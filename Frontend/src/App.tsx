@@ -1,11 +1,21 @@
 
 
+import { Button } from './components/ui/button'
+
 function App() {
 
 
   return (
     <>
-      <h5 className='text-3xl text-red-500 font-bold underline'>Hello World</h5>
+      <div className="App">
+        <header className="App-header">
+          <h1>Welcome to Newzify</h1>
+          <p>Your one-stop news aggregator.</p>
+        </header>
+      </div>
+      <Button className="m-4">
+        Click Me
+      </Button>
     </>
   )
 }
