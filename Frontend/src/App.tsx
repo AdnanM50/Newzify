@@ -1,23 +1,14 @@
+import React from 'react';
+import HeroSection from "./components/Home/HeroSection"
 
-
-import { Button } from './components/ui/button'
-
-function App() {
+const Home: React.FC = () => {
 
 
   return (
     <>
-      <div className="App">
-        <header className="App-header">
-          <h1>Welcome to Newzify</h1>
-          <p>Your one-stop news aggregator.</p>
-        </header>
-      </div>
-      <Button className="m-4">
-        Click Me
-      </Button>
+     <HeroSection />
     </>
   )
 }
 
-export default App
+export default Home;
