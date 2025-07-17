@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development PORT=5000 dotenv_config_path=.env nodemon src/server.ts"
+    "dev": "cross-env NODE_ENV=development dotenv_config_path=.env nodemon src/server.ts"
   },
   "keywords": [],
   "author": "",

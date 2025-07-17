@@ -1,11 +1,16 @@
 import dotenv from 'dotenv';
 import path from 'node:path';
-const envPath: string = path.join(
-    __dirname,
-    '../../../',
-    `.env.${process.env.NODE_ENV}`,
-);
+
+// Load the standard `.env` file from root directory
+const envPath: string = path.join(__dirname, '../../../', '.env');
+
+// Inject the environment variables
 dotenv.config({ path: envPath });
+
+// Optional: For debugging
+console.log('Loaded env from:', envPath);
+console.log('PORT:', process.env.PORT);
+
 export default {
     db_string: process.env.DB_STRING,
     port: process.env.PORT || 3005,
