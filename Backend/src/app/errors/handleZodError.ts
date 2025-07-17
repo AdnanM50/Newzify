@@ -7,14 +7,10 @@ import {
 const handleZodError = (error: ZodError): TGenericErrorResponse => {
     let errorMessage: string = '';
     const statusCode = 422;
-    const errorSources: TArrayOfErrorSources = error.issues.map(
-        (issue: ZodIssue) => {
-            return {
-                path: issue?.path[issue.path.length - 1],
-                message: issue.message,
-            };
-        },
-    );
+    const errorSources: TArrayOfErrorSources = error.issues.map(issue => ({
+  path: String(issue.path[issue.path.length - 1]),
+  message: issue.message,
+}));
     errorSources.forEach((data, index) => {
         errorMessage +=
             data.message + (errorSources?.length - 1 === index ? '.' : '. ');

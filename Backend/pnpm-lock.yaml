@@ -60,9 +60,15 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.3
+      '@types/express-fileupload':
+        specifier: ^1.5.1
+        version: 1.5.1
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.10
+      '@types/morgan':
+        specifier: ^1.9.10
+        version: 1.9.10
       '@types/node':
         specifier: ^22.10.1
         version: 22.16.4
@@ -122,6 +128,9 @@ packages:
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
+  '@types/busboy@1.5.4':
+    resolution: {integrity: sha512-kG7WrUuAKK0NoyxfQHsVE6j1m01s6kMma64E+OZenQABMQyTJop1DumUWcLwAQ2JzpefU7PDYoRDKl8uZosFjw==}
+
   '@types/compression@1.8.1':
     resolution: {integrity: sha512-kCFuWS0ebDbmxs0AXYn6e2r2nrGAb5KwQhknjSPSPgJcGd8+HVSILlUyFhGqML2gk39HcG7D1ydW9/qpYkN00Q==}
 
@@ -135,6 +144,9 @@ packages:
 
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
+
+  '@types/express-fileupload@1.5.1':
+    resolution: {integrity: sha512-DllImBVI1lCyjl2klky/TEwk60mbNebgXv1669h66g9TfptWSrEFq5a/raHSutaFzjSm1tmn9ypdNfu4jPSixQ==}
 
   '@types/express-serve-static-core@5.0.7':
     resolution: {integrity: sha512-R+33OsgWw7rOhD1emjU7dzCDHucJrgJXMA5PYCzJxVil0dsyx5iBEPHqpPfiKNJQb7lZ1vxwoLR4Z87bBUpeGQ==}
@@ -150,6 +162,9 @@ packages:
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
+
+  '@types/morgan@1.9.10':
+    resolution: {integrity: sha512-sS4A1zheMvsADRVfT0lYbJ4S9lmsey8Zo2F7cnbYjWHP67Q0AwMYuuzLlkIM2N8gAbb9cubhIVFwcIN2XyYCkA==}
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
@@ -873,6 +888,10 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 22.16.4
 
+  '@types/busboy@1.5.4':
+    dependencies:
+      '@types/node': 22.16.4
+
   '@types/compression@1.8.1':
     dependencies:
       '@types/express': 5.0.3
@@ -889,6 +908,11 @@ snapshots:
   '@types/cors@2.8.19':
     dependencies:
       '@types/node': 22.16.4
+
+  '@types/express-fileupload@1.5.1':
+    dependencies:
+      '@types/busboy': 1.5.4
+      '@types/express': 5.0.3
 
   '@types/express-serve-static-core@5.0.7':
     dependencies:
@@ -911,6 +935,10 @@ snapshots:
       '@types/node': 22.16.4
 
   '@types/mime@1.3.5': {}
+
+  '@types/morgan@1.9.10':
+    dependencies:
+      '@types/node': 22.16.4
 
   '@types/ms@2.1.0': {}
 
