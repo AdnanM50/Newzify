@@ -4,7 +4,6 @@ export const USER_ROLE = {
     ADMIN: 'admin',
     EMPLOYEE: 'employee',
     USER: 'user',
-    VENDOR: 'vendor',
 } as const;
 
 export const USER_ROLE_ENUM: string[] = Object.values(USER_ROLE);

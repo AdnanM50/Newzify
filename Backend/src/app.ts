@@ -16,7 +16,7 @@ app.use('/api/v1', router);
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({
         success: true,
-        message: "You're Welcome to Shopstick Pro API",
+        message: "You're Welcome to Newzify API",
     });
 });
 

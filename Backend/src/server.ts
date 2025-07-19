@@ -3,7 +3,7 @@ import config from './app/config';
 import { app } from './app';
 async function main(): Promise<void> {
     try {
-        await connectMongo(config.db_string as string);
+        await connectMongo(config.db_string  as string);
         const PORT = config.port;
         app.listen(PORT, () => console.log(`Listening on ${PORT}`));
     } catch (error) {
