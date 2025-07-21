@@ -164,40 +164,40 @@ export default class UserService {
         }
         return user;
     }
-    static async allSellerListByQuery(filter,query: any): Promise<any> {
-        const aggregate = User.aggregate([
-            {
-                $match:filter
-            },
-            {
-                $project: {
-                    _id: 1,
-                    first_name: 1,
-                    last_name: 1,
-                    email: 1,
-                    phone: 1,
-                    role: 1,
-                    image: 1,
-                    shop_address:1,
-                    shop_name:1,
-                    shop_image:1,
-                    shop_banner:1
-                },
-            },
-        ])
-        const options = {
-            page: query.page || 1,
-            limit: query.limit || 10,
-            sort: { createdAt: -1 },
-        };
-        const sellers = await User.aggregatePaginate(aggregate,options)
-        if(!sellers.docs.length){
-            throw new AppError(
-                HttpStatusCode.NotFound,
-                'Request Failed',
-                'Sellers not found!',
-            )
-        }
-        return sellers;
-    }
+    // static async allSellerListByQuery(filter,query: any): Promise<any> {
+    //     const aggregate = User.aggregate([
+    //         {
+    //             $match:filter
+    //         },
+    //         {
+    //             $project: {
+    //                 _id: 1,
+    //                 first_name: 1,
+    //                 last_name: 1,
+    //                 email: 1,
+    //                 phone: 1,
+    //                 role: 1,
+    //                 image: 1,
+    //                 shop_address:1,
+    //                 shop_name:1,
+    //                 shop_image:1,
+    //                 shop_banner:1
+    //             },
+    //         },
+    //     ])
+    //     const options = {
+    //         page: query.page || 1,
+    //         limit: query.limit || 10,
+    //         sort: { createdAt: -1 },
+    //     };
+    //     const sellers = await User.aggregatePaginate(aggregate,options)
+    //     if(!sellers.docs.length){
+    //         throw new AppError(
+    //             HttpStatusCode.NotFound,
+    //             'Request Failed',
+    //             'Sellers not found!',
+    //         )
+    //     }
+    //     return sellers;
+    // }
 }

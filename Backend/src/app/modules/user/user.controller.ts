@@ -48,7 +48,7 @@ export class UserController {
                 action: 'signup',
                 permission: false,
             });
-            user = await UserService.findUserByEmail(payload.body.email, false);
+            user = await UserService.findUserByEmail(payload.body.email, true);
         }
         else {
             otp = await OTPService.findOtpByPhone({
@@ -117,88 +117,6 @@ export class UserController {
             'Invalid OTP! Please try again.',
         );
     });
-    static getUserProfile = catchAsync(async (req, res) => {
-        const { user } = res.locals;
-        sendResponse(res,
-            {
-                statusCode: HttpStatusCode.Ok,
-                success: true,
-                message: 'User profile retrieved successfully',
-                data: {
-                    ...user,
-                    password: undefined,
-                    __v: undefined,
-                    is_deleted: undefined,
-                    fcm_token: undefined,
-                },
-            }
-        )
-    });
-    static userProfileUpdate = catchAsync(async (req, res) => {
-        const {_id} = res.locals.user;
-        const {body} = req.body;
-        const updateQuery = {_id}
-        const updateDocument = {
-            ...body,
-            _id: undefined,
-            role: undefined,
-            password: undefined,
-        }
-        const user = await UserService.updateUserProfile(
-            updateQuery,
-            updateDocument,
-        );
-        sendResponse(res, {
-            statusCode: HttpStatusCode.Ok,
-            success: true,
-            message: 'Profile updated successfully',
-            data: {
-                ...user,
-                password: undefined,
-                __v: undefined,
-                is_deleted: undefined,
-                fcm_token: undefined,
-            },
-        });
-    });
-    // static getUserList = catchAsync(async (req, res) => {
-    //     const filter:any = {};
-    //     const query = req.query
 
-    //     if(!!query.role){
-    //         if(query.role === 'admin'){
-    //             filter.role = 'nothing';
-    //         }else{
-    //             filter.role = query.role
-    //         }
-    //     }else{
-    //         filter.role = "nothing"
-    //     }
-    //     if(!!query.search){
-    //         filter[`name.${langCode}`] = {
-    //             $regex: new RegExp(query.search, 'i'),
-    //         };
-    //     }
-    //     const data = await  UserService.findUserListByQuery(filter, query,false);
-    //     sendResponse(res, {
-    //         statusCode:HttpStatusCode.Ok,
-    //         success:true,
-    //         message:"Successfully retrived user list",
-    //         data: data,
-    //     })
-    // })
-
-    static sellerList = catchAsync(async (req, res) => {
-         const filter:any = {};
-         const query = req.query
-         filter.role = "vendor"
-        const data = await  UserService.allSellerListByQuery(filter, query);
-        sendResponse(res, {
-            statusCode:HttpStatusCode.Ok,
-            success:true,
-            message:"Successfully retrived seller list",
-            data: data
-        })
-
-    })
+ 
 }

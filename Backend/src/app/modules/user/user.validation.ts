@@ -4,10 +4,9 @@ import mongoose from 'mongoose';
 const userRegisterValidate = z.object({
     body: z.object({
         first_name: z.string({
-            required_error: 'First name is required',
             invalid_type_error: 'First name must be a string',
         }).min(1, {
-            message: 'First name must be at least 1 character long',
+            message: 'First name is required',
         }).max(50, {
             message: 'First name must be at most 50 characters long',
         }),
