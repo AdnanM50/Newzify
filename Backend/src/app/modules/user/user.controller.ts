@@ -11,7 +11,7 @@ import config from "../../config";
 
 export class UserController {
     static registerNewAccount = catchAsync(async (req, res) => {
-        const payload = req.body;
+        const payload = req.body; 
         const findUser = await UserService.checkUserExists(payload.body.email, payload.body.phone);
         const settings = await SettingService.getSettings({}, '-updatedAt -__v')
         if (findUser) {

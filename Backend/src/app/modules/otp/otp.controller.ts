@@ -12,7 +12,7 @@ import { SettingService } from '../setting/setting.service';
 import { sendUserEmailGeneral } from '../../utils/sendEmail';
 
 export class OTPController {
-    static sendOTP = catchAsync(async (req, res) => {
+    static sendOTP = catchAsync(async (req: any, res: any) => {
         const { body } = req.body;
         const { identifier, action } = body;
         const validationResult = validEmailCheck(identifier);
@@ -32,7 +32,7 @@ export class OTPController {
         let user = null;
         if (action != 'signup') {
             if (setting.otp_verification_type === 'email') {
-                user = await UserService.findUserByEmail(identifier);
+                user = await UserService.findUserByEmail(identifier, true);
             } else {
                 user = await UserService.findUserByPhone(identifier);
             }
@@ -45,7 +45,7 @@ export class OTPController {
             }
         } else {
             if (setting.otp_verification_type === 'email') {
-                user = await UserService.findUserByEmail(identifier,false);
+                user = await UserService.findUserByEmail(identifier,true);
             } else {
                 user = await UserService.findUserByPhone(identifier);
             }

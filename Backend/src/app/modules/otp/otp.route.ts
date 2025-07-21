@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
     '/send',
-    validate(OTPValidations.postOTPValidationSchema),
+ 
     OTPController.sendOTP,
 );
 
