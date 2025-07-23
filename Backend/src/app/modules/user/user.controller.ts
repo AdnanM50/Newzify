@@ -8,6 +8,7 @@ import {OTPService} from "../otp/otp.service";
 import dayjs from "dayjs";
 import {createToken} from "../auth/auth.utils";
 import config from "../../config";
+import httpStatus from "http-status";
 
 export class UserController {
     static registerNewAccount = catchAsync(async (req, res) => {
@@ -118,5 +119,54 @@ export class UserController {
         );
     });
 
- 
+    static registerNewAccountWithOTP = catchAsync(async (req, res) => {
+        const payload = req.body; 
+        const { email, otp } = payload.body;
+
+        // Validate OTP
+        const otpRecord = await OTPService.findOTPByEmail({
+            email: email,
+            code: otp,
+            action: 'signup',
+            permission: false,
+        });
+
+        if (!otpRecord) {
+            throw new AppError(
+                400,
+                'Failed to verify OTP',
+                'Invalid or expired OTP!',
+            );
+        }
+
+        // Check OTP expiration
+        const startTime = dayjs(otpRecord.createdAt);
+        const endTime = dayjs(Date.now());
+        const expireTimesInMinute = endTime.diff(startTime, 'minute');
+        if (expireTimesInMinute >= 2) {
+            throw new AppError(
+                400,
+                'Invalid request',
+                'OTP expired! Please try again.',
+            );
+        }
+
+        // Create new user
+        const newUser = await UserService.createNewUser(payload.body);
+        if (!newUser) {
+            throw new AppError(
+                400,
+                'Request Failed',
+                'Failed to create account! Please try again.',
+            );
+        }
+
+        // Respond with success
+        sendResponse(res, {
+            statusCode: httpStatus.CREATED,
+            success: true,
+            message: 'Registration successful',
+            data: null,
+        });
+    });
 }
