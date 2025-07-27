@@ -1,5 +1,5 @@
 import {Router} from "express";
-import userRouter from "../modules/user/user.route";
+// import userRouter from "../modules/user/user.route";
 import authRouter from "../modules/auth/auth.route";
 import { otpRoutes } from "../modules/otp/otp.route";
 // import { settingRoutes } from "../modules/setting/setting.route";
@@ -23,10 +23,10 @@ import { otpRoutes } from "../modules/otp/otp.route";
 const router = Router();
 
 const moduleRouters:any = [
-    {
-        path: '/user',
-        route: userRouter,
-    },
+    // {
+    //     path: '/user',
+    //     route: userRouter,
+    // },
     {
         path: '/auth',
         route: authRouter,

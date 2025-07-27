@@ -6,8 +6,8 @@ import { USER_ROLE_ENUM } from "../../utils/constant";
 import auth from "../../middleware/auth";
 
 const authRouter = Router();
+authRouter.post('/register', AuthController.registerNewAccount);
 authRouter.post("/login",
-    
     AuthController.loginAccess)
 authRouter.post(
     '/forget-password/verify-otp',

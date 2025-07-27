@@ -1,14 +1,11 @@
 import { catchAsync } from '../../utils/catchAsync';
-
 import { OTPService } from './otp.service';
 import { validEmailCheck } from '../auth/auth.utils';
 import { generateOTP } from './otp.utils';
-import config from '../../config';
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import AppError from '../../errors/appError';
 import UserService from '../user/user.service';
-// import { SettingService } from '../setting/setting.service';
 import { sendUserEmailGeneral } from '../../utils/sendEmail';
 
 export class OTPController {
