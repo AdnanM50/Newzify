@@ -12,6 +12,16 @@ export class OTPService {
         code: string;
         action: string;
     }): Promise<void> {
+        console.log('Creating OTP:', { email, code, action });
+        
+        if (!email) {
+            throw new AppError(
+                HttpStatusCode.BadRequest,
+                'Request Failed',
+                'Email is required',
+            );
+        }
+        
         await OTP.create({
             email: email.toLowerCase().trim(),
             code,
@@ -29,6 +39,14 @@ export class OTPService {
         action: string;
         permission: boolean | undefined;
     }): Promise<any> {
+        if (!email) {
+            throw new AppError(
+                HttpStatusCode.BadRequest,
+                'Request Failed',
+                'Email is required',
+            );
+        }
+        
         const otp_data = await OTP.findOne({
             email: email.toLowerCase().trim(),
             code,
@@ -55,6 +73,14 @@ export class OTPService {
         action: string;
         permission: boolean | undefined;
     }): Promise<any> {
+        if (!phone) {
+            throw new AppError(
+                HttpStatusCode.BadRequest,
+                'Request Failed',
+                'Phone is required',
+            );
+        }
+        
         const otp_data = await OTP.findOne({
             phone: phone.trim(),
             code,

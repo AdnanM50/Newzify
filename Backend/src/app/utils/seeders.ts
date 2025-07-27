@@ -25,11 +25,72 @@ export const seedAdmin = async ({ adminInfo, valueString }) => {
     // create siteSettings --->
     if (!setting) {
         await Setting.create({
-            title: WEBSITE_NAME,
-            currency: {
-                code: 'USD',
-                symbol: '$',
+            site_name: WEBSITE_NAME,
+            site_email: 'admin@example.com',
+            site_phone: '01998311602',
+            site_logo: '',
+            site_address: '',
+            site_description: '',
+            site_footer: '',
+            currency_code: 'USD',
+            currency_symbol: '$',
+            client_side_url: 'http://localhost:3000',
+            server_side_url: 'http://localhost:5000',
+            otp_verification_type: 'email',
+            file_upload_type: 'local',
+            email_config: {
+                default: 'gmail',
+                gmail: {
+                    auth_email: 'your-email@gmail.com',
+                    password: 'your-app-password',
+                    service_provider: 'gmail',
+                },
+                sendgrid: {
+                    host: '',
+                    port: 587,
+                    username: '',
+                    password: '',
+                    sender_email: '',
+                },
             },
+            phone_config: {
+                twilio_auth_token: '',
+                twilio_sender_number: '',
+                twilio_account_sid: '',
+                is_active: false,
+            },
+            stripe: {
+                credentials: {
+                    stripe_publishable_key: '',
+                    stripe_secret_key: '',
+                    stripe_webhook_secret: '',
+                },
+                is_active: false,
+                logo: '',
+                name: '',
+            },
+            paypal: {
+                credentials: {
+                    paypal_base_url: '',
+                    paypal_client_id: '',
+                    paypal_secret_key: '',
+                },
+                is_active: false,
+                logo: '',
+                name: '',
+            },
+            razorpay: {
+                credentials: {
+                    razorpay_key_id: '',
+                    razorpay_key_secret: '',
+                },
+                is_active: false,
+                logo: '',
+                name: '',
+            },
+            social_media_link: [],
+            partner: [],
+            otp_required: true,
         });
     }
 

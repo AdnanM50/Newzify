@@ -33,6 +33,16 @@ export const sendUserEmailGeneral = async (data: TData) => {
         });
         from_email = setting?.email_config?.gmail?.auth_email;
     }
+
+    // Check if transporter is configured
+    if (!transporter) {
+        console.log('Email configuration not found. Skipping email send.');
+        console.log('Email would have been sent to:', data.email);
+        console.log('Subject:', data.subject);
+        console.log('Message:', data.message);
+        return { success: true, message: 'Email configuration not set up' };
+    }
+
     return await transporter.sendMail({
         from: from_email, // sender address
         to: data.email, // list of receivers

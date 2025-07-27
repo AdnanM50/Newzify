@@ -41,7 +41,7 @@ export default class UserService {
         }
         return user;
     }
-    static async findUserByEmail(email: string,permission:true): Promise<any> {
+    static async findUserByEmail(email: string, permission: boolean = true): Promise<any> {
         const user = await User.findOne({ email })
         .select('-__v -updatedAt')
         .lean();

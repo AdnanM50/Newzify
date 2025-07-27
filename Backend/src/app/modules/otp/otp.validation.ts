@@ -1,11 +1,9 @@
 import { z } from 'zod';
+
 const postOTPValidationSchema = z.object({
     body: z.object({
         identifier: z
-            .string({
-                invalid_type_error: 'Identifier must be a string',
-                required_error: 'Identifier is required',
-            })
+            .string('Identifier must be a string')
             .refine(
                 (value) => {
                     // Check if input matches email format or phone number format
@@ -19,8 +17,7 @@ const postOTPValidationSchema = z.object({
                 },
             ),
         action: z.enum(['forget_password', 'signup', 'profile_update'], {
-            invalid_type_error: 'Action must be string',
-            required_error: 'Action is required',
+            message: 'Action must be one of: forget_password, signup, profile_update',
         }),
     }),
 });
@@ -28,10 +25,7 @@ const postOTPValidationSchema = z.object({
 const postOTPVerifyValidationSchema = z.object({
     body: z.object({
         identifier: z
-            .string({
-                invalid_type_error: 'Identifier must be a string',
-                required_error: 'Identifier is required',
-            })
+            .string('Identifier must be a string')
             .refine(
                 (value) => {
                     // Check if input matches email format or phone number format
@@ -44,13 +38,9 @@ const postOTPVerifyValidationSchema = z.object({
                     message: 'Identifier must be a valid email or phone number',
                 },
             ),
-        otp: z.string({
-            invalid_type_error: 'OTP must be string',
-            required_error: 'OTP is required',
-        }),
+        otp: z.string('OTP must be string'),
         otp_option: z.enum(['sms', 'email'], {
-            invalid_type_error: 'OTP option must be string',
-            required_error: 'OTP option must be sms or email address',
+            message: 'OTP option must be sms or email',
         }),
     }),
 });

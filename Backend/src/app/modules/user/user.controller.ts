@@ -3,7 +3,6 @@ import { catchAsync } from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import UserService from "./user.service";
 import AppError from "../../errors/appError";
-import {SettingService} from "../setting/setting.service";
 import {OTPService} from "../otp/otp.service";
 import dayjs from "dayjs";
 import {createToken} from "../auth/auth.utils";
@@ -14,7 +13,6 @@ export class UserController {
     static registerNewAccount = catchAsync(async (req, res) => {
         const payload = req.body; 
         const findUser = await UserService.checkUserExists(payload.body.email, payload.body.phone);
-        const settings = await SettingService.getSettings({}, '-updatedAt -__v')
         if (findUser) {
             throw new AppError(
                 HttpStatusCode.Conflict,
@@ -22,27 +20,22 @@ export class UserController {
                 'User with this email or phone number already exists!',
             )
         }
-        if(settings.otp_required===false){
-            const newUser = await UserService.createNewUser(payload.body);
-            if(!newUser){
-                throw new AppError(
-                    HttpStatusCode.BadRequest,
-                    'Request Failed',
-                    'Failed to create account! Please try again.',
-                )
-            }
-            sendResponse(res,
-                {
-                    statusCode: HttpStatusCode.Created,
-                    success: true,
-                    message: 'Registration successfully',
-                    data: null,
-                }
+        
+        // Check if OTP is provided
+        if (!payload.body.otp) {
+            throw new AppError(
+                HttpStatusCode.BadRequest,
+                'OTP Required',
+                'OTP is required for registration!',
             )
         }
+        
         let otp;
         let user = null;
-        if (settings.otp_verification_type === 'email') {
+        // Default to email verification if not specified
+        const otpVerificationType = payload.body.otp_verification_type || 'email';
+        
+        if (otpVerificationType === 'email') {
             otp = await OTPService.findOTPByEmail({
                 email: payload.body.email,
                 code: payload.body.otp,

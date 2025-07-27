@@ -8,7 +8,6 @@ import sendResponse from "../../utils/sendResponse";
 import config  from "../../config";
 import dayjs from "dayjs";
 import { OTPService } from "../otp/otp.service";
-import { SettingService } from "../setting/setting.service";
 import { AuthService } from "./auth.service";
 
 export class AuthController {
@@ -18,10 +17,10 @@ export class AuthController {
         const verificationResult = validEmailCheck(identifier);
         let user = null;
         if (verificationResult.success) {
-            user = await UserService.findUserByEmail(identifier);
+            user = await UserService.findUserByEmail(identifier, true);
         }
         if (!user) {
-            user = await UserService.findUserByPhone(identifier);
+            user = await UserService.findUserByPhone(identifier, true);
         }
         if(user.is_deleted) {
             throw new AppError(
@@ -82,26 +81,21 @@ export class AuthController {
     static forgetPasswordOTPVerify = catchAsync(async (req, res) => {
         const { body } = req.body;
         const { identifier, action, otp } = body;
-        const setting = await SettingService.getSettingsBySelect(
-            'otp_verification_type',
-        );
         let otp_Object,
             user: any = null;
         const validationResult = validEmailCheck(identifier?.trim());
-        if (
-            !validationResult.success &&
-            setting.otp_verification_type === 'email'
-        ) {
-            throw new AppError(400, 'Request Failed', 'Invalid email address');
-        }
-        if (setting.otp_verification_type === 'email') {
+        
+        // Determine verification type based on identifier format
+        const isEmail = validationResult.success;
+        
+        if (isEmail) {
             otp_Object = await OTPService.findOTPByEmail({
                 email: identifier,
                 code: otp,
                 action,
                 permission: false,
             });
-            user = await UserService.findUserByEmail(identifier);
+            user = await UserService.findUserByEmail(identifier, true);
         } else {
             otp_Object = await OTPService.findOtpByPhone({
                 phone: identifier,
@@ -109,7 +103,7 @@ export class AuthController {
                 action,
                 permission: false,
             });
-            user = await UserService.findUserByPhone(identifier);
+            user = await UserService.findUserByPhone(identifier, true);
         }
         if (!otp_Object) {
             throw new AppError(
