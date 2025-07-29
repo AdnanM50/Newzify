@@ -10,7 +10,7 @@ const Footer: React.FC<Props> = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <h3 className="text-xl font-bold mb-4 font-serif">THE VOICE</h3>
+            <h3 className="text-xl font-bold mb-4 font-serif">THE VOICE OF NEWZIFY</h3>
             <p className="text-gray-300 text-sm">
               Your trusted source for breaking news and in-depth analysis.
             </p>
@@ -43,7 +43,7 @@ const Footer: React.FC<Props> = () => {
           </div>
         </div>
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
-          <p>&copy; 2024 The Voice. All rights reserved.</p>
+          <p>&copy; 2024 The Voice of newzify. All rights reserved.</p>
         </div>
       </div>
     </footer>

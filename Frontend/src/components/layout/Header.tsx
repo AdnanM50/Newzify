@@ -25,7 +25,7 @@ const Header: React.FC<Props> = () => {
       {/* Main header */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">THE VOICE</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">NEWZIFY</h1>
           <div className="flex items-center space-x-4">
             <Search className="w-5 h-5 text-gray-600 cursor-pointer" />
             <User className="w-5 h-5 text-gray-600 cursor-pointer" />
