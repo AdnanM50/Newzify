@@ -83,7 +83,7 @@ const NewsHerosection: React.FC = () => {
           {/* Left Column - Fresh Stories */}
           <div className="col-span-1">
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Fresh stories</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Fresh stories</h2>
               <p className="text-sm text-gray-600 mb-6 uppercase tracking-wide">
                 TODAY: BROWSE OUR EDITOR'S HAND PICKED ARTICLES!
               </p>
