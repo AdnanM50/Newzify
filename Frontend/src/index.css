@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: 'Proxima Nova Black';
+  src: url('/fonts/ProximaNova-Black.woff2') format('woff2'),
+       url('/fonts/ProximaNova-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -116,6 +124,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Proxima Nova Black', 'Helvetica Neue', Arial, sans-serif;
   }
 }
 

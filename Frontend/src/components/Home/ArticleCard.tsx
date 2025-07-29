@@ -38,7 +38,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ title, category, date, isExcl
         </div>
       )}
       
-      <h3 className="text-lg font-bold text-gray-900 leading-tight mb-2 group-hover:text-red-600 transition-colors">
+      <h3 className="text-lg font-semibold text-gray-900 leading-tight mb-1 group-hover:text-red-600 transition-colors">
         {title}
       </h3>
       <p className="text-sm text-gray-500">{date}</p>
