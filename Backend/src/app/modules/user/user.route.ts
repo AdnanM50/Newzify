@@ -6,7 +6,7 @@ import { UserValidations } from "./user.validation";
 // import { USER_ROLE_ENUM } from "../../utils/constant";
 const userRouter = Router();
 
-userRouter.post('/register', UserController.registerNewAccount);
+// userRouter.post('/register', UserController.registerNewAccount);
 // userRouter.patch('/update',auth(...USER_ROLE_ENUM),validate(UserValidations.updateUserProfileValidationSchema), UserController.userProfileUpdate);
 // userRouter.get('/profile',auth(...USER_ROLE_ENUM), UserController.getUserProfile);
 // userRouter.get('/list',auth(...USER_ROLE_ENUM), UserController.getUserList);
