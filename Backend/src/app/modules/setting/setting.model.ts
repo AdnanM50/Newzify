@@ -22,7 +22,7 @@ const schema = new Schema<TSetting>(
         },
         file_upload_type: {
             type: String,
-            enum: ['local', 's3'],
+            enum: ['local', 'firebase'],
             default: 'local',
             message: '{VALUE} is not a valid file upload type',
         },
@@ -93,10 +93,7 @@ const schema = new Schema<TSetting>(
             type: [String],
             default: undefined,
         },
-        otp_required: {
-            type: Boolean,
-            default: false,
-        },
+      
     },
     {
         timestamps: true,

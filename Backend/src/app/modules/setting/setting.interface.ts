@@ -11,7 +11,7 @@ export type TSetting = {
     client_side_url?: string;
     server_side_url?: string;
     otp_verification_type?: 'email' | 'phone';
-    file_upload_type: 'local' | 's3';
+    file_upload_type: 'local' | 'firebase';
     email_config?: {
         default: string;
         sendgrid: {

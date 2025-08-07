@@ -3,7 +3,7 @@ import userRouter from "../modules/user/user.route";
 import authRouter from "../modules/auth/auth.route";
 import { otpRoutes } from "../modules/otp/otp.route";
 // import { settingRoutes } from "../modules/setting/setting.route";
-// import { fileRouters } from "../modules/file/file.route";
+import { fileRouters } from "../modules/file/file.route";
 // import { faqRoutes } from "../modules/faq/faq.route";
 // import {ProductCategoryRoute} from "../modules/product/product-category/product-category.route";
 // import {languageRoutes} from "../modules/setting-language/setting-language.route";
@@ -35,10 +35,10 @@ const moduleRouters:any = [
         path: '/otp',
         route: otpRoutes,
     },
-    // {
-    //     path: '/files',
-    //     route: fileRouters,
-    // },
+    {
+        path: '/files',
+        route: fileRouters,
+    },
     // {
     //     path: '/setting',
     //     route: settingRoutes,
