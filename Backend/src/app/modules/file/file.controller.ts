@@ -7,22 +7,35 @@ import '../../../app/config';
 
 export class CloudinaryController {
     static uploadImage = catchAsync(async (req: Request, res: Response) => {
-        const { files } = req;
-        if (!files?.image) {
-            return res.status(400).json({ message: 'Image is required' });
+        try {
+            if (!req.files || !req.files.image) {
+                return res.status(400).json({ message: 'Image is required' });
+            }
+        
+            const imageFile = Array.isArray(req.files.image)
+                ? req.files.image[0]
+                : req.files.image;
+        
+            if (!imageFile.tempFilePath) {
+                return res.status(400).json({ message: 'Invalid file upload' });
+            }
+        
+            const result = await cloudinary.uploader.upload(imageFile.tempFilePath, {
+                folder: 'my_uploads',
+            });
+        
+            return res.status(200).json({
+                message: 'Image uploaded successfully',
+                url: result.secure_url,
+                public_id: result.public_id,
+            });
+        } catch (error) {
+            console.error('Upload error:', error);
+            return res.status(500).json({ 
+                message: 'Upload failed', 
+                error: error instanceof Error ? error.message : 'Unknown error' 
+            });
         }
-
-        // Assuming files.image is an array, take the first one
-        const imageFile = Array.isArray(files.image) ? files.image[0] : files.image;
-
-        const result = await cloudinary.uploader.upload(imageFile.tempFilePath, {
-            folder: 'your_folder_name', // Optional: specify a folder in Cloudinary
-        });
-
-        return res.status(200).json({
-            message: 'Image uploaded successfully',
-            data: result,
-        });
     });
 
     static deleteImage = catchAsync(async (req: Request, res: Response) => {
