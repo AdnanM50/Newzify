@@ -3,10 +3,7 @@ import { z } from 'zod';
 const userLoginValidationSchema = z.object({
     body: z.object({
         identifier: z
-            .string({
-                invalid_type_error: 'User identifier must be a string',
-                required_error: 'User identifier is required',
-            })
+            .string()
             .refine(
                 (value) => {
                     // Check if input matches email format or phone number format
@@ -21,10 +18,7 @@ const userLoginValidationSchema = z.object({
                 },
             ),
         password: z
-            .string({
-                invalid_type_error: 'User password must be string',
-                required_error: 'User password is required',
-            })
+            .string()
             .min(6, {
                 message:
                     'Password must be greater than or equal to 6 characters',
@@ -39,17 +33,11 @@ const userLoginValidationSchema = z.object({
 const identifierValidations = z.object({
     body: z.object({
         phone: z
-            .string({
-                invalid_type_error: 'Phone must be string',
-                required_error: 'Phone is required',
-            })
+            .string()
             .optional(),
 
         email: z
-            .string({
-                invalid_type_error: 'User email must be string',
-                required_error: 'User email is required',
-            })
+            .string()
             .email({
                 message: 'Invalid email address',
             })
@@ -58,15 +46,9 @@ const identifierValidations = z.object({
 });
 const forgetPasswordOtpVerify = z.object({
     body: z.object({
-        otp: z.string({
-            invalid_type_error: 'Otp must be string',
-            required_error: 'Otp is required',
-        }),
+        otp: z.string(),
         identifier: z
-            .string({
-                invalid_type_error: 'Identifier must be a string',
-                required_error: 'Identifier is required',
-            })
+            .string()
             .refine(
                 (value) => {
                     // Check if input matches email format or phone number format
@@ -79,19 +61,13 @@ const forgetPasswordOtpVerify = z.object({
                     message: 'Identifier must be a valid email or phone number',
                 },
             ),
-        action: z.enum(['forget_password', 'signup', 'profile_update'], {
-            invalid_type_error: 'Action must be string',
-            required_error: 'Action is required',
-        }),
+        action: z.enum(['forget_password', 'signup', 'profile_update'] as const),
     }),
 });
 const forgetPasswordValidationSchema = z.object({
     body: z.object({
         password: z
-            .string({
-                invalid_type_error: 'Password must be string',
-                required_error: 'Password is required',
-            })
+            .string()
             .min(6, {
                 message:
                     'Password must be greater than or equal to 6 characters',
@@ -101,10 +77,7 @@ const forgetPasswordValidationSchema = z.object({
                     'Password must be less than or equal to 100 characters',
             }),
         confirm_password: z
-            .string({
-                invalid_type_error: 'Confirm password must be string',
-                required_error: 'Confirm password is required',
-            })
+            .string()
             .min(6, {
                 message:
                     'Password must be greater than or equal to 6 characters',
@@ -118,10 +91,7 @@ const forgetPasswordValidationSchema = z.object({
 const passwordUpdateValidationSchema = z.object({
     body: z.object({
         old_password: z
-            .string({
-                invalid_type_error: 'Old password must be string',
-                required_error: 'Old password is required',
-            })
+            .string()
             .min(6, {
                 message:
                     'Password must be greater than or equal to 6 characters',
@@ -131,10 +101,7 @@ const passwordUpdateValidationSchema = z.object({
                     'Password must be less than or equal to 100 characters',
             }),
         password: z
-            .string({
-                invalid_type_error: 'Password must be string',
-                required_error: 'Password is required',
-            })
+            .string()
             .min(6, {
                 message:
                     'Password must be greater than or equal to 6 characters',
@@ -144,10 +111,7 @@ const passwordUpdateValidationSchema = z.object({
                     'Password must be less than or equal to 100 characters',
             }),
         confirm_password: z
-            .string({
-                invalid_type_error: 'Confirm password must be string',
-                required_error: 'Confirm password is required',
-            })
+            .string()
             .min(6, {
                 message:
                     'Password must be greater than or equal to 6 characters',

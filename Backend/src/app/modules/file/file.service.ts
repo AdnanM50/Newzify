@@ -1,4 +1,5 @@
-import File, { IFile } from './file.model';
+import File from './file.model';
+import type { IFile } from './file.model';
 import { generateID } from '../../utils/helper';
 
 export class FileService {
@@ -56,11 +57,11 @@ export class FileService {
         const files = await File.find(query);
         
         const totalFiles = files.length;
-        const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+        const totalSize = files.reduce((sum: number, file: IFile) => sum + (file.size || 0), 0);
         
         const filesByType: { [key: string]: number } = {};
-        files.forEach(file => {
-            const type = file.mimeType.split('/')[0];
+        files.forEach((file: IFile) => {
+            const type = (file.mimeType || '').split('/')[0];
             filesByType[type] = (filesByType[type] || 0) + 1;
         });
 

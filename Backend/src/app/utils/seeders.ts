@@ -1,7 +1,8 @@
 import User from '../modules/user/user.model';
 import Setting from '../modules/setting/setting.model';
-import Language from '../modules/setting-language/setting-language.model';
-import Page from '../modules/setting-page/setting-page.model';
+// The following modules are not present in the codebase; comment them out to avoid build errors.
+// import Language from '../modules/setting-language/setting-language.model';
+// import Page from '../modules/setting-page/setting-page.model';
 
 
 // @ts-ignore
@@ -10,8 +11,8 @@ export const seedAdmin = async ({ adminInfo, valueString }) => {
     const { WEBSITE_NAME } = valueString;
     const user = await User.findOne({ role: 'admin' }, { _id: 0 });
     const setting = await Setting.findOne({});
-    const language = await Language.findOne({});
-    const page = await Page.findOne({});
+    // const language = await Language.findOne({});
+    // const page = await Page.findOne({});
     //create admin -- >
     if (!user) {
         await User.create({
@@ -94,15 +95,15 @@ export const seedAdmin = async ({ adminInfo, valueString }) => {
         });
     }
 
-    if (!language) {
-        await Language.create({
-            name: 'English',
-            code: 'en',
-            active: true,
-            flag: 'us',
-            default: true,
-        });
-    }
+    // if (!language) {
+    //     await Language.create({
+    //         name: 'English',
+    //         code: 'en',
+    //         active: true,
+    //         flag: 'us',
+    //         default: true,
+    //     });
+    // }
     // create new page -->
     const pages = [
         {
@@ -174,10 +175,10 @@ export const seedAdmin = async ({ adminInfo, valueString }) => {
         },
     ];
     console.log(pages);
-    if (!page) {
-        await Page.insertMany(pages);
-        console.log("page setting is created successfully.");
-    }
+    // if (!page) {
+    //     await Page.insertMany(pages);
+    //     console.log("page setting is created successfully.");
+    // }
 };
 
 export const seeders = async () => {
