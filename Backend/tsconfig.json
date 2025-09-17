@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
   },
-  "include": ["src/**/*.ts", "main.ts"],
+  "include": ["src/**/*.ts", "api/**/*.ts", "main.ts"],
   "exclude": ["node_modules", "dist/*"],
   "lib": ["es6"]
 }
