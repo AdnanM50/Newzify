@@ -6,7 +6,9 @@ interface Props {
 }
 
 const Header: React.FC<Props> = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hideForReporter = typeof window !== 'undefined' && window.location.pathname.startsWith('/reporter')
+  if (hideForReporter) return null
     // Navigation items
   const navItems = ["Politics", "Crime", "Business", "Sports", "Entertainment", "World News", "Technology", "Celebrities"];
   return (
@@ -29,6 +31,7 @@ const Header: React.FC<Props> = () => {
           <div className="flex items-center space-x-4">
             <Search className="w-5 h-5 text-gray-600 cursor-pointer" />
             <User className="w-5 h-5 text-gray-600 cursor-pointer" />
+            <a href="/dashboard" className="text-sm text-gray-700 hover:text-red-600">User Panel</a>
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden"

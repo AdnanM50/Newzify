@@ -9,7 +9,7 @@ const router = Router();
 
 router.post(
     '/',
-    auth('admin', 'employee'),
+    auth('admin', 'reporter'),
     // employeePermission('setting_create'),
     validate(SettingValidations.postSettingValidationSchema),
     SettingControllers.postSiteSettings,
@@ -17,7 +17,7 @@ router.post(
 
 router.get(
     '/',
-    auth('admin', 'employee'),
+    auth('admin', 'reporter'),
     // employeePermission('setting_view'),
     SettingControllers.getSettings,
 );

@@ -5,6 +5,8 @@ interface Props {
 }
 
 const Footer: React.FC<Props> = () => {
+  const hideForReporter = typeof window !== 'undefined' && window.location.pathname.startsWith('/reporter')
+  if (hideForReporter) return null
   return (
     <footer className="bg-gray-800 text-white py-8 ">
       <div className="container mx-auto px-4">
