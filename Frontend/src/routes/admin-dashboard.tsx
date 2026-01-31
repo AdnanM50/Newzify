@@ -1,5 +1,9 @@
-import React from 'react'
+import { createFileRoute } from '@tanstack/react-router'
 import './admin-dashboard.css'
+
+export const Route = createFileRoute('/admin-dashboard')({
+  component: AdminDashboard,
+})
 
 const stats = [
   { title: 'Total Users', value: 50, color: '#3b82f6' },

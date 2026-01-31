@@ -1,6 +1,6 @@
 import React from 'react'
 
-const StatCard: React.FC<{title: string; value: string; meta?: string; accent?: string}> = ({ title, value, meta, accent }) => (
+const StatCard: React.FC<{title: string; value: string; meta?: string}> = ({ title, value, meta }) => (
   <div style={{background: 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))'}} className="rounded-xl p-4 flex-1 min-h-[88px]">
     <div className="text-sm text-gray-300">{title}</div>
     <div className="mt-2 text-2xl font-semibold text-white">{value}</div>
