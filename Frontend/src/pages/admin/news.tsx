@@ -14,11 +14,11 @@ import {
   type PaginatedResponse,
 } from "../../helpers/backend";
 import { useForm } from "react-hook-form";
-import { Trash, Edit, Plus, Loader2, Image as ImageIcon, X } from "lucide-react";
+import { Trash, Edit, Loader2, Image as ImageIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const News = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingNews, setEditingNews] = useState<TNews | null>(null);
   const [activeTab, setActiveTab] = useState<"list" | "create">("list");
   
@@ -95,7 +95,6 @@ const News = () => {
     handleSubmit,
     reset,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<TNews>();
 
