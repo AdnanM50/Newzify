@@ -17,8 +17,8 @@ function AdminLayout() {
 
   const navItems = [
     { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/admin/products', label: 'Products', icon: Package },
-    { path: '/admin/orders', label: 'Orders', icon: ShoppingCart },
+    { path: '/admin/news', label: 'News', icon: Package },
+    { path: '/admin/category', label: 'category', icon: ShoppingCart },
   ]
 
   const isActive = (path: string) => {

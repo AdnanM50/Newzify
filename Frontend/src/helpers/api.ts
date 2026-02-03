@@ -1,85 +1,136 @@
-// // api.ts
-// import axios from "axios";
+// api.ts - Native Fetch API wrapper with TanStack Query integration
 
-// const API_URL = `${import.meta.env.VITE_BACKEND_URL}api/v1/`;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/";
+const API_URL = `${BACKEND_URL.replace(/\/$/, "")}/api/v1/`;
 
-// const axiosApi = axios.create({
-//   baseURL: API_URL,
-//   validateStatus: status => status >= 200 && status < 600,
-// });
+// API Response type matching your backend
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
+  errorMessage?: string;
+}
 
-// axiosApi.interceptors.response.use(
-//   response => response,
-//   error => Promise.reject(error)
-// );
+interface FetchOptions extends RequestInit {
+  data?: Record<string, unknown> | FormData;
+  params?: Record<string, unknown>;
+  token_name?: string;
+}
 
-// const updateRequest = (url: string, data: any) => {
-//   axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token") ?? ""}`;
-//   let variables = url.match(/:[a-zA-Z]+/g);
-//   if (variables?.length) {
-//     variables.forEach(variable => {
-//       url = url.replace(variable, data[variable.replace(":", "")]);
-//       delete data[variable.replace(":", "")];
-//     });
-//   }
-//   return { url, data };
-// };
+// Helper to construct URL with query params
+const buildUrl = (endpoint: string, params: Record<string, unknown> = {}) => {
+  const baseUrl = endpoint.startsWith("http") ? endpoint : `${API_URL}${endpoint.replace(/^\//, "")}`;
+  const url = new URL(baseUrl);
+  
+  // Handle path parameters (e.g., /users/:id)
+  let finalPath = url.pathname;
+  Object.keys(params).forEach((key) => {
+    if (finalPath.includes(`:${key}`)) {
+      finalPath = finalPath.replace(`:${key}`, String(params[key]));
+      delete params[key];
+    }
+  });
+  url.pathname = finalPath;
 
-// export const api = {
-//   get: async (url: string, data = {}, config = {}) => {
-//     const { url: newUrl, data: newData } = updateRequest(url, data);
-//     return axiosApi.get(newUrl, { ...config, params: newData }).then(res => res.data);
-//   },
-//   post: async (url: string, data = {}, config = {}) => {
-//     const { url: newUrl, data: newData } = updateRequest(url, data);
-//     axiosApi.defaults.headers.common["Content-Type"] = "application/json";
-//     return axiosApi.post(newUrl, newData, config).then(res => res.data);
-//   },
-//   newPost: async (url: string, data = {}, config = {}, token_name = "token") => {
-//     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(token_name) ?? ""}`;
-//     return axiosApi.post(url, data, config).then(res => res.data);
-//   },
-//   postForm: async (url: string, data: any, config = {}) => {
-//     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token") ?? ""}`;
-//     axiosApi.defaults.headers.common["Content-Type"] = "multipart/form-data";
-//     return axiosApi.post(url, convertToFormData(data), config).then(res => res.data);
-//   },
-//   patchForm: async (url: string, data: any, config = {}) => {
-//     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token") ?? ""}`;
-//     axiosApi.defaults.headers.common["Content-Type"] = "multipart/form-data";
-//     return axiosApi.patch(url, convertToFormData(data), config).then(res => res.data);
-//   },
-//   put: async (url: string, data: any, config = {}) => {
-//     const { url: newUrl, data: newData } = updateRequest(url, data);
-//     return axiosApi.put(newUrl, newData, config).then(res => res.data);
-//   },
-//   patch: async (url: string, data: any, config = {}) => {
-//     const { url: newUrl, data: newData } = updateRequest(url, data);
-//     axiosApi.defaults.headers.common["Content-Type"] = "application/json";
-//     return axiosApi.patch(newUrl, newData, config).then(res => res.data);
-//   },
-//   delete: async (url: string, data: any, config = {}) => {
-//     const { url: newUrl, data: newData } = updateRequest(url, data);
-//     return axiosApi.delete(newUrl, { ...config, params: newData }).then(res => res.data);
-//   },
-//   imgDel: async (url: string, data: any, config = {}, token_name = "token") => {
-//     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(token_name) ?? ""}`;
-//     if (!config.headers) config.headers = {};
-//     config.headers["Content-Type"] = "application/json";
-//     return axiosApi.delete(url, { ...config, data: { file: `${data}` } }).then(res => res.data);
-//   },
-// };
+  // Append remaining params as query string
+  Object.keys(params).forEach((key) => {
+    if (params[key] !== undefined && params[key] !== null) {
+      url.searchParams.append(key, String(params[key]));
+    }
+  });
 
-// const convertToFormData = (object: Record<string, any>) => {
-//   const formData = new FormData();
-//   for (let key in object) {
-//     if (object[key] !== null && object[key] !== undefined) {
-//       if (Array.isArray(object[key])) {
-//         object[key].forEach(item => formData.append(key, item));
-//       } else {
-//         formData.append(key, object[key]);
-//       }
-//     }
-//   }
-//   return formData;
-// };
+  return url.toString();
+};
+
+// Generic Fetch Wrapper
+const customFetch = async <T>(endpoint: string, options: FetchOptions = {}): Promise<ApiResponse<T>> => {
+  const { data, params = {}, token_name = "token", headers = {}, ...customConfig } = options;
+
+  const url = buildUrl(endpoint, params);
+  
+  const config: RequestInit = {
+    ...customConfig,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem(token_name) ?? ""}`,
+      ...headers,
+    },
+  };
+
+  if (data) {
+    if (data instanceof FormData) {
+      // Let browser set Content-Type for FormData
+      config.body = data;
+    } else {
+      config.body = JSON.stringify(data);
+      config.headers = {
+        ...config.headers,
+        "Content-Type": "application/json",
+      };
+    }
+  }
+
+  try {
+    const response = await fetch(url, config);
+    const result: ApiResponse<T> = await response.json();
+
+    if (!response.ok) {
+      throw {
+        message: result.message || "Something went wrong",
+        errorMessage: result.errorMessage,
+        statusCode: response.status,
+      };
+    }
+
+    return result;
+  } catch (error: any) {
+    throw {
+      message: error.message || "Network Error",
+      errorMessage: error.errorMessage || error.message,
+      statusCode: error.statusCode || 500,
+    };
+  }
+};
+
+// Convert object to FormData for file uploads
+const convertToFormData = (object: Record<string, unknown>) => {
+  const formData = new FormData();
+  for (const key in object) {
+    if (object[key] !== null && object[key] !== undefined) {
+      if (Array.isArray(object[key])) {
+        (object[key] as unknown[]).forEach((item) =>
+          formData.append(key, item as string | Blob)
+        );
+      } else {
+        formData.append(key, object[key] as string | Blob);
+      }
+    }
+  }
+  return formData;
+};
+
+// API methods object
+export const api = {
+  get: <T = unknown>(url: string, params: Record<string, unknown> = {}) =>
+    customFetch<T>(url, { method: "GET", params }),
+
+  post: <T = unknown>(url: string, data: Record<string, unknown> = {}) =>
+    customFetch<T>(url, { method: "POST", data }),
+
+  postForm: <T = unknown>(url: string, data: Record<string, unknown>) =>
+    customFetch<T>(url, { method: "POST", data: convertToFormData(data) }),
+
+  put: <T = unknown>(url: string, data: Record<string, unknown> = {}) =>
+    customFetch<T>(url, { method: "PUT", data }),
+
+  patch: <T = unknown>(url: string, data: Record<string, unknown> = {}) =>
+    customFetch<T>(url, { method: "PATCH", data }),
+
+  patchForm: <T = unknown>(url: string, data: Record<string, unknown>) =>
+    customFetch<T>(url, { method: "PATCH", data: convertToFormData(data) }),
+
+  delete: <T = unknown>(url: string, data: Record<string, unknown> = {}) =>
+    customFetch<T>(url, { method: "DELETE", data }), // Send data as body for DELETE
+};
+
+export default api;

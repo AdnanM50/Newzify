@@ -17,8 +17,8 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminProductsRouteImport } from './routes/admin/products'
-import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
+import { Route as AdminNewsRouteImport } from './routes/admin/news'
+import { Route as AdminCategoryRouteImport } from './routes/admin/category'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -60,14 +60,14 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminProductsRoute = AdminProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
+const AdminNewsRoute = AdminNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminOrdersRoute = AdminOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
+const AdminCategoryRoute = AdminCategoryRouteImport.update({
+  id: '/category',
+  path: '/category',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 
@@ -79,8 +79,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
-  '/admin/orders': typeof AdminOrdersRoute
-  '/admin/products': typeof AdminProductsRoute
+  '/admin/category': typeof AdminCategoryRoute
+  '/admin/news': typeof AdminNewsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -90,8 +90,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
-  '/admin/orders': typeof AdminOrdersRoute
-  '/admin/products': typeof AdminProductsRoute
+  '/admin/category': typeof AdminCategoryRoute
+  '/admin/news': typeof AdminNewsRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -103,8 +103,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
-  '/admin/orders': typeof AdminOrdersRoute
-  '/admin/products': typeof AdminProductsRoute
+  '/admin/category': typeof AdminCategoryRoute
+  '/admin/news': typeof AdminNewsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -117,8 +117,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/reporter-dashboard'
     | '/signup'
-    | '/admin/orders'
-    | '/admin/products'
+    | '/admin/category'
+    | '/admin/news'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -128,8 +128,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/reporter-dashboard'
     | '/signup'
-    | '/admin/orders'
-    | '/admin/products'
+    | '/admin/category'
+    | '/admin/news'
     | '/admin'
   id:
     | '__root__'
@@ -140,8 +140,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/reporter-dashboard'
     | '/signup'
-    | '/admin/orders'
-    | '/admin/products'
+    | '/admin/category'
+    | '/admin/news'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -213,32 +213,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/products': {
-      id: '/admin/products'
-      path: '/products'
-      fullPath: '/admin/products'
-      preLoaderRoute: typeof AdminProductsRouteImport
+    '/admin/news': {
+      id: '/admin/news'
+      path: '/news'
+      fullPath: '/admin/news'
+      preLoaderRoute: typeof AdminNewsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/orders': {
-      id: '/admin/orders'
-      path: '/orders'
-      fullPath: '/admin/orders'
-      preLoaderRoute: typeof AdminOrdersRouteImport
+    '/admin/category': {
+      id: '/admin/category'
+      path: '/category'
+      fullPath: '/admin/category'
+      preLoaderRoute: typeof AdminCategoryRouteImport
       parentRoute: typeof AdminRouteRoute
     }
   }
 }
 
 interface AdminRouteRouteChildren {
-  AdminOrdersRoute: typeof AdminOrdersRoute
-  AdminProductsRoute: typeof AdminProductsRoute
+  AdminCategoryRoute: typeof AdminCategoryRoute
+  AdminNewsRoute: typeof AdminNewsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
-  AdminOrdersRoute: AdminOrdersRoute,
-  AdminProductsRoute: AdminProductsRoute,
+  AdminCategoryRoute: AdminCategoryRoute,
+  AdminNewsRoute: AdminNewsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
