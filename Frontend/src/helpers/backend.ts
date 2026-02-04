@@ -56,19 +56,19 @@ export const backend = <T = unknown>(endpoint: string, method: HttpMethod) => {
 
 // Get all categories
 // GET /category/list
-export const getCategories = backend<PaginatedResponse<TCategory>>("/category/list", "get");
+export const getCategories = backend<PaginatedResponse<TCategory>>("/news-category/list", "get");
 
 // Create category
 // POST /category/create
-export const createCategory = backend<TCategory>("/category/create", "post");
+export const createCategory = backend<TCategory>("/news-category/create", "post");
 
 // Update category
 // PUT /category/update
-export const updateCategory = backend<TCategory>("/category/update", "put");
+export const updateCategory = backend<TCategory>("/news-category/update", "put");
 
 // Delete category
 // DELETE /category/delete
-export const deleteCategory = backend<null>("/category/delete", "delete");
+export const deleteCategory = backend<null>("/news-category/delete", "delete");
 
 // ==================== News Endpoints ====================
 

@@ -4,7 +4,7 @@ import httpStatus from 'http-status';
 import NewsService from './news.service';
 import { HttpStatusCode } from 'axios';
 import AppError from '../../errors/appError';
-import Category from '../category/category.model';
+import Category from '../news-category/category.model';
 
 export class NewsController {
     static createNews = catchAsync(async (req, res) => {

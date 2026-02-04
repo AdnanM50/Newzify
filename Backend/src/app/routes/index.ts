@@ -5,14 +5,14 @@ import { otpRoutes } from "../modules/otp/otp.route";
 // import { settingRoutes } from "../modules/setting/setting.route";
 import { fileRouters } from "../modules/file/file.route";
 import { newsRoutes } from "../modules/news/news.route";
-import { categoryRoutes } from "../modules/category/category.route";
+import { categoryRoutes } from "../modules/news-category/category.route";
+import { tagRoutes } from "../modules/blog-tag/tag.route";
 // import { faqRoutes } from "../modules/faq/faq.route";
 // import {ProductCategoryRoute} from "../modules/product/product-category/product-category.route";
 // import {languageRoutes} from "../modules/setting-language/setting-language.route";
 // import {pageRoutes} from "../modules/setting-page/setting-page.route";
-// import {blogRoutes} from "../modules/blog/blog.route";
-// import {blogCategoryRoutes} from "../modules/blog-category/blog-category.route";
-// import {tagRoutes} from "../modules/blog-tag/blog-tag.route";
+import {blogRoutes} from "../modules/blog/blog.route";
+import {blogCategoryRoutes} from "../modules/blog-category/category.route";
 // import {ProductSectionRouter} from "../modules/product/product-section/product-section.routes";
 // import {ProductBrandRouter} from "../modules/product/product-brand/product-brand.routes";
 // import {ProductAttributeRouter} from "../modules/product/product-attributes/product-attributes.routes";
@@ -46,7 +46,7 @@ const moduleRouters:any = [
         route: newsRoutes,
     },
     {
-        path: '/category',
+        path: '/news-category',
         route: categoryRoutes,
     },
     // {
@@ -69,18 +69,18 @@ const moduleRouters:any = [
     //     path: '/subscriber',
     //     route: subscriberRoutes,
     // },
-    // {
-    //     path: '/blogs',
-    //     route: blogRoutes,
-    // },
-    // {
-    //     path: '/blog-categories',
-    //     route: blogCategoryRoutes,
-    // },
-    // {
-    //     path: '/blog-tags',
-    //     route: tagRoutes,
-    // },
+    {
+        path: '/blogs',
+        route: blogRoutes,
+    },
+    {
+        path: '/blog-categories',
+        route: blogCategoryRoutes,
+    },
+    {
+        path: '/blog-tags',
+        route: tagRoutes,
+    },
     // {
     //     path: '/faq',
     //     route: faqRoutes,
