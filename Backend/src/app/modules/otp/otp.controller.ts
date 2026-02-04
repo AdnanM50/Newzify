@@ -94,7 +94,6 @@ export class OTPController {
             data: {
                 type: 'email',
                 identifier: identifier.trim(),
-                otp: otp, // Including OTP in response for testing
             },
         });
     });

@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import Setting from '../modules/setting/setting.model';
+import config from '../config';
+
 export type TData = {
     email: string;
     subject: string;
@@ -25,13 +27,23 @@ export const sendUserEmailGeneral = async (data: TData) => {
     } else if (setting?.email_config?.default === 'gmail') {
         transporter = nodemailer.createTransport({
             secure: false,
-            service: setting?.email_config?.gmail?.service_provider,
+            service: setting?.email_config?.gmail?.service_provider || 'gmail',
             auth: {
                 user: setting?.email_config?.gmail?.auth_email,
                 pass: setting?.email_config?.gmail?.password,
             },
         });
         from_email = setting?.email_config?.gmail?.auth_email;
+    } else if (config.email_user && config.email_pass) {
+        // Fallback to environment variables
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: config.email_user,
+                pass: config.email_pass,
+            },
+        });
+        from_email = config.email_user;
     }
 
     // Check if transporter is configured
