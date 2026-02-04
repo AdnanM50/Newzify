@@ -90,14 +90,8 @@ export const deleteNews = backend<null>("/news/delete", "delete");
 
 // ==================== File Endpoints ====================
 
-// Upload single image
-// POST /files/single-image-upload (expects FormData with 'file' field)
-// Upload single image
-// POST /files/single-image-upload (expects FormData with 'file' field)
 export const uploadImage = backend<{ url: string }>("/files/single-image-upload", "postForm");
 
-// Delete single image
-// DELETE /files/delete (expects JSON with 'public_id')
 export const deleteImage = backend<{ message: string }>("/files/delete", "delete");
 
 

@@ -186,7 +186,7 @@ const Registration: React.FC = () => {
   // Send OTP
   const sendOTP = async (data: RegistrationForm) => {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/otp/send', {
+      const response = await fetch('https://newzify-backend-kappa.vercel.app/api/v1/otp/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ const Registration: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/register', {
+      const response = await fetch('https://newzify-backend-kappa.vercel.app/api/v1/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
