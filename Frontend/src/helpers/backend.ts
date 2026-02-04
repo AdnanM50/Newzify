@@ -94,5 +94,11 @@ export const uploadImage = backend<{ url: string }>("/files/single-image-upload"
 
 export const deleteImage = backend<{ message: string }>("/files/delete", "delete");
 
+// ==================== User Endpoints ====================
+
+// Get user profile
+// GET /user/profile
+export const fetchUser = backend<any>("/user/profile", "get");
+
 
 export default backend;

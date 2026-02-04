@@ -17,6 +17,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminProfileRouteImport } from './routes/admin/profile'
 import { Route as AdminNewsRouteImport } from './routes/admin/news'
 import { Route as AdminCategoryRouteImport } from './routes/admin/category'
 
@@ -60,6 +61,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminProfileRoute = AdminProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminNewsRoute = AdminNewsRouteImport.update({
   id: '/news',
   path: '/news',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/news': typeof AdminNewsRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/news': typeof AdminNewsRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/news': typeof AdminNewsRoute
+  '/admin/profile': typeof AdminProfileRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin/category'
     | '/admin/news'
+    | '/admin/profile'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin/category'
     | '/admin/news'
+    | '/admin/profile'
     | '/admin'
   id:
     | '__root__'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin/category'
     | '/admin/news'
+    | '/admin/profile'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -213,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/profile': {
+      id: '/admin/profile'
+      path: '/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/news': {
       id: '/admin/news'
       path: '/news'
@@ -233,12 +252,14 @@ declare module '@tanstack/react-router' {
 interface AdminRouteRouteChildren {
   AdminCategoryRoute: typeof AdminCategoryRoute
   AdminNewsRoute: typeof AdminNewsRoute
+  AdminProfileRoute: typeof AdminProfileRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCategoryRoute: AdminCategoryRoute,
   AdminNewsRoute: AdminNewsRoute,
+  AdminProfileRoute: AdminProfileRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
