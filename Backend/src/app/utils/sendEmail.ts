@@ -44,10 +44,12 @@ export const sendUserEmailGeneral = async (data: TData) => {
             },
         });
         from_email = emailConfig.gmail.auth_email;
-    } else if (config.email_user && config.email_pass) {
+    } else if (config.email_user && config.email_pass && (config as any).email_host && (config as any).email_port) {
         // Fallback to environment variables
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: (config as any).email_host,
+            port: Number((config as any).email_port),
+            secure: false, // true for 465, false for other ports
             auth: {
                 user: config.email_user,
                 pass: config.email_pass,
