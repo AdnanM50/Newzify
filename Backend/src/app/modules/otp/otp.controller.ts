@@ -78,7 +78,7 @@ export class OTPController {
         try {
             await sendUserEmailGeneral(data);
         } catch (error) {
-            console.log('Email sending failed, but OTP is still generated:', error);
+            console.error('Email sending failed in OTPController:', error);
         }
         
         await OTPService.postOTPByEmail({

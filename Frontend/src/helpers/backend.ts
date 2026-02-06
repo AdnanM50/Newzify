@@ -30,6 +30,38 @@ export type TNews = {
   updatedAt?: string;
 };
 
+export type TBlogCategory = {
+  _id: string;
+  name: string;
+  slug?: string;
+  description?: string;
+  is_deleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type TTag = {
+  _id: string;
+  name: string;
+  slug?: string;
+  is_deleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type TBlog = {
+  _id: string;
+  title: string;
+  description: string;
+  image?: string;
+  category: TBlogCategory | string;
+  tags: Array<TTag | string>;
+  slug?: string;
+  is_deleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type PaginatedResponse<T> = {
   docs: T[];
   totalDocs: number;
@@ -52,7 +84,7 @@ export const backend = <T = unknown>(endpoint: string, method: HttpMethod) => {
   };
 };
 
-// ==================== Category Endpoints ====================
+// ==================== News Category Endpoints ====================
 
 // Get all categories
 // GET /category/list
@@ -69,6 +101,27 @@ export const updateCategory = backend<TCategory>("/news-category/update", "put")
 // Delete category
 // DELETE /category/delete
 export const deleteCategory = backend<null>("/news-category/delete", "delete");
+
+// ==================== Blog Category Endpoints ====================
+
+export const getBlogCategories = backend<PaginatedResponse<TBlogCategory>>("/blog-categories/list", "get");
+export const createBlogCategory = backend<TBlogCategory>("/blog-categories/create", "post");
+export const updateBlogCategory = backend<TBlogCategory>("/blog-categories/update", "put");
+export const deleteBlogCategory = backend<null>("/blog-categories/delete", "delete");
+
+// ==================== Blog Tag Endpoints ====================
+
+export const getBlogTags = backend<PaginatedResponse<TTag>>("/blog-tags/list", "get");
+export const createBlogTag = backend<TTag>("/blog-tags/create", "post");
+export const updateBlogTag = backend<TTag>("/blog-tags/update", "put");
+export const deleteBlogTag = backend<null>("/blog-tags/delete", "delete");
+
+// ==================== Blog Endpoints ====================
+
+export const getBlogs = backend<PaginatedResponse<TBlog>>("/blogs/list", "get");
+export const createBlog = backend<TBlog>("/blogs/create", "post");
+export const updateBlog = backend<TBlog>("/blogs/update", "put");
+export const deleteBlog = backend<null>("/blogs/delete", "delete");
 
 // ==================== News Endpoints ====================
 
