@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Menu, User } from "lucide-react";
 import { useState } from "react";
+import { Link } from '@tanstack/react-router';
 interface Props {
   // add your props here
 }
@@ -19,7 +20,7 @@ const Header: React.FC<Props> = () => {
           <span>Follow us on</span>
           <div className="flex space-x-4">
             <button className="bg-red-600 text-white px-3 py-1 text-xs">Subscribe</button>
-            <button className="bg-white text-gray-800 px-3 py-1 text-xs">Login</button>
+            <Link to="/login" className="bg-white text-gray-800 px-3 py-1 text-xs">Login</Link>
           </div>
         </div>
       </div>
@@ -27,7 +28,7 @@ const Header: React.FC<Props> = () => {
       {/* Main header */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">NEWZIFY</h1>
+          <Link to="/" className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">NEWZIFY</Link>
           <div className="flex items-center space-x-4">
             <Search className="w-5 h-5 text-gray-600 cursor-pointer" />
             <User className="w-5 h-5 text-gray-600 cursor-pointer" />

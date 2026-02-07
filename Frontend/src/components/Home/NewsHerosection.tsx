@@ -55,7 +55,7 @@ import Sidebar from "./Sidebar";
   ];
 const NewsHerosection: React.FC = () => {
   return (
-    <div className="container bg-white">
+    <div className=" bg-white">
       {/* Top Articles Bar */}
       <div className="bg-gray-50 border-b">
         <div className=" px-4 py-4">
@@ -78,7 +78,7 @@ const NewsHerosection: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className=" py-8">
+      <div className="container py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Column - Fresh Stories */}
           <div className="col-span-1">
