@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -54,6 +55,7 @@ const Toast: React.FC<{
 };
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
@@ -119,12 +121,14 @@ const LoginPage: React.FC = () => {
       // Reset form
       form.reset();
       
-      // Here you would typically:
-      // 1. Update authentication state (e.g., using React Context or Redux)
-      // 2. Redirect to dashboard/home page
-      // Example:
-      // setAuthUser(result.data.user);
-      // navigate('/dashboard');
+      const role = result.data?.user?.role;
+      if (role === 'admin') {
+        navigate({ to: '/admin' });
+      } else if (role === 'user') {
+        navigate({ to: '/dashboard' });
+      }
+      
+
       
     } catch (error) {
       console.error('Login error:', error);

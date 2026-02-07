@@ -8,7 +8,6 @@ export type TCategory = {
   _id: string;
   name: string;
   slug?: string;
-  description?: string;
   is_deleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -34,7 +33,6 @@ export type TBlogCategory = {
   _id: string;
   name: string;
   slug?: string;
-  description?: string;
   is_deleted?: boolean;
   createdAt?: string;
   updatedAt?: string;

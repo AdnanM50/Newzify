@@ -13,7 +13,6 @@ const schema = new Schema<TCategory>(
             type: String,
             index: true,
         },
-        description: String,
         is_deleted: {
             type: Boolean,
             default: false,

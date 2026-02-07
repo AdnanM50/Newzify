@@ -4,7 +4,7 @@ import BlogCategory from './category.model';
 import { TBlogCategoryCreate } from './category.interface';
 
 export default class BlogCategoryService {
-    static async createCategory(payload: TBlogCategoryCreate): Promise<any> {
+    static async createCategory(payload: any): Promise<any> {
         const newCategory = await BlogCategory.create(payload);
         if (!newCategory) {
             throw new AppError(

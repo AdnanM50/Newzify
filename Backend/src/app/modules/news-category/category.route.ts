@@ -13,6 +13,6 @@ router.delete('/delete', auth('admin'), validate(CategoryValidation.deleteCatego
 
 // Public list
 router.get('/list', auth('admin','reporter'), CategoryController.listCategories);
-router.get('/list', auth('user'), CategoryController.listCategories);
+// router.get('/list', CategoryController.listCategories);
 
 export const categoryRoutes = router;

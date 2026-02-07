@@ -42,9 +42,9 @@ const BlogCategory = () => {
   });
 
   // Form Setup
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string; description: string }>();
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string }>();
 
-  const onSubmit = (data: { name: string; description: string }) => {
+  const onSubmit = (data: { name: string }) => {
     const payload = { body: data };
 
     if (editingCategory) {
@@ -57,7 +57,6 @@ const BlogCategory = () => {
   const handleEdit = (category: TBlogCategory) => {
     setEditingCategory(category);
     setValue('name', category.name);
-    setValue('description', category.description || '');
     setIsModalOpen(true);
   };
 
@@ -102,7 +101,6 @@ const BlogCategory = () => {
               <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
                 <tr>
                   <th className="px-6 py-4 font-medium">Name</th>
-                  <th className="px-6 py-4 font-medium">Description</th>
                   <th className="px-6 py-4 font-medium">Slug</th>
                   <th className="px-6 py-4 font-medium text-right">Actions</th>
                 </tr>
@@ -113,7 +111,6 @@ const BlogCategory = () => {
                     <td className="px-6 py-4">
                         <span className="font-semibold text-gray-900">{category.name}</span>
                     </td>
-                    <td className="px-6 py-4 text-gray-600 max-w-xs truncate">{category.description || '-'}</td>
                     <td className="px-6 py-4">
                         <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-mono">
                             {category.slug}
@@ -181,16 +178,6 @@ const BlogCategory = () => {
                 {errors.name && <span className="text-red-500 text-xs mt-1">{errors.name.message}</span>}
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  {...register('description')}
-                  rows={3}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none placeholder:text-gray-300"
-                  placeholder="Optional description of this category..."
-                />
-              </div>
-
               <div className="pt-2 flex justify-end gap-3">
                 <button
                   type="button"

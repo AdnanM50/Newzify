@@ -42,9 +42,9 @@ const Category = () => {
   });
 
   // Form Setup
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string; description: string }>();
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string }>();
 
-  const onSubmit = (data: { name: string; description: string }) => {
+  const onSubmit = (data: { name: string }) => {
     // Backend expects data wrapped in "body" sometimes, but our api.ts handles sending the object.
     // However, the controller expects `req.body` to have the fields. 
     // The backend service expected `createCategory(payload)` where payload is the body.
@@ -65,7 +65,6 @@ const Category = () => {
   const handleEdit = (category: TCategory) => {
     setEditingCategory(category);
     setValue('name', category.name);
-    setValue('description', category.description || '');
     setIsModalOpen(true);
   };
 
@@ -105,7 +104,6 @@ const Category = () => {
             <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
               <tr>
                 <th className="px-6 py-4 font-medium">Name</th>
-                <th className="px-6 py-4 font-medium">Description</th>
                 <th className="px-6 py-4 font-medium">Slug</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
               </tr>
@@ -114,7 +112,6 @@ const Category = () => {
               {categories.map((category) => (
                 <tr key={category._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 font-medium text-gray-900">{category.name}</td>
-                  <td className="px-6 py-4 text-gray-600">{category.description || '-'}</td>
                   <td className="px-6 py-4 text-gray-400 text-sm">{category.slug}</td>
                   <td className="px-6 py-4 text-right flex justify-end gap-2">
                     <button
@@ -171,16 +168,6 @@ const Category = () => {
                 {errors.name && <span className="text-red-500 text-xs mt-1">{errors.name.message}</span>}
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  {...register('description')}
-                  rows={3}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
-                  placeholder="Optional description..."
-                />
-              </div>
-
               <div className="pt-2 flex justify-end gap-3">
                 <button
                   type="button"

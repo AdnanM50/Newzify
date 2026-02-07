@@ -44,7 +44,7 @@ export default class CategoryService {
     static async listCategories(filter: any = {}, query: any = {}): Promise<any> {
         const aggregate = Category.aggregate([
             { $match: { ...filter, is_deleted: false } },
-            { $project: { name: 1, slug: 1, description: 1, createdAt: 1 } },
+            { $project: { name: 1, slug: 1, createdAt: 1 } },
         ]);
         const options = {
             page: query.page || 1,
