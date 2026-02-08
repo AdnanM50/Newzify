@@ -32,15 +32,15 @@ function AdminLayout() {
   // }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       {/* Sidebar */}
       <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full">
         <AdminHeader setSidebarOpen={setIsSidebarOpen} />
         
-        <main className="flex-1 overflow-auto p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
           <Outlet />
         </main>
       </div>

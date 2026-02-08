@@ -274,7 +274,7 @@ const Registration: React.FC = () => {
       <div className="flex items-center justify-center bg-white p-4 min-h-screen">
         <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md animate-in slide-in-from-bottom-4 duration-500">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
               Join Newzify
             </h1>
             <p className="text-gray-600 text-sm">

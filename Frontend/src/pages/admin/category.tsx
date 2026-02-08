@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useFetch, useAction, useDelete } from '../../helpers/hooks';
 import { getCategories, createCategory, updateCategory, deleteCategory, type TCategory, type PaginatedResponse } from '../../helpers/backend';
 import { useForm } from 'react-hook-form';
-import { Trash, Edit, Plus, Loader2 } from 'lucide-react';
+import { Trash, Eye, Loader2 } from 'lucide-react';
+import { PrimaryTable } from '../../components/common/Primary-table';
+import type { ColumnDef } from '@tanstack/react-table';
 
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<TCategory | null>(null);
 
   // 1. Fetch Categories
-  const { data: categoriesData, isLoading, refetch } = useFetch<PaginatedResponse<TCategory>>('categories', getCategories);
+  const { data: categoriesData, refetch } = useFetch<PaginatedResponse<TCategory>>('categories', getCategories);
   const categories = categoriesData?.docs || [];
 
   // 2. Create Category Mutation
@@ -17,7 +19,7 @@ const Category = () => {
     onSuccess: () => {
       setIsModalOpen(false);
       reset();
-      refetch(); // explicit refetch to be safe, though invalidate should handle it if key matches
+      refetch();
     },
     invalidateKeys: ['categories'],
     successMessage: "Category created successfully"
@@ -45,14 +47,6 @@ const Category = () => {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string }>();
 
   const onSubmit = (data: { name: string }) => {
-    // Backend expects data wrapped in "body" sometimes, but our api.ts handles sending the object.
-    // However, the controller expects `req.body` to have the fields. 
-    // The backend service expected `createCategory(payload)` where payload is the body.
-    // Let's look at controller: `const { body } = payload`. 
-    // Wait, `req.body` IS the payload. So if I send `{ name: "..." }`, then `payload` is `{ name: "..." }`.
-    // Then `const { body } = payload` means it looks for `payload.body`. 
-    // SO I NEED TO WRAP IT IN `body`.
-    
     const payload = { body: data };
 
     if (editingCategory) {
@@ -70,7 +64,7 @@ const Category = () => {
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this category?')) {
-      remove({ body: { _id: id } }); // Backend expects { body: { _id: ... } } based on controller
+      remove({ body: { _id: id } });
     }
   };
 
@@ -80,65 +74,50 @@ const Category = () => {
     setIsModalOpen(true);
   };
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Categories</h1>
-        <button
-          onClick={openCreateModal}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus size={20} />
-          Add Category
-        </button>
-      </div>
+  const columns = useMemo<ColumnDef<TCategory>[]>(() => [
+    {
+      header: 'Name',
+      accessorKey: 'name',
+      cell: ({ row }) => <span className="font-medium text-gray-900">{row.original.name}</span>
+    },
+  
+    {
+      header: () => <div className="text-right">ACTION</div>,
+      id: 'actions',
+      cell: ({ row }) => {
+        const category = row.original;
+        return (
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => handleEdit(category)}
+              className="w-8 h-8 flex items-center justify-center text-green-600 border border-green-600 rounded-md hover:bg-green-50 transition-colors"
+              title="View/Edit"
+            >
+              <Eye size={16} />
+            </button>
+            <button
+              onClick={() => handleDelete(category._id)}
+              className="w-8 h-8 flex items-center justify-center text-red-600 border border-red-600 rounded-md hover:bg-red-50 transition-colors"
+              title="Delete"
+            >
+              <Trash size={16} />
+            </button>
+          </div>
+        );
+      }
+    }
+  ], []);
 
-      {/* List */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {isLoading ? (
-          <div className="p-8 flex justify-center text-gray-400">
-            <Loader2 className="animate-spin" size={32} />
-          </div>
-        ) : categories && categories.length > 0 ? (
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
-              <tr>
-                <th className="px-6 py-4 font-medium">Name</th>
-                <th className="px-6 py-4 font-medium">Slug</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {categories.map((category) => (
-                <tr key={category._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{category.name}</td>
-                  <td className="px-6 py-4 text-gray-400 text-sm">{category.slug}</td>
-                  <td className="px-6 py-4 text-right flex justify-end gap-2">
-                    <button
-                      onClick={() => handleEdit(category)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                      title="Edit"
-                    >
-                      <Edit size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(category._id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                      title="Delete"
-                    >
-                      {/* We could use isDeleting state here but it's global for the hook, ideally we track per ID */}
-                      <Trash size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div className="p-8 text-center text-gray-500">
-            No categories found. Create one to get started.
-          </div>
-        )}
+  return (
+    <div className="">
+      <div className="mb-6">
+        <PrimaryTable 
+          columns={columns} 
+          data={categories} 
+          title="Categories"
+          onAdd={openCreateModal}
+          addButtonLabel="Add Category"
+        />
       </div>
 
       {/* Modal Overlay */}
