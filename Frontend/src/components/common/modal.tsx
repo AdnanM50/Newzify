@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import * as ReactModule from "react"
 import {
   Dialog,
   DialogContent,
