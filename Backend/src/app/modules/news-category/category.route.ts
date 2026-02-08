@@ -11,8 +11,11 @@ router.post('/create', auth('admin'), validate(CategoryValidation.createCategory
 router.put('/update', auth('admin'), validate(CategoryValidation.updateCategorySchema), CategoryController.updateCategory);
 router.delete('/delete', auth('admin'), validate(CategoryValidation.deleteCategorySchema), CategoryController.deleteCategory);
 
-// Public list
-router.get('/list', auth('admin','reporter'), CategoryController.listCategories);
-// router.get('/list', CategoryController.listCategories);
+// Authenticated list
+router.get('/list', auth('admin', 'reporter'), CategoryController.listCategories);
+
+// Public routes
+router.get('/public/list', CategoryController.publicListCategories);
+router.get('/public/:slug', CategoryController.getCategoryBySlug);
 
 export const categoryRoutes = router;

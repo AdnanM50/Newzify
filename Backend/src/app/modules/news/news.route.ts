@@ -14,7 +14,7 @@ router.put('/update', auth(), validate(NewsValidation.updateNewsSchema), NewsCon
 router.delete('/delete', auth(), validate(NewsValidation.deleteNewsSchema), NewsController.deleteNews);
 
 // Authenticated list/get (admin/reporter)
-router.get('/list', auth(), NewsController.listNews);
+router.get('/list', auth(''), NewsController.listNews);
 router.get('/:id', auth(), NewsController.getNews);
 
 // Public endpoints

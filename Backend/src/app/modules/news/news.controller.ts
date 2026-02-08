@@ -5,6 +5,7 @@ import NewsService from './news.service';
 import { HttpStatusCode } from 'axios';
 import AppError from '../../errors/appError';
 import Category from '../news-category/category.model';
+import { Types } from 'mongoose';
 
 export class NewsController {
     static createNews = catchAsync(async (req, res) => {
@@ -84,7 +85,12 @@ export class NewsController {
     });
     static publicList = catchAsync(async (req, res) => {
         const query = req.query || {};
-        const filter = { is_deleted: false, status: 'published' };
+        const filter: any = { is_deleted: false, status: 'published' };
+        
+        if (query.category) {
+            filter.category = new Types.ObjectId(query.category as string);
+        }
+
         const list = await NewsService.listNews(filter, query);
         sendResponse(res, {
             statusCode: httpStatus.OK,

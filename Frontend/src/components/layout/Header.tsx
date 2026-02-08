@@ -1,19 +1,33 @@
 import React from 'react';
-import { Search, Menu, User } from "lucide-react";
+import { Search, Menu, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Link } from '@tanstack/react-router';
+import { useFetch } from '../../helpers/hooks';
+import { getPublicCategories } from '../../helpers/backend';
+
 interface Props {
   // add your props here
 }
 
 const Header: React.FC<Props> = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+
+  const { data: categoriesData } = useFetch<any>("categories", getPublicCategories, { limit: 100 });
+
+  const fetchedCategories = (categoriesData as any)?.docs || [];
+  
+  const categories = fetchedCategories.map((c: any) => ({ _id: c._id, name: c.name, slug: c.slug }));
+
   const hideForReporter = typeof window !== 'undefined' && window.location.pathname.startsWith('/reporter')
   if (hideForReporter) return null
-    // Navigation items
-  const navItems = ["Politics", "Crime", "Business", "Sports", "Entertainment", "World News", "Technology", "Celebrities"];
+
+  // Navigation items logic
+  const visibleCategories = categories.slice(0, 8);
+  const moreCategories = categories.slice(8);
+
   return (
-   <header className="bg-white border-b border-gray-200">
+    <header className="bg-white border-b border-gray-200">
       {/* Top bar */}
       <div className="bg-gray-800 text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
@@ -44,18 +58,64 @@ const Header: React.FC<Props> = () => {
       </div>
 
       {/* Navigation */}
-      <nav className={`bg-gray-50 border-t border-gray-200 ${isMenuOpen ? 'block' : 'hidden'} md:block`}>
+      <nav className={`bg-gray-50 border-t border-gray-200 ${isMenuOpen ? 'block' : 'hidden'} md:block relative`}>
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:space-x-8 py-2">
-            {navItems.map((item) => (
-              <a
-                key={item}
-                href="#"
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-8 py-2">
+            {visibleCategories.map((category: any) => (
+              <Link
+                key={category._id}
+                to={`/category/${category.slug}` as any}
                 className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
               >
-                {item}
-              </a>
+                {category.name}
+              </Link>
             ))}
+
+            {moreCategories.length > 0 && (
+              <div 
+                className="relative group md:inline-block hidden"
+                onMouseEnter={() => setIsMoreOpen(true)}
+                onMouseLeave={() => setIsMoreOpen(false)}
+              >
+                <button
+                  className="flex items-center space-x-1 py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium"
+                >
+                  <span>More</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Mega Menu Dropdown */}
+                {isMoreOpen && (
+                  <div className="absolute left-0 top-full w-[600px] bg-white shadow-xl border border-gray-100 p-6 z-50 grid grid-cols-3 gap-4 rounded-b-lg">
+                    {moreCategories.map((category: any) => (
+                      <Link
+                        key={category._id}
+                        to={`/category/${category.slug}` as any}
+                        className="text-gray-600 hover:text-red-600 text-sm py-1 transition-colors"
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Mobile More categories */}
+            {moreCategories.length > 0 && isMenuOpen && (
+              <div className="md:hidden">
+                <div className="py-2 text-xs font-bold text-gray-400 font-bold uppercase tracking-wider">More Categories</div>
+                {moreCategories.map((category: any) => (
+                  <Link
+                    key={category._id}
+                    to={`/category/${category.slug}` as any}
+                    className="block py-2 text-gray-700 hover:text-red-600 text-sm font-medium border-b border-gray-100"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </nav>

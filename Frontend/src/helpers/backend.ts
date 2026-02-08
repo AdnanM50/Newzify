@@ -100,6 +100,12 @@ export const updateCategory = backend<TCategory>("/news-category/update", "put")
 // DELETE /category/delete
 export const deleteCategory = backend<null>("/news-category/delete", "delete");
 
+// Public category list
+export const getPublicCategories = backend<PaginatedResponse<TCategory>>("/news-category/public/list", "get");
+
+// Get category by slug
+export const getCategoryBySlug = backend<TCategory>("/news-category/public/:slug", "get");
+
 // ==================== Blog Category Endpoints ====================
 
 export const getBlogCategories = backend<PaginatedResponse<TBlogCategory>>("/blog-categories/list", "get");
@@ -126,6 +132,9 @@ export const deleteBlog = backend<null>("/blogs/delete", "delete");
 // Get list of news
 // GET /news/list
 export const getNewsList = backend<PaginatedResponse<TNews>>("/news/list", "get");
+
+// Public list of news
+export const getPublicNewsList = backend<PaginatedResponse<TNews>>("/news/public/list", "get");
 
 // Create news
 // POST /news/create

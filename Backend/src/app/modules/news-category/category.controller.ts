@@ -4,6 +4,17 @@ import httpStatus from 'http-status';
 import CategoryService from './category.service';
 import AppError from '../../errors/appError';
 import { HttpStatusCode } from 'axios';
+import Category from './category.model';
+
+const manualSlugify = (text: string) => {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-');
+};
 
 export class CategoryController {
     static createCategory = catchAsync(async (req, res) => {
@@ -17,6 +28,11 @@ export class CategoryController {
                 'Only admin can create categories.',
             );
         }
+
+        if (body.name && !body.slug) {
+            body.slug = manualSlugify(body.name);
+        }
+
         const created = await CategoryService.createCategory(body);
         sendResponse(res, {
             statusCode: httpStatus.CREATED,
@@ -74,6 +90,31 @@ export class CategoryController {
             success: true,
             message: 'Category list fetched successfully',
             data: list,
+        });
+    });
+
+    static publicListCategories = catchAsync(async (req, res) => {
+        const query = req.query || {};
+        const list = await CategoryService.listCategories({ is_deleted: false }, query);
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Public category list fetched successfully',
+            data: list,
+        });
+    });
+
+    static getCategoryBySlug = catchAsync(async (req, res) => {
+        const { slug } = req.params;
+        const category = await Category.findOne({ slug, is_deleted: false }).lean();
+        if (!category) {
+            throw new AppError(HttpStatusCode.NotFound, 'Not Found', 'Category not found!');
+        }
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Category fetched successfully',
+            data: category,
         });
     });
 }
