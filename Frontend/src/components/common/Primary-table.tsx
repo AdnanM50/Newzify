@@ -90,7 +90,7 @@ export function PrimaryTable<TData, TValue>({
               {onView && (
                 <button
                   onClick={() => onView(row.original)}
-                  className="w-8 h-8 flex items-center justify-center text-[#16a34a] border border-[#16a34a] rounded hover:bg-[#16a34a] hover:text-white transition-colors"
+                  className="size-7 flex items-center justify-center text-[#16a34a] border border-[#16a34a] rounded hover:bg-[#16a34a] hover:text-white transition-colors"
                   title="View"
                 >
                   <Eye size={16} />
@@ -99,7 +99,7 @@ export function PrimaryTable<TData, TValue>({
               {onEdit && (
                 <button
                   onClick={() => onEdit(row.original)}
-                  className="w-8 h-8 flex items-center justify-center text-[#3b82f6] border border-[#3b82f6] rounded hover:bg-[#3b82f6] hover:text-white transition-colors"
+                  className="size-7 flex items-center justify-center text-[#3b82f6] border border-[#3b82f6] rounded hover:bg-[#3b82f6] hover:text-white transition-colors"
                   title="Edit"
                 >
                    <Pencil size={16} />
@@ -108,7 +108,7 @@ export function PrimaryTable<TData, TValue>({
               {onDelete && (
                 <button
                   onClick={() => onDelete(row.original)}
-                  className="w-8 h-8 flex items-center justify-center text-[#dc2626] border border-[#dc2626] rounded hover:bg-[#dc2626] hover:text-white transition-colors"
+                  className="size-7 flex items-center justify-center text-[#dc2626] border border-[#dc2626] rounded hover:bg-[#dc2626] hover:text-white transition-colors"
                   title="Delete"
                 >
                   <Trash size={16} />
