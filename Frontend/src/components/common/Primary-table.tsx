@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -15,7 +15,7 @@ import type {
   Row,
   Cell,
 } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { Search, Eye, Trash, Loader2, Pencil } from "lucide-react";
 
 import {
   Table,
@@ -39,35 +39,103 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   title?: string;
-  onAdd?: () => void;
+  loading?: boolean;
+  onReload?: () => void;
+  action?: React.ReactNode;
+  indexed?: boolean;
+  onEdit?: (data: TData) => void;
+  onDelete?: (data: TData) => void;
+  onView?: (data: TData) => void;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
-  filterOptions?: { label: string; value: string }[];
-  addButtonLabel?: string;
 }
 
 export function PrimaryTable<TData, TValue>({
   columns,
   data,
   title = "List",
-  onAdd,
+  loading = false,
+  action,
+  indexed = false,
+  onEdit,
+  onDelete,
+  onView,
   searchValue,
   onSearchChange,
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = React.useState(searchValue || "");
 
+  const finalColumns = React.useMemo(() => {
+    let cols = [...columns];
+
+    if (indexed) {
+      cols = [
+        {
+          id: "index",
+          header: "#",
+          cell: ({ row }: { row: Row<TData> }) => <span>{row.index + 1}</span>,
+        },
+        ...cols,
+      ];
+    }
+
+    if (onEdit || onDelete || onView) {
+      cols = [
+        ...cols,
+        {
+          id: "actions",
+          header: () => <div className="text-right">ACTION</div>,
+          cell: ({ row }: { row: Row<TData> }) => (
+            <div className="flex justify-end gap-2">
+              {onView && (
+                <button
+                  onClick={() => onView(row.original)}
+                  className="w-8 h-8 flex items-center justify-center text-[#16a34a] border border-[#16a34a] rounded hover:bg-[#16a34a] hover:text-white transition-colors"
+                  title="View"
+                >
+                  <Eye size={16} />
+                </button>
+              )}
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(row.original)}
+                  className="w-8 h-8 flex items-center justify-center text-[#3b82f6] border border-[#3b82f6] rounded hover:bg-[#3b82f6] hover:text-white transition-colors"
+                  title="Edit"
+                >
+                   <Pencil size={16} />
+                </button>
+              )}
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(row.original)}
+                  className="w-8 h-8 flex items-center justify-center text-[#dc2626] border border-[#dc2626] rounded hover:bg-[#dc2626] hover:text-white transition-colors"
+                  title="Delete"
+                >
+                  <Trash size={16} />
+                </button>
+              )}
+            </div>
+          ),
+        },
+      ];
+    }
+
+    return cols;
+  }, [columns, indexed, onEdit, onDelete, onView]);
+
   const table = useReactTable({
     data,
-    columns,
+    columns: finalColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       globalFilter,
     },
-    onGlobalFilterChange: (value: string) => {
-      setGlobalFilter(value);
-      onSearchChange?.(value);
+    onGlobalFilterChange: (value: string | number | boolean | undefined) => {
+      const stringValue = String(value ?? "");
+      setGlobalFilter(stringValue);
+      onSearchChange?.(stringValue);
     },
   });
 
@@ -94,69 +162,81 @@ export function PrimaryTable<TData, TValue>({
               className="pl-10 h-10 border-gray-200 focus-visible:ring-1 focus-visible:ring-gray-300 rounded-md"
             />
           </div>
-          {onAdd && (
-            <Button 
-              onClick={onAdd}
-              className="bg-white text-[#d35400] border border-[#d35400] hover:bg-[#d35400] hover:text-white h-10 px-4 font-semibold transition-colors rounded-md"
-            >
-              Add {title.replace(/s$/, '')}
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {/* {onReload && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onReload}
+                className="h-10 w-10 border-gray-200"
+              >
+                <RotateCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+              </Button>
+            )} */}
+            {action}
+          </div>
         </div>
 
         {/* Table Container */}
-        <div className="overflow-x-auto custom-scrollbar border rounded-sm">
-          <Table className="min-w-full border-collapse">
-            <TableHeader className="bg-white border-y border-gray-100">
-              {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
-                <TableRow key={headerGroup.id} className="hover:bg-transparent border-none">
-                  {headerGroup.headers.map((header: Header<TData, unknown>) => (
-                    <TableHead 
-                      key={header.id}
-                      className="text-[11px] font-bold uppercase text-gray-400 h-12 px-4 border-none whitespace-nowrap"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row: Row<TData>) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className="hover:bg-gray-50 border-b border-gray-100 last:border-0"
-                  >
-                    {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
-                      <TableCell key={cell.id} className="py-4 px-4 text-[13px] text-gray-600 font-medium whitespace-nowrap">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
+        <div className="relative overflow-hidden border rounded-sm">
+          {loading && (
+            <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-[#d35400]" />
+            </div>
+          )}
+          <div className="overflow-x-auto custom-scrollbar">
+            <Table className="min-w-full border-collapse">
+              <TableHeader className="bg-white border-y border-gray-100">
+                {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
+                  <TableRow key={headerGroup.id} className="hover:bg-transparent border-none">
+                    {headerGroup.headers.map((header: Header<TData, unknown>) => (
+                      <TableHead 
+                        key={header.id}
+                        className="text-[11px] font-bold uppercase text-gray-400 h-12 px-4 border-none whitespace-nowrap"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
                     ))}
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row: Row<TData>) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className="hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                    >
+                      {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
+                        <TableCell key={cell.id} className="py-4 px-4 text-[13px] text-gray-600 font-medium whitespace-nowrap">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={finalColumns.length} className="h-24 text-center">
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
 
         <style dangerouslySetInnerHTML={{ __html: `
           .custom-scrollbar::-webkit-scrollbar {
             height: 8px;
           }
-          .custom-scrollbar::-webkit-scrollbar-track {
+          .custom-scrollbar::-webkit-scrollbar track {
             background: #f1f1f1;
             border-radius: 10px;
           }
@@ -164,7 +244,7 @@ export function PrimaryTable<TData, TValue>({
             background: #ccc;
             border-radius: 10px;
           }
-          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          .custom-scrollbar::-webkit-scrollbar-thumb hover {
             background: #999;
           }
         `}} />
