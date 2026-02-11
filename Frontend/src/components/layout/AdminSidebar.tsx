@@ -153,7 +153,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, setIsOpen }) => {
         } lg:translate-x-0 lg:static flex flex-col border-r border-gray-700`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-700">
-          <span className="text-xl font-bold text-white">NEWZIFY</span>
+          <Link to="/admin" className="text-xl font-bold text-white font-serif">NEWZIFY</Link>
           <button
             onClick={() => setIsOpen(false)}
             className="lg:hidden text-gray-400 hover:text-white focus:outline-none"

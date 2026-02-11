@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { useFetch } from '../helpers/hooks';
 import { getPublicNewsList, getCategoryBySlug } from '../helpers/backend';
 import { Link } from '@tanstack/react-router';
@@ -9,7 +9,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
 
     // 2. Fetch news filtering by category ID (once category is loaded)
     const { data: newsData, isLoading: isNewsLoading } = useFetch(
-        ["categoryNews", category?._id],
+        ["categoryNews", category?._id as string],
         getPublicNewsList,
         { category: category?._id, limit: 12 },
         { enabled: !!category?._id }
