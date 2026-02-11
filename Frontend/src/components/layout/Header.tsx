@@ -14,6 +14,7 @@ const Header: React.FC<Props> = () => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const { data: categoriesData } = useFetch<any>("categories", getPublicCategories, { limit: 100 });
+  console.log("🚀 ~ Header ~ categoriesData:", categoriesData)
 
   const fetchedCategories = (categoriesData as any)?.docs || [];
   
