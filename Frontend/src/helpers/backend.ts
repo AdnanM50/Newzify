@@ -20,7 +20,7 @@ export type TNews = {
   content: string;
   image?: string;
   category?: TCategory | string;
-  types?: Array<'trending' | 'latest' | 'popular' | 'fresh' | 'top'>;
+  types?: string[];
   author?: any;
   status?: 'draft' | 'published';
   is_deleted?: boolean;

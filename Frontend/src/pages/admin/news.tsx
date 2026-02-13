@@ -17,6 +17,22 @@ import { useForm, Controller } from "react-hook-form";
 import { Trash, Edit, Loader2, Image as ImageIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 import TiptapEditor from "../../components/common/TiptapEditor";
+import MultiSelect from "../../components/common/MultiSelect";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+
+const TYPE_OPTIONS = [
+  { label: "Latest", value: "latest" },
+  { label: "Trending", value: "trending" },
+  { label: "Popular", value: "popular" },
+  { label: "Fresh", value: "fresh" },
+  { label: "Top", value: "top" },
+];
 
 const News = () => {
   const [editingNews, setEditingNews] = useState<TNews | null>(null);
@@ -266,7 +282,7 @@ const News = () => {
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6 ">
               <div className="grid grid-cols-3 gap-6">
-                <div className="grid grid-cols-1 col-span-2 gap-6">
+                <div className="grid grid-cols-1 col-span-2 ">
                     {/* Image Upload Area */}
                 <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Main Image</label>
@@ -328,46 +344,70 @@ const News = () => {
                 <div className="grid grid-cols-1 ">
                     
 
-                    <div className="space-y-2">
-                         <label className="block text-sm font-medium text-gray-700">Category</label>
-                         <select
-                            {...register("category", { required: "Category is required" })}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
-                         >
-                            <option value="">Select Category</option>
-                            {categories.map(cat => (
-                                <option key={cat._id} value={cat._id}>{cat.name}</option>
-                            ))}
-                         </select>
-                         {errors.category && <span className="text-red-500 text-xs">{errors.category.message}</span>}
-                    </div>
+                     <div className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700">Category</label>
+                          <Controller
+                             name="category"
+                             control={control}
+                             rules={{ required: "Category is required" }}
+                             render={({ field }) => (
+                                 <Select 
+                                    onValueChange={field.onChange} 
+                                    value={field.value as string}
+                                 >
+                                     <SelectTrigger className="w-full !h-[45px]">
+                                         <SelectValue placeholder="Select Category" />
+                                     </SelectTrigger>
+                                     <SelectContent>
+                                         {categories.map(cat => (
+                                             <SelectItem key={cat._id} value={cat._id}>
+                                                 {cat.name}
+                                             </SelectItem>
+                                         ))}
+                                     </SelectContent>
+                                 </Select>
+                             )}
+                          />
+                          {errors.category && <span className="text-red-500 text-xs">{errors.category.message}</span>}
+                     </div>
                      {/* Types/Tags - Simplistic usage for now */}
                      <div className="space-y-2">
-                         <label className="block text-sm font-medium text-gray-700">Type (Optional)</label>
-                         <select
-                            {...register("types")}
-                            multiple
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white h-24"
-                         >
-                            <option value="latest">Latest</option>
-                            <option value="trending">Trending</option>
-                            <option value="popular">Popular</option>
-                            <option value="fresh">Fresh</option>
-                            <option value="top">Top</option>
-                         </select>
-                         <p className="text-xs text-gray-500">Hold Ctrl/Cmd to select multiple</p>
+                         <label className="block text-sm font-medium text-gray-700">Section Type (Optional)</label>
+                         <Controller
+                            name="types"
+                            control={control}
+                            render={({ field }) => (
+                                <MultiSelect
+                                    options={TYPE_OPTIONS}
+                                    value={field.value || []}
+                                    onChange={field.onChange}
+                                    placeholder="Select news types..."
+                                />
+                            )}
+                         />
                      </div>
 
                       <div className="space-y-2">
-                         <label className="block text-sm font-medium text-gray-700">Status</label>
-                         <select
-                            {...register("status")}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
-                         >
-                            <option value="draft">Draft</option>
-                            <option value="published">Published</option>
-                         </select>
-                     </div>
+                          <label className="block text-sm font-medium text-gray-700">Status</label>
+                          <Controller
+                             name="status"
+                             control={control}
+                             render={({ field }) => (
+                                 <Select 
+                                    onValueChange={field.onChange} 
+                                    value={field.value}
+                                 >
+                                     <SelectTrigger className="w-full !h-[45px]">
+                                         <SelectValue placeholder="Select Status" />
+                                     </SelectTrigger>
+                                     <SelectContent>
+                                         <SelectItem value="draft">Draft</SelectItem>
+                                         <SelectItem value="published">Published</SelectItem>
+                                     </SelectContent>
+                                 </Select>
+                             )}
+                          />
+                      </div>
                 </div>
 
 </div>
