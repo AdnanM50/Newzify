@@ -13,9 +13,10 @@ import {
   type TCategory,
   type PaginatedResponse,
 } from "../../helpers/backend";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Trash, Edit, Loader2, Image as ImageIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
+import TiptapEditor from "../../components/common/TiptapEditor";
 
 const News = () => {
   // const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,9 +26,6 @@ const News = () => {
   // Custom states for File Upload
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  
-  const [selectedCover, setSelectedCover] = useState<File | null>(null);
-  const [previewCover, setPreviewCover] = useState<string | null>(null);
   
   const [uploadingImage, setUploadingImage] = useState(false);
 
@@ -95,6 +93,7 @@ const News = () => {
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors },
   } = useForm<TNews>();
 
@@ -102,8 +101,6 @@ const News = () => {
     setEditingNews(null);
     setSelectedImage(null);
     setPreviewImage(null);
-    setSelectedCover(null);
-    setPreviewCover(null);
     reset();
   };
 
@@ -112,14 +109,6 @@ const News = () => {
     if (file) {
       setSelectedImage(file);
       setPreviewImage(URL.createObjectURL(file));
-    }
-  };
-
-  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedCover(file);
-      setPreviewCover(URL.createObjectURL(file));
     }
   };
 
@@ -144,34 +133,25 @@ const News = () => {
   const onSubmit = async (data: TNews) => {
     try {
       let imageUrl = editingNews?.image || "";
-      let coverUrl = editingNews?.cover_image || "";
 
-      if (selectedImage || selectedCover) {
+      if (selectedImage) {
         setUploadingImage(true);
         
-        if (selectedImage) {
-           const url = await uploadSingleFile(selectedImage);
-           if (url) imageUrl = url;
-        }
-
-        if (selectedCover) {
-           const url = await uploadSingleFile(selectedCover);
-           if (url) coverUrl = url;
-        }
-        
+        const url = await uploadSingleFile(selectedImage);
+        if (url) imageUrl = url;
+         
         setUploadingImage(false);
       }
 
-      if ((!imageUrl || !coverUrl) && !editingNews) {
-         if (!imageUrl) toast.error("Please upload main image");
-         if (!imageUrl) return; 
+      if (!imageUrl && !editingNews) {
+         toast.error("Please upload main image");
+         return; 
       }
 
       // 2. Prepare Payload
       const payloadBody = {
         ...data,
         image: imageUrl,
-        cover_image: coverUrl, 
         types: data.types || [], 
       };
 
@@ -180,7 +160,6 @@ const News = () => {
       if (editingNews) {
         // Capture old images before update (since form reset happens on success)
         const oldImage = editingNews.image;
-        const oldCover = editingNews.cover_image;
         
         // Check if we uploaded a NEW image (selectedImage is not null) and it's different from old content
         // Note: selectedImage is the FILE object. If it exists, we definitely uploaded a new one.
@@ -197,13 +176,6 @@ const News = () => {
             if (publicId) {
                 console.log("Deleting old image:", publicId);
                 deleteImage({ public_id: publicId }).catch(e => console.error("Failed to delete old image", e));
-            }
-        }
-        if (selectedCover && oldCover && oldCover !== coverUrl) {
-            const publicId = getPublicIdFromUrl(oldCover);
-            if (publicId) {
-                console.log("Deleting old cover:", publicId);
-                deleteImage({ public_id: publicId }).catch(e => console.error("Failed to delete old cover", e));
             }
         }
 
@@ -229,7 +201,6 @@ const News = () => {
     setValue("types", news.types);
     
     setPreviewImage(news.image || null);
-    setPreviewCover(news.cover_image || null);
     setActiveTab("create");
   };
 
@@ -325,67 +296,34 @@ const News = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
                 
                 {/* Image Upload Area */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Main Image</label>
-                        <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative h-64">
-                            <input 
-                                type="file" 
-                                accept="image/*" 
-                                onChange={handleImageChange}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                            {previewImage ? (
-                                <div className="relative w-full h-full rounded-lg overflow-hidden">
-                                    <img src={previewImage} alt="Main Preview" className="w-full h-full object-cover" />
-                                    <button
-                                        type="button"
-                                        onClick={(e) => { e.preventDefault(); setPreviewImage(null); setSelectedImage(null); }}
-                                        className="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-white text-gray-700 z-10"
-                                    >
-                                        <X size={20} />
-                                    </button>
+                <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Main Image</label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative h-64">
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={handleImageChange}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        {previewImage ? (
+                            <div className="relative w-full h-full rounded-lg overflow-hidden">
+                                <img src={previewImage} alt="Main Preview" className="w-full h-full object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={(e) => { e.preventDefault(); setPreviewImage(null); setSelectedImage(null); }}
+                                    className="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-white text-gray-700 z-10"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="text-center">
+                                <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <ImageIcon size={20} />
                                 </div>
-                            ) : (
-                                <div className="text-center">
-                                    <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                                        <ImageIcon size={20} />
-                                    </div>
-                                    <p className="text-sm text-gray-600 font-medium">Upload Main Image</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Cover Image</label>
-                        <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative h-64">
-                            <input 
-                                type="file" 
-                                accept="image/*" 
-                                onChange={handleCoverChange}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                            {previewCover ? (
-                                <div className="relative w-full h-full rounded-lg overflow-hidden">
-                                    <img src={previewCover} alt="Cover Preview" className="w-full h-full object-cover" />
-                                    <button
-                                        type="button"
-                                        onClick={(e) => { e.preventDefault(); setPreviewCover(null); setSelectedCover(null); }}
-                                        className="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-white text-gray-700 z-10"
-                                    >
-                                        <X size={20} />
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="text-center">
-                                    <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                                        <ImageIcon size={20} />
-                                    </div>
-                                    <p className="text-sm text-gray-600 font-medium">Upload Cover Image</p>
-                                </div>
-                            )}
-                        </div>
+                                <p className="text-sm text-gray-600 font-medium">Upload Main Image</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -417,11 +355,16 @@ const News = () => {
 
                 <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Content</label>
-                    <textarea
-                        {...register("content", { required: "Content is required" })}
-                        rows={8}
-                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none font-mono text-sm"
-                        placeholder="Write your article content here..."
+                    <Controller
+                        name="content"
+                        control={control}
+                        rules={{ required: "Content is required" }}
+                        render={({ field }) => (
+                            <TiptapEditor 
+                                value={field.value} 
+                                onChange={field.onChange} 
+                            />
+                        )}
                     />
                      {errors.content && <span className="text-red-500 text-xs">{errors.content.message}</span>}
                 </div>

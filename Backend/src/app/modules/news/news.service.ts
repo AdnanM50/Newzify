@@ -57,7 +57,6 @@ export default class NewsService {
                     slug: 1,
                     content: 1,
                     image: 1,
-                    cover_image: 1,
                     category: 1,
                     types: 1,
                     status: 1,

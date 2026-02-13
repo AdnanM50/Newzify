@@ -19,7 +19,6 @@ export type TNews = {
   slug?: string;
   content: string;
   image?: string;
-  cover_image?: string;
   category?: TCategory | string;
   types?: Array<'trending' | 'latest' | 'popular' | 'fresh' | 'top'>;
   author?: any;

@@ -19,9 +19,6 @@ const schema = new Schema<TNews>(
         image: {
             type: String,
         },
-        cover_image: {
-            type: String,
-        },
         category: {
             type: Schema.Types.ObjectId,
             ref: 'category',
