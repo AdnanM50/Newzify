@@ -19,28 +19,21 @@ import toast from "react-hot-toast";
 import TiptapEditor from "../../components/common/TiptapEditor";
 
 const News = () => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingNews, setEditingNews] = useState<TNews | null>(null);
   const [activeTab, setActiveTab] = useState<"list" | "create">("list");
-  
-  // Custom states for File Upload
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  // 1. Fetch News
   const { data: newsData, isLoading: isNewsLoading, refetch: refetchNews } = useFetch<PaginatedResponse<TNews>>(
     "news",
     getNewsList
   );
   const newsList = newsData?.docs || [];
 
-  // 1.1 Fetch Categories (for dropdown)
   const { data: categoriesData } = useFetch<PaginatedResponse<TCategory>>("categories", getCategories);
   const categories = categoriesData?.docs || [];
 
-  // 2. Create News Mutation
   const { mutate: create, isLoading: isCreating } = useAction(createNews, {
     onSuccess: () => {
       resetForm();
@@ -50,7 +43,6 @@ const News = () => {
     successMessage: "News created successfully",
   });
 
-  // 3. Update News Mutation - Using mutateAsync for await capability
   const { mutateAsync: update, isLoading: isUpdating } = useAction(updateNews, {
     onSuccess: () => {
       resetForm();
@@ -60,19 +52,13 @@ const News = () => {
     successMessage: "News updated successfully",
   });
   
-  // Helper to extract public_id from Cloudinary URL
   const getPublicIdFromUrl = (url: string) => {
       try {
           if (!url) return null;
-          // Strategy: Split by '/upload/' and take the part after it
-          // URL: https://res.cloudinary.com/.../upload/v1234/folder/image.jpg
           const parts = url.split('/upload/');
           if (parts.length < 2) return null;
           let path = parts[1];
-          // Remove version prefix (e.g., v1712345/)
-          // It's usually v<numbers>/
           path = path.replace(/^v\d+\//, '');
-          // Remove extension
           path = path.replace(/\.[^/.]+$/, "");
           return path;
       } catch (e) {
@@ -81,7 +67,6 @@ const News = () => {
       }
   };
 
-  // 4. Delete News Mutation
   const { mutate: remove } = useDelete(deleteNews, {
     onSuccess: () => refetchNews(),
     successMessage: "News deleted successfully",
@@ -114,10 +99,7 @@ const News = () => {
 
   const uploadSingleFile = async (file: File): Promise<string | null> => {
      try {
-        // Backend expects 'image' key. We call uploadImage directly to bypass useAction's success check.
         const uploadRes = await uploadImage({ image: file });
-        
-        // Handling flat response
         const responseCtx = uploadRes as any;
         if (responseCtx.url) return responseCtx.url;
         if (responseCtx.data && responseCtx.data.url) return responseCtx.data.url;
@@ -147,8 +129,6 @@ const News = () => {
          toast.error("Please upload main image");
          return; 
       }
-
-      // 2. Prepare Payload
       const payloadBody = {
         ...data,
         image: imageUrl,
@@ -158,18 +138,9 @@ const News = () => {
       const payload = { body: payloadBody };
 
       if (editingNews) {
-        // Capture old images before update (since form reset happens on success)
         const oldImage = editingNews.image;
-        
-        // Check if we uploaded a NEW image (selectedImage is not null) and it's different from old content
-        // Note: selectedImage is the FILE object. If it exists, we definitely uploaded a new one.
-        
-        // Perform Update (await ensures it completes)
+
         await update({ body: { ...payloadBody, _id: editingNews._id } });
-        
-        // If update succeeded, delete old images IF they were replaced
-        // Logic: if we had an old image, and we selected a new one (which implies we uploaded and got new URL), delete old.
-        // Also check if URL actually changed to be safe, though selecting new file implies change.
         
         if (selectedImage && oldImage && oldImage !== imageUrl) {
             const publicId = getPublicIdFromUrl(oldImage);
@@ -289,13 +260,14 @@ const News = () => {
       )}
 
       {activeTab === "create" && (
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="w-full mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-6 border-b border-gray-100">
                 <h2 className="text-xl font-semibold text-gray-800">{editingNews ? "Edit News" : "Create New Article"}</h2>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
-                
-                {/* Image Upload Area */}
+            <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6 ">
+              <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 col-span-2 gap-6">
+                    {/* Image Upload Area */}
                 <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Main Image</label>
                     <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative h-64">
@@ -326,9 +298,7 @@ const News = () => {
                         )}
                     </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
+                <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">Title</label>
                         <input
                             {...register("title", { required: "Title is required" })}
@@ -337,23 +307,7 @@ const News = () => {
                         />
                          {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
                     </div>
-
-                    <div className="space-y-2">
-                         <label className="block text-sm font-medium text-gray-700">Category</label>
-                         <select
-                            {...register("category", { required: "Category is required" })}
-                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
-                         >
-                            <option value="">Select Category</option>
-                            {categories.map(cat => (
-                                <option key={cat._id} value={cat._id}>{cat.name}</option>
-                            ))}
-                         </select>
-                         {errors.category && <span className="text-red-500 text-xs">{errors.category.message}</span>}
-                    </div>
-                </div>
-
-                <div className="space-y-2">
+                     <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Content</label>
                     <Controller
                         name="content"
@@ -368,19 +322,25 @@ const News = () => {
                     />
                      {errors.content && <span className="text-red-500 text-xs">{errors.content.message}</span>}
                 </div>
+                  </div>
+              
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                     <div className="space-y-2">
-                         <label className="block text-sm font-medium text-gray-700">Status</label>
+                <div className="grid grid-cols-1 ">
+                    
+
+                    <div className="space-y-2">
+                         <label className="block text-sm font-medium text-gray-700">Category</label>
                          <select
-                            {...register("status")}
+                            {...register("category", { required: "Category is required" })}
                             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
                          >
-                            <option value="draft">Draft</option>
-                            <option value="published">Published</option>
+                            <option value="">Select Category</option>
+                            {categories.map(cat => (
+                                <option key={cat._id} value={cat._id}>{cat.name}</option>
+                            ))}
                          </select>
-                     </div>
-                     
+                         {errors.category && <span className="text-red-500 text-xs">{errors.category.message}</span>}
+                    </div>
                      {/* Types/Tags - Simplistic usage for now */}
                      <div className="space-y-2">
                          <label className="block text-sm font-medium text-gray-700">Type (Optional)</label>
@@ -397,7 +357,20 @@ const News = () => {
                          </select>
                          <p className="text-xs text-gray-500">Hold Ctrl/Cmd to select multiple</p>
                      </div>
+
+                      <div className="space-y-2">
+                         <label className="block text-sm font-medium text-gray-700">Status</label>
+                         <select
+                            {...register("status")}
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
+                         >
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                         </select>
+                     </div>
                 </div>
+
+</div>
 
                 <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
                     <button
