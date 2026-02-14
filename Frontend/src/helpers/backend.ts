@@ -159,5 +159,18 @@ export const deleteImage = backend<{ message: string }>("/files/delete", "delete
 // GET /user/profile
 export const fetchUser = backend<any>("/user/profile", "get");
 
+// Update user profile
+// PATCH /user/update
+export const updateProfile = backend<any>("/user/update", "patch");
+
+// Update user password
+// PATCH /auth/password-update
+export const updatePassword = backend<any>("/auth/password-update", "patch");
+
+// Admin only user management
+export const fetchUserList = backend<any>("/user/list", "get");
+export const createReporter = backend<any>("/user/create-reporter", "post");
+export const deleteUser = backend<any>("/user/delete", "delete");
+export const resetUserPassword = backend<any>("/user/reset-password", "patch");
 
 export default backend;

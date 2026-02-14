@@ -65,7 +65,7 @@ const Header: React.FC<Props> = () => {
             {visibleCategories.map((category: any) => (
               <Link
                 key={category._id}
-                to={`/category/${category.slug}` as any}
+                to={`/category/${category.slug || category._id}` as any}
                 className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
               >
                 {category.name}
@@ -91,7 +91,7 @@ const Header: React.FC<Props> = () => {
                     {moreCategories.map((category: any) => (
                       <Link
                         key={category._id}
-                        to={`/category/${category.slug}` as any}
+                        to={`/category/${category.slug || category._id}` as any}
                         className="text-gray-600 hover:text-red-600 text-sm py-1 transition-colors"
                       >
                         {category.name}
@@ -109,7 +109,7 @@ const Header: React.FC<Props> = () => {
                 {moreCategories.map((category: any) => (
                   <Link
                     key={category._id}
-                    to={`/category/${category.slug}` as any}
+                    to={`/category/${category.slug || category._id}` as any}
                     className="block py-2 text-gray-700 hover:text-red-600 text-sm font-medium border-b border-gray-100"
                   >
                     {category.name}

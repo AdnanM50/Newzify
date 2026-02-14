@@ -6,15 +6,7 @@ import AppError from '../../errors/appError';
 import { HttpStatusCode } from 'axios';
 import Category from './category.model';
 
-const manualSlugify = (text: string) => {
-    return text
-        .toString()
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-');
-};
+import { slugify } from '../../utils/slugify';
 
 export class CategoryController {
     static createCategory = catchAsync(async (req, res) => {
@@ -30,7 +22,7 @@ export class CategoryController {
         }
 
         if (body.name && !body.slug) {
-            body.slug = manualSlugify(body.name);
+            body.slug = slugify(body.name);
         }
 
         const created = await CategoryService.createCategory(body);
@@ -106,7 +98,13 @@ export class CategoryController {
 
     static getCategoryBySlug = catchAsync(async (req, res) => {
         const { slug } = req.params;
-        const category = await Category.findOne({ slug, is_deleted: false }).lean();
+        let category = await Category.findOne({ slug, is_deleted: false }).lean();
+        
+        
+        if (!category && slug.match(/^[0-9a-fA-F]{24}$/)) {
+            category = await Category.findOne({ _id: slug, is_deleted: false }).lean();
+        }
+
         if (!category) {
             throw new AppError(HttpStatusCode.NotFound, 'Not Found', 'Category not found!');
         }

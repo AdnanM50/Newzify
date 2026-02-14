@@ -18,6 +18,8 @@ import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as CategorySlugRouteImport } from './routes/category/$slug'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
 import { Route as AdminNewsRouteImport } from './routes/admin/news'
 import { Route as AdminCategoryRouteImport } from './routes/admin/category'
@@ -70,6 +72,16 @@ const CategorySlugRoute = CategorySlugRouteImport.update({
   path: '/category/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminReportersRoute = AdminReportersRouteImport.update({
+  id: '/reporters',
+  path: '/reporters',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminProfileRoute = AdminProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -112,6 +124,8 @@ export interface FileRoutesByFullPath {
   '/admin/category': typeof AdminCategoryRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/reporters': typeof AdminReportersRoute
+  '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
@@ -128,6 +142,8 @@ export interface FileRoutesByTo {
   '/admin/category': typeof AdminCategoryRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/reporters': typeof AdminReportersRoute
+  '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/admin': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
@@ -146,6 +162,8 @@ export interface FileRoutesById {
   '/admin/category': typeof AdminCategoryRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/reporters': typeof AdminReportersRoute
+  '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
@@ -165,6 +183,8 @@ export interface FileRouteTypes {
     | '/admin/category'
     | '/admin/news'
     | '/admin/profile'
+    | '/admin/reporters'
+    | '/admin/users'
     | '/category/$slug'
     | '/admin/'
     | '/admin/blog/category'
@@ -181,6 +201,8 @@ export interface FileRouteTypes {
     | '/admin/category'
     | '/admin/news'
     | '/admin/profile'
+    | '/admin/reporters'
+    | '/admin/users'
     | '/category/$slug'
     | '/admin'
     | '/admin/blog/category'
@@ -198,6 +220,8 @@ export interface FileRouteTypes {
     | '/admin/category'
     | '/admin/news'
     | '/admin/profile'
+    | '/admin/reporters'
+    | '/admin/users'
     | '/category/$slug'
     | '/admin/'
     | '/admin/blog/category'
@@ -281,6 +305,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/reporters': {
+      id: '/admin/reporters'
+      path: '/reporters'
+      fullPath: '/admin/reporters'
+      preLoaderRoute: typeof AdminReportersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/profile': {
       id: '/admin/profile'
       path: '/profile'
@@ -330,6 +368,8 @@ interface AdminRouteRouteChildren {
   AdminCategoryRoute: typeof AdminCategoryRoute
   AdminNewsRoute: typeof AdminNewsRoute
   AdminProfileRoute: typeof AdminProfileRoute
+  AdminReportersRoute: typeof AdminReportersRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogCategoryRoute: typeof AdminBlogCategoryRoute
   AdminBlogTagsRoute: typeof AdminBlogTagsRoute
@@ -340,6 +380,8 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCategoryRoute: AdminCategoryRoute,
   AdminNewsRoute: AdminNewsRoute,
   AdminProfileRoute: AdminProfileRoute,
+  AdminReportersRoute: AdminReportersRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogCategoryRoute: AdminBlogCategoryRoute,
   AdminBlogTagsRoute: AdminBlogTagsRoute,

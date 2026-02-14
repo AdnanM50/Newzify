@@ -8,11 +8,8 @@ export type TUser = {
     email: string;
     role: string;
     shop_address: string;
-    country: string;
-    state: string;
-    city: string;
-    zip_code: string;
     shop_name: string;
+    work_experience?: string;
     shop_image: string;
     shop_banner: string;
     password: string;

@@ -70,33 +70,6 @@ const updateUserProfileValidationSchema = z.object({
                 message: 'image must be string',
             })
             .optional(),
-        country: z
-            .string({
-                message: 'Country must be string',
-            })
-            .max(250, {
-                message: 'Country must be less than or equal to 250 characters',
-            })
-            .optional(),
-        city: z
-            .string({
-                message: 'City must be string',
-            })
-            .optional(),
-        state: z
-            .string({
-                message: 'User state must be string',
-            })
-            .max(50, {
-                message: 'State must be less than or equal to 50 characters',
-            })
-            .optional(),
-
-        zip_code: z
-            .string({
-                message: 'User zip code must be string',
-            })
-            .optional(),
         address: z
             .string({
                 message: 'User address must be string',
@@ -105,11 +78,43 @@ const updateUserProfileValidationSchema = z.object({
                 message: 'Address must be less than or equal to 250 characters',
             })
             .optional(),
+        work_experience: z
+            .string({
+                message: 'Work experience must be string',
+            })
+            .optional(),
     }),
 });
 
+const createReporterValidationSchema = z.object({
+    body: z.object({
+        first_name: z.string({
+            message: 'First name is required',
+        }),
+        last_name: z.string({
+            message: 'Last name is required',
+        }),
+        email: z.string({
+            message: 'Valid email is required',
+        }).email(),
+        phone: z.string({
+            message: 'Phone is required',
+        }),
+        password: z.string().min(6),
+        work_experience: z.string().optional(),
+    }),
+});
+
+const resetPasswordValidationSchema = z.object({
+    body: z.object({
+        userId: z.string(),
+        newPassword: z.string().min(6),
+    }),
+});
 
 export const UserValidations = {
     userRegisterValidate,
-    updateUserProfileValidationSchema
+    updateUserProfileValidationSchema,
+    createReporterValidationSchema,
+    resetPasswordValidationSchema,
 };

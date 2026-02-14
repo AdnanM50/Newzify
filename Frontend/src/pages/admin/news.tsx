@@ -235,8 +235,9 @@ const News = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {newsList.map((item) => (
-                  <tr key={item._id} className="hover:bg-gray-50 transition-colors">
+                {newsList.map((item) => {
+                  console.log("🚀 ~ News ~ item:", item)
+                  return <tr key={item._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                         <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden">
                             {item.image ? (
@@ -263,8 +264,8 @@ const News = () => {
                         <Trash size={18} />
                       </button>
                     </td>
-                  </tr>
-                ))}
+                  </tr>;
+                })}
               </tbody>
             </table>
           ) : (

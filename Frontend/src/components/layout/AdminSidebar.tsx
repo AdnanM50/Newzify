@@ -33,9 +33,19 @@ const menuItems: MenuItem[] = [
     icon: <LayoutDashboard size={20} />,
   },
   {
+    label: "Reporters",
+    href: "/admin/reporters",
+    icon: <UsersRound size={20} />,
+  },
+  {
+    label: "Users",
+    href: "/admin/users",
+    icon: <Users size={20} />,
+  },
+  {
     label: "News",
     href: "/admin/news",
-    icon: <Users size={20} />,
+    icon: <FileText size={20} />,
   },
   {
     label: "Category",

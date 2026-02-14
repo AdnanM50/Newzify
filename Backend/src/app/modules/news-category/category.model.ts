@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { TCategory } from './category.interface';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
+import { slugify } from '../../utils/slugify';
 
 const schema = new Schema<TCategory>(
     {
@@ -22,6 +23,13 @@ const schema = new Schema<TCategory>(
         timestamps: true,
     },
 );
+
+schema.pre<TCategory>('save', async function (next) {
+    if (this.name && (!this.slug || this.slug === '')) {
+        this.slug = slugify(this.name);
+    }
+    next();
+});
 
 schema.post<TCategory>('save', async function (doc: any, next): Promise<void> {
     doc.__v = undefined;

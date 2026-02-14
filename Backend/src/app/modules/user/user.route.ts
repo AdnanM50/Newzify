@@ -9,9 +9,11 @@ const userRouter = Router();
 
 userRouter.patch('/update',auth(...USER_ROLE_ENUM),validate(UserValidations.updateUserProfileValidationSchema), UserController.userProfileUpdate);
 userRouter.get('/profile',auth(...USER_ROLE_ENUM), UserController.getUserProfile);
-// userRouter.get('/list',auth(...USER_ROLE_ENUM), UserController.getUserList);
-// userRouter.get('/seller/list', UserController.sellerList);
 
-
+// Admin only routes
+userRouter.get('/list', auth('admin'), UserController.getUserList);
+userRouter.post('/create-reporter', auth('admin'), validate(UserValidations.createReporterValidationSchema), UserController.createNewReporter);
+userRouter.delete('/delete/:id', auth('admin'), UserController.deleteUser);
+userRouter.patch('/reset-password', auth('admin'), validate(UserValidations.resetPasswordValidationSchema), UserController.resetUserPassword);
 
 export default userRouter
