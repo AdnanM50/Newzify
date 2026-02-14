@@ -27,7 +27,7 @@ const Users = () => {
     }
   };
 
-  const users = usersData?.data?.docs || [];
+  const users = usersData?.docs || [];
 
   return (
     <div className="p-6 space-y-6">

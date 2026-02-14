@@ -120,6 +120,8 @@ export default class UserService {
                     role: 1,
                     permissions: 1,
                     image: 1,
+                    work_experience: 1,
+                    createdAt: 1,
                 },
             },
         ]);

@@ -94,7 +94,7 @@ const Reporters = () => {
     }
   };
 
-  const reporters = reportersData?.data?.docs || [];
+  const reporters = reportersData?.docs || [];
 
   return (
     <div className="p-6 space-y-6">

@@ -17,6 +17,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as NewsNewsIdRouteImport } from './routes/news/$newsId'
 import { Route as CategorySlugRouteImport } from './routes/category/$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
@@ -66,6 +67,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const NewsNewsIdRoute = NewsNewsIdRouteImport.update({
+  id: '/news/$newsId',
+  path: '/news/$newsId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/news/$newsId': typeof NewsNewsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/news/$newsId': typeof NewsNewsIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/news/$newsId': typeof NewsNewsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/admin/reporters'
     | '/admin/users'
     | '/category/$slug'
+    | '/news/$newsId'
     | '/admin/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/admin/reporters'
     | '/admin/users'
     | '/category/$slug'
+    | '/news/$newsId'
     | '/admin'
     | '/admin/blog/category'
     | '/admin/blog/tags'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/admin/reporters'
     | '/admin/users'
     | '/category/$slug'
+    | '/news/$newsId'
     | '/admin/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   ReporterDashboardRoute: typeof ReporterDashboardRoute
   SignupRoute: typeof SignupRoute
   CategorySlugRoute: typeof CategorySlugRoute
+  NewsNewsIdRoute: typeof NewsNewsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -297,6 +310,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/news/$newsId': {
+      id: '/news/$newsId'
+      path: '/news/$newsId'
+      fullPath: '/news/$newsId'
+      preLoaderRoute: typeof NewsNewsIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/category/$slug': {
       id: '/category/$slug'
@@ -401,6 +421,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReporterDashboardRoute: ReporterDashboardRoute,
   SignupRoute: SignupRoute,
   CategorySlugRoute: CategorySlugRoute,
+  NewsNewsIdRoute: NewsNewsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

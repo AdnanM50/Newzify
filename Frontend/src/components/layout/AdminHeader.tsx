@@ -4,7 +4,6 @@ import { Link } from "@tanstack/react-router";
 import {
   Menu,
   ExternalLink,
-  Globe,
   User,
   Lock,
   LogOut,
@@ -19,17 +18,17 @@ interface AdminHeaderProps {
 
 const AdminHeader: React.FC<AdminHeaderProps> = ({ setSidebarOpen }) => {
   const [profileOpen, setProfileOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
+  // const [langOpen, setLangOpen] = useState(false);
     const { user, logout } = useUser();
   // Mock data
-  const languages = [
-    { code: "en", name: "English" },
-    { code: "es", name: "Spanish" },
-    { code: "fr", name: "French" },
-  ];
+  // const languages = [
+  //   { code: "en", name: "English" },
+  //   { code: "es", name: "Spanish" },
+  //   { code: "fr", name: "French" },
+  // ];
 
 
-  const [currentLang, setCurrentLang] = useState(languages[0]);
+  // const [currentLang, setCurrentLang] = useState(languages[0]);
 
   return (
     <header className="bg-white border-b border-gray-200 z-30 sticky top-0 h-16">
@@ -58,7 +57,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ setSidebarOpen }) => {
           </a>
 
           {/* Language Selector */}
-          <div className="relative">
+          {/* <div className="relative">
             <button
               onClick={() => {
                 setLangOpen(!langOpen);
@@ -94,7 +93,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ setSidebarOpen }) => {
                 </div>
               </>
             )}
-          </div>
+          </div> */}
 
 
           <div className="h-6 w-px bg-gray-200 hidden sm:block"></div>
@@ -104,7 +103,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ setSidebarOpen }) => {
             <button
               onClick={() => {
                 setProfileOpen(!profileOpen);
-                setLangOpen(false);
+                // setLangOpen(false);
               
               }}
               className="flex items-center gap-3 focus:outline-none group"
@@ -137,14 +136,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ setSidebarOpen }) => {
                     <User size={16} />
                     Profile
                   </Link>
-                  <Link
-                    to={"/admin/profile/change-password" as any}
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    onClick={() => setProfileOpen(false)}
-                  >
-                    <Lock size={16} />
-                    Change Password
-                  </Link>
+                 
                 </div>
                 <div className="py-1 border-t border-gray-50">
                   <button

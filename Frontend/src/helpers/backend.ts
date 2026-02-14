@@ -135,6 +135,9 @@ export const getNewsList = backend<PaginatedResponse<TNews>>("/news/list", "get"
 // Public list of news
 export const getPublicNewsList = backend<PaginatedResponse<TNews>>("/news/public/list", "get");
 
+// Public single news
+export const getPublicNewsById = backend<TNews>("/news/public/:id", "get");
+
 // Create news
 // POST /news/create
 export const createNews = backend<TNews>("/news/create", "post");

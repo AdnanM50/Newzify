@@ -1,7 +1,9 @@
 import React from "react";
 import CategoryBadge from "./CategoryBadge";
+import { Link } from "@tanstack/react-router";
 
 interface ArticleCardProps {
+  _id?: string;
   title: string;
   category: string;
   date: string;
@@ -10,9 +12,9 @@ interface ArticleCardProps {
   className?: string;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ title, category, date, isExclusive, imageUrl, className }: ArticleCardProps) => {
-  return (
-    <article className={`group cursor-pointer ${className}`}>
+const ArticleCard: React.FC<ArticleCardProps> = ({ _id, title, category, date, isExclusive, imageUrl, className }: ArticleCardProps) => {
+  const content = (
+    <>
       {imageUrl && (
         <div className="relative mb-3 overflow-hidden rounded-lg">
           <img 
@@ -42,6 +44,24 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ title, category, date, isExcl
         {title}
       </h3>
       <p className="text-sm text-gray-500">{date}</p>
+    </>
+  );
+
+  if (_id) {
+    return (
+      <Link 
+        to="/news/$newsId" 
+        params={{ newsId: _id }}
+        className={`group cursor-pointer block ${className}`}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <article className={`group cursor-pointer ${className}`}>
+      {content}
     </article>
   );
 };

@@ -1,16 +1,18 @@
 import React from "react";
 import CategoryBadge from "./CategoryBadge";
+import { Link } from "@tanstack/react-router";
 
 interface FeaturedArticleProps {
+  _id?: string;
   title: string;
   description: string;
   category: string;
   imageUrl: string;
 }
 
-const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ title, description, category, imageUrl }: FeaturedArticleProps) => {
-  return (
-    <article className="relative overflow-hidden rounded-xl group cursor-pointer">
+const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ _id, title, description, category, imageUrl }: FeaturedArticleProps) => {
+  const content = (
+    <>
       <div className="absolute inset-0">
         <img 
           src={imageUrl} 
@@ -33,6 +35,24 @@ const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ title, description, c
           {description}
         </p>
       </div>
+    </>
+  );
+
+  if (_id) {
+    return (
+      <Link 
+        to="/news/$newsId" 
+        params={{ newsId: _id }}
+        className="relative overflow-hidden rounded-xl group cursor-pointer block"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <article className="relative overflow-hidden rounded-xl group cursor-pointer">
+      {content}
     </article>
   );
 };
