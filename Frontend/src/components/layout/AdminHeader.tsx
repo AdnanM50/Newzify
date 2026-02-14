@@ -5,7 +5,6 @@ import {
   Menu,
   ExternalLink,
   User,
-  Lock,
   LogOut,
   ChevronDown,
 } from "lucide-react";
