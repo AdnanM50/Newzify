@@ -5,7 +5,7 @@ const validate = (schema: ZodObject<ZodRawShape>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             await schema.parseAsync({
-                body: req.body.body,
+                body: req.body,
                 cookies: req.cookies,
             });
             next();
