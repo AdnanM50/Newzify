@@ -23,20 +23,23 @@ const buildUrl = (endpoint: string, params: Record<string, unknown> = {}) => {
   const baseUrl = endpoint.startsWith("http") ? endpoint : `${API_URL}${endpoint.replace(/^\//, "")}`;
   const url = new URL(baseUrl);
   
+  // Clone params to avoid mutation
+  const queryParams = { ...params };
+
   // Handle path parameters (e.g., /users/:id)
   let finalPath = url.pathname;
-  Object.keys(params).forEach((key) => {
+  Object.keys(queryParams).forEach((key) => {
     if (finalPath.includes(`:${key}`)) {
-      finalPath = finalPath.replace(`:${key}`, String(params[key]));
-      delete params[key];
+      finalPath = finalPath.replace(`:${key}`, String(queryParams[key]));
+      delete queryParams[key];
     }
   });
   url.pathname = finalPath;
 
   // Append remaining params as query string
-  Object.keys(params).forEach((key) => {
-    if (params[key] !== undefined && params[key] !== null) {
-      url.searchParams.append(key, String(params[key]));
+  Object.keys(queryParams).forEach((key) => {
+    if (queryParams[key] !== undefined && queryParams[key] !== null) {
+      url.searchParams.append(key, String(queryParams[key]));
     }
   });
 
