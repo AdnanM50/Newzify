@@ -192,10 +192,8 @@ const Registration: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          body: {
-            identifier: data.email,
-            action: 'signup'
-          }
+          identifier: data.email,
+          action: 'signup'
         })
       });
 
@@ -230,14 +228,12 @@ const Registration: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          body: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            email: formData.email,
-            phone: formData.phoneNumber,
-            password: formData.password,
-            otp: otp
-          }
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phoneNumber,
+          password: formData.password,
+          otp: otp
         })
       });
 
