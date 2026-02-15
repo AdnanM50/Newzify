@@ -11,23 +11,36 @@ const createComment = async (userId: string, payload: Partial<TComment>) => {
 };
 
 const getCommentsByNewsId = async (newsId: string) => {
-    const result = await Comment.find({ newsId, parentCommentId: null })
+    // Helper function for recursive reply fetching
+    const getReplies = async (parentId: string): Promise<any[]> => {
+        const replies = await Comment.find({ parentCommentId: parentId, is_deleted: false })
+            .populate("userId", "first_name last_name image")
+            .sort({ createdAt: 1 })
+            .lean();
+
+        if (replies.length === 0) return [];
+
+        return Promise.all(
+            replies.map(async (reply) => {
+                const nestedReplies = await getReplies(reply._id.toString());
+                return { ...reply, replies: nestedReplies };
+            })
+        );
+    };
+
+    const topLevelComments = await Comment.find({ newsId, parentCommentId: null, is_deleted: false })
         .populate("userId", "first_name last_name image")
         .sort({ createdAt: -1 })
         .lean();
 
-    // Fetch replies for each top-level comment
-    const commentsWithReplies = await Promise.all(
-        result.map(async (comment) => {
-            const replies = await Comment.find({ parentCommentId: comment._id })
-                .populate("userId", "first_name last_name image")
-                .sort({ createdAt: 1 })
-                .lean();
+    const commentsWithNestedReplies = await Promise.all(
+        topLevelComments.map(async (comment) => {
+            const replies = await getReplies(comment._id.toString());
             return { ...comment, replies };
         })
     );
 
-    return commentsWithReplies;
+    return commentsWithNestedReplies;
 };
 
 const toggleLike = async (userId: string, commentId: string) => {

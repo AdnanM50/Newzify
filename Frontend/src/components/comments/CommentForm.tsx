@@ -46,7 +46,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-3">
       <Textarea
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
         placeholder={placeholder}
         className="min-h-[100px] focus-visible:ring-red-500"
       />

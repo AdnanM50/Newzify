@@ -8,10 +8,10 @@ import CommentForm from './CommentForm';
 interface CommentItemProps {
   comment: any;
   newsId: string;
-  isReply?: boolean;
+  depth?: number;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, newsId, isReply = false }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, newsId, depth = 0 }) => {
   const [isReplying, setIsReplying] = useState(false);
   
   const { mutate: toggleLike } = useAction(toggleLikeComment, {
@@ -33,7 +33,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, newsId, isReply = fa
   };
 
   return (
-    <div className={`flex gap-4 ${isReply ? 'ml-12 mt-4' : 'mt-8'}`}>
+    <div className={`flex gap-4 mt-6`} style={{ marginLeft: depth > 0 ? `${Math.min(depth * 2, 8)}rem` : '0px' }}>
       <div className="flex-shrink-0">
         <img 
           src={comment.userId?.image || 'https://via.placeholder.com/40'} 
@@ -77,7 +77,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, newsId, isReply = fa
             <span>{comment.likes?.length || 0}</span>
           </button>
           
-          {!isReply && (
+          {depth < 5 && (
             <button 
               onClick={() => setIsReplying(!isReplying)}
               className="flex items-center gap-1 text-sm text-gray-500 font-medium hover:text-red-600"
@@ -108,7 +108,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, newsId, isReply = fa
                 key={reply._id} 
                 comment={reply} 
                 newsId={newsId} 
-                isReply={true} 
+                depth={depth + 1} 
               />
             ))}
           </div>

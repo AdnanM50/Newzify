@@ -22,11 +22,14 @@ import { Route as CategorySlugRouteImport } from './routes/category/$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
-import { Route as AdminNewsRouteImport } from './routes/admin/news'
 import { Route as AdminCategoryRouteImport } from './routes/admin/category'
+import { Route as AdminNewsIndexRouteImport } from './routes/admin/news/index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
+import { Route as AdminNewsCreateRouteImport } from './routes/admin/news/create'
 import { Route as AdminBlogTagsRouteImport } from './routes/admin/blog/tags'
 import { Route as AdminBlogCategoryRouteImport } from './routes/admin/blog/category'
+import { Route as AdminNewsNewsIdEditRouteImport } from './routes/admin/news/$newsId.edit'
+import { Route as AdminNewsNewsIdCommentsRouteImport } from './routes/admin/news/$newsId.comments'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -93,19 +96,24 @@ const AdminProfileRoute = AdminProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminNewsRoute = AdminNewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
 const AdminCategoryRoute = AdminCategoryRouteImport.update({
   id: '/category',
   path: '/category',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminNewsIndexRoute = AdminNewsIndexRouteImport.update({
+  id: '/news/',
+  path: '/news/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminNewsCreateRoute = AdminNewsCreateRouteImport.update({
+  id: '/news/create',
+  path: '/news/create',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminBlogTagsRoute = AdminBlogTagsRouteImport.update({
@@ -118,6 +126,16 @@ const AdminBlogCategoryRoute = AdminBlogCategoryRouteImport.update({
   path: '/blog/category',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminNewsNewsIdEditRoute = AdminNewsNewsIdEditRouteImport.update({
+  id: '/news/$newsId/edit',
+  path: '/news/$newsId/edit',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminNewsNewsIdCommentsRoute = AdminNewsNewsIdCommentsRouteImport.update({
+  id: '/news/$newsId/comments',
+  path: '/news/$newsId/comments',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -128,7 +146,6 @@ export interface FileRoutesByFullPath {
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
   '/admin/category': typeof AdminCategoryRoute
-  '/admin/news': typeof AdminNewsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -137,7 +154,11 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
+  '/admin/news/create': typeof AdminNewsCreateRoute
   '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/news': typeof AdminNewsIndexRoute
+  '/admin/news/$newsId/comments': typeof AdminNewsNewsIdCommentsRoute
+  '/admin/news/$newsId/edit': typeof AdminNewsNewsIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -147,7 +168,6 @@ export interface FileRoutesByTo {
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
   '/admin/category': typeof AdminCategoryRoute
-  '/admin/news': typeof AdminNewsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -156,7 +176,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
+  '/admin/news/create': typeof AdminNewsCreateRoute
   '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/news': typeof AdminNewsIndexRoute
+  '/admin/news/$newsId/comments': typeof AdminNewsNewsIdCommentsRoute
+  '/admin/news/$newsId/edit': typeof AdminNewsNewsIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -168,7 +192,6 @@ export interface FileRoutesById {
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
   '/admin/category': typeof AdminCategoryRoute
-  '/admin/news': typeof AdminNewsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -177,7 +200,11 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
+  '/admin/news/create': typeof AdminNewsCreateRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/news/': typeof AdminNewsIndexRoute
+  '/admin/news/$newsId/comments': typeof AdminNewsNewsIdCommentsRoute
+  '/admin/news/$newsId/edit': typeof AdminNewsNewsIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,7 +217,6 @@ export interface FileRouteTypes {
     | '/reporter-dashboard'
     | '/signup'
     | '/admin/category'
-    | '/admin/news'
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
@@ -199,7 +225,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
+    | '/admin/news/create'
     | '/admin/blog'
+    | '/admin/news'
+    | '/admin/news/$newsId/comments'
+    | '/admin/news/$newsId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -209,7 +239,6 @@ export interface FileRouteTypes {
     | '/reporter-dashboard'
     | '/signup'
     | '/admin/category'
-    | '/admin/news'
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
@@ -218,7 +247,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/blog/category'
     | '/admin/blog/tags'
+    | '/admin/news/create'
     | '/admin/blog'
+    | '/admin/news'
+    | '/admin/news/$newsId/comments'
+    | '/admin/news/$newsId/edit'
   id:
     | '__root__'
     | '/'
@@ -229,7 +262,6 @@ export interface FileRouteTypes {
     | '/reporter-dashboard'
     | '/signup'
     | '/admin/category'
-    | '/admin/news'
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
@@ -238,7 +270,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
+    | '/admin/news/create'
     | '/admin/blog/'
+    | '/admin/news/'
+    | '/admin/news/$newsId/comments'
+    | '/admin/news/$newsId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -346,13 +382,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProfileRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/news': {
-      id: '/admin/news'
-      path: '/news'
-      fullPath: '/admin/news'
-      preLoaderRoute: typeof AdminNewsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
     '/admin/category': {
       id: '/admin/category'
       path: '/category'
@@ -360,11 +389,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoryRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/news/': {
+      id: '/admin/news/'
+      path: '/news'
+      fullPath: '/admin/news'
+      preLoaderRoute: typeof AdminNewsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/blog/': {
       id: '/admin/blog/'
       path: '/blog'
       fullPath: '/admin/blog'
       preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/news/create': {
+      id: '/admin/news/create'
+      path: '/news/create'
+      fullPath: '/admin/news/create'
+      preLoaderRoute: typeof AdminNewsCreateRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/blog/tags': {
@@ -381,31 +424,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogCategoryRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/news/$newsId/edit': {
+      id: '/admin/news/$newsId/edit'
+      path: '/news/$newsId/edit'
+      fullPath: '/admin/news/$newsId/edit'
+      preLoaderRoute: typeof AdminNewsNewsIdEditRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/news/$newsId/comments': {
+      id: '/admin/news/$newsId/comments'
+      path: '/news/$newsId/comments'
+      fullPath: '/admin/news/$newsId/comments'
+      preLoaderRoute: typeof AdminNewsNewsIdCommentsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
   }
 }
 
 interface AdminRouteRouteChildren {
   AdminCategoryRoute: typeof AdminCategoryRoute
-  AdminNewsRoute: typeof AdminNewsRoute
   AdminProfileRoute: typeof AdminProfileRoute
   AdminReportersRoute: typeof AdminReportersRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogCategoryRoute: typeof AdminBlogCategoryRoute
   AdminBlogTagsRoute: typeof AdminBlogTagsRoute
+  AdminNewsCreateRoute: typeof AdminNewsCreateRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
+  AdminNewsIndexRoute: typeof AdminNewsIndexRoute
+  AdminNewsNewsIdCommentsRoute: typeof AdminNewsNewsIdCommentsRoute
+  AdminNewsNewsIdEditRoute: typeof AdminNewsNewsIdEditRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCategoryRoute: AdminCategoryRoute,
-  AdminNewsRoute: AdminNewsRoute,
   AdminProfileRoute: AdminProfileRoute,
   AdminReportersRoute: AdminReportersRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogCategoryRoute: AdminBlogCategoryRoute,
   AdminBlogTagsRoute: AdminBlogTagsRoute,
+  AdminNewsCreateRoute: AdminNewsCreateRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
+  AdminNewsIndexRoute: AdminNewsIndexRoute,
+  AdminNewsNewsIdCommentsRoute: AdminNewsNewsIdCommentsRoute,
+  AdminNewsNewsIdEditRoute: AdminNewsNewsIdEditRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(

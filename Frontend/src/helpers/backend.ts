@@ -136,7 +136,12 @@ export const getNewsList = backend<PaginatedResponse<TNews>>("/news/list", "get"
 export const getPublicNewsList = backend<PaginatedResponse<TNews>>("/news/public/list", "get");
 
 // Public single news
+// GET /news/public/:id
 export const getPublicNewsById = backend<TNews>("/news/public/:id", "get");
+
+// Admin single news
+// GET /news/:id
+export const getNewsById = backend<TNews>("/news/:id", "get");
 
 // Create news
 // POST /news/create
