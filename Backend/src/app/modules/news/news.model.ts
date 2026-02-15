@@ -37,6 +37,12 @@ const schema = new Schema<TNews>(
             enum: ['draft', 'published'],
             default: 'draft',
         },
+        likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'user',
+            },
+        ],
         is_deleted: {
             type: Boolean,
             default: false,

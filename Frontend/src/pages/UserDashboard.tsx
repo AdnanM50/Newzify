@@ -1,108 +1,146 @@
-import React, { useEffect, useState } from 'react'
-import UserSidebar from '../components/layout/UserSidebar'
-
-type Post = {
-  id: string
-  title: string
-  excerpt?: string
-}
-
-type Comment = {
-  id: string
-  postId: string
-  text: string
-  replies?: Comment[]
-}
-
-const LikedPosts: React.FC<{ items: Post[] }> = ({ items }) => {
-  if (!items.length) return <div>No liked posts yet.</div>
-  return (
-    <div className="space-y-4">
-      {items.map(p => (
-        <div key={p.id} className="p-4 border rounded bg-white">
-          <div className="font-semibold">{p.title}</div>
-          {p.excerpt && <div className="text-sm text-gray-600">{p.excerpt}</div>}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-const UserComments: React.FC<{ items: Comment[] }> = ({ items }) => {
-  if (!items.length) return <div>No comments yet.</div>
-  return (
-    <div className="space-y-4">
-      {items.map(c => (
-        <div key={c.id} className="p-4 border rounded bg-white">
-          <div className="text-sm text-gray-700">{c.text}</div>
-          <div className="mt-2 pl-2 border-l">
-            {c.replies && c.replies.length ? (
-              c.replies.map(r => (
-                <div key={r.id} className="text-sm text-gray-600 py-1">↳ {r.text}</div>
-              ))
-            ) : (
-              <div className="text-xs text-gray-400">No replies</div>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
+import React, { useEffect, useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { userProfileApi } from '@/helpers/api';
+import { LikedPostsSection } from '@/components/user/LikedPostsSection';
+import { UserCommentsSection } from '@/components/user/UserCommentsSection';
+import { RepliesSection } from '@/components/user/RepliesSection';
+import { SettingsForm } from '@/components/user/SettingsForm';
+import UserSidebar from '../components/layout/UserSidebar';
+import { Heart, MessageSquare, Reply, Settings } from 'lucide-react';
 
 const UserDashboard: React.FC = () => {
-  const [liked, setLiked] = useState<Post[]>([])
-  const [comments, setComments] = useState<Comment[]>([])
+  const [likedPosts, setLikedPosts] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
+  const [replies, setReplies] = useState<any[]>([]);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [isLoadingLiked, setIsLoadingLiked] = useState(true);
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
+  const [isLoadingReplies, setIsLoadingReplies] = useState(true);
+  const [activeTab, setActiveTab] = useState('liked');
+
+  const fetchUserProfile = async () => {
+    try {
+      const response: any = await fetch('https://newzify-backend-kappa.vercel.app/api/v1/user/profile', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      const result = await response.json();
+      if (result.success) {
+        setUserProfile(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const fetchLikedPosts = async () => {
+    setIsLoadingLiked(true);
+    try {
+      const response: any = await userProfileApi.getLikedPosts({ page: 1, limit: 20 });
+      setLikedPosts(response.data?.docs || []);
+    } catch (error) {
+      console.error('Error fetching liked posts:', error);
+      setLikedPosts([]);
+    } finally {
+      setIsLoadingLiked(false);
+    }
+  };
+
+  const fetchComments = async () => {
+    setIsLoadingComments(true);
+    try {
+      const response: any = await userProfileApi.getUserComments({ page: 1, limit: 20 });
+      setComments(response.data?.docs || []);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      setComments([]);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  const fetchReplies = async () => {
+    setIsLoadingReplies(true);
+    try {
+      const response: any = await userProfileApi.getUserReplies({ page: 1, limit: 20 });
+      setReplies(response.data?.docs || []);
+    } catch (error) {
+      console.error('Error fetching replies:', error);
+      setReplies([]);
+    } finally {
+      setIsLoadingReplies(false);
+    }
+  };
 
   useEffect(() => {
-    // For now read from localStorage as a simple mock. Replace with real API calls.
-    try {
-      const likedRaw = localStorage.getItem('likedPosts') || '[]'
-      const commentsRaw = localStorage.getItem('userComments') || '[]'
-      setLiked(JSON.parse(likedRaw))
-      setComments(JSON.parse(commentsRaw))
-    } catch (e) {
-      setLiked([])
-      setComments([])
-    }
-  }, [])
+    fetchUserProfile();
+    fetchLikedPosts();
+    fetchComments();
+    fetchReplies();
+  }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row md:space-x-6">
-        <UserSidebar />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Sidebar */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <UserSidebar user={userProfile} />
+          </aside>
 
-        <main className="flex-1 space-y-6 mt-6 md:mt-0">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">User Panel</h2>
-            <div className="text-sm text-gray-500">Welcome back</div>
-          </div>
+          {/* Main Content */}
+          <main className="flex-1">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">User Dashboard</h1>
+              <p className="text-gray-600 mt-1">Manage your profile and activity</p>
+            </div>
 
-          <section id="liked" className="bg-gray-50 p-4 rounded">
-            <h3 className="font-semibold mb-3">Liked Posts</h3>
-            <LikedPosts items={liked} />
-          </section>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex mb-6">
+                <TabsTrigger value="liked" className="flex items-center gap-2">
+                  <Heart className="h-4 w-4" />
+                  <span className="hidden sm:inline">Liked Posts</span>
+                  <span className="sm:hidden">Liked</span>
+                </TabsTrigger>
+                <TabsTrigger value="comments" className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  <span className="hidden sm:inline">Comments</span>
+                  <span className="sm:hidden">Comments</span>
+                </TabsTrigger>
+                <TabsTrigger value="replies" className="flex items-center gap-2">
+                  <Reply className="h-4 w-4" />
+                  <span className="hidden sm:inline">Replies</span>
+                  <span className="sm:hidden">Replies</span>
+                </TabsTrigger>
+                <TabsTrigger value="settings" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  <span className="hidden sm:inline">Settings</span>
+                  <span className="sm:hidden">Settings</span>
+                </TabsTrigger>
+              </TabsList>
 
-          <section id="comments" className="bg-gray-50 p-4 rounded">
-            <h3 className="font-semibold mb-3">Your Comments</h3>
-            <UserComments items={comments} />
-          </section>
+              <TabsContent value="liked" className="mt-0">
+                <LikedPostsSection posts={likedPosts} isLoading={isLoadingLiked} />
+              </TabsContent>
 
-          <section id="replies" className="bg-gray-50 p-4 rounded">
-            <h3 className="font-semibold mb-3">All Replies</h3>
-            {/* Flatten replies */}
-            {comments.flatMap(c => c.replies || []).length ? (
-              comments.flatMap(c => c.replies || []).map(r => (
-                <div key={r.id} className="p-3 border rounded bg-white mb-2">{r.text}</div>
-              ))
-            ) : (
-              <div className="text-sm text-gray-500">No replies found</div>
-            )}
-          </section>
-        </main>
+              <TabsContent value="comments" className="mt-0">
+                <UserCommentsSection comments={comments} isLoading={isLoadingComments} />
+              </TabsContent>
+
+              <TabsContent value="replies" className="mt-0">
+                <RepliesSection replies={replies} isLoading={isLoadingReplies} />
+              </TabsContent>
+
+              <TabsContent value="settings" className="mt-0">
+                <SettingsForm user={userProfile} onUpdate={fetchUserProfile} />
+              </TabsContent>
+            </Tabs>
+          </main>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserDashboard
+export default UserDashboard;

@@ -136,4 +136,23 @@ export const api = {
     customFetch<T>(url, { method: "DELETE", data }), // Send data as body for DELETE
 };
 
+// User Profile API Functions
+export const userProfileApi = {
+  getLikedPosts: (params: { page?: number; limit?: number } = {}) =>
+    api.get('/user/profile/liked-posts', params),
+  
+  getUserComments: (params: { page?: number; limit?: number } = {}) =>
+    api.get('/user/profile/comments', params),
+  
+  getUserReplies: (params: { page?: number; limit?: number } = {}) =>
+    api.get('/user/profile/replies', params),
+  
+  toggleNewsLike: (newsId: string) =>
+    api.patch(`/user/profile/toggle-like/${newsId}`),
+  
+  updateUserProfile: (data: Record<string, unknown>) =>
+    api.patch('/user/update', { body: data }),
+};
+
 export default api;
+

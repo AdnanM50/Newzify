@@ -9,6 +9,7 @@ export type TNews = {
     types?: Array<'trending' | 'latest' | 'popular' | 'fresh' | 'top'>;
     author?: Types.ObjectId | any;
     status?: 'draft' | 'published';
+    likes?: Types.ObjectId[] | any[];
     is_deleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;

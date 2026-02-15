@@ -117,4 +117,54 @@ export class UserController {
             data: null,
         });
     });
+
+    // User Profile Features
+    static getLikedPosts = catchAsync(async (req, res) => {
+        const { _id } = res.locals.user;
+        const result = await UserService.findLikedPostsByUserId(_id, req.query);
+        
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Liked posts retrieved successfully',
+            data: result,
+        });
+    });
+
+    static getUserComments = catchAsync(async (req, res) => {
+        const { _id } = res.locals.user;
+        const result = await UserService.findCommentsByUserId(_id, req.query);
+        
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'User comments retrieved successfully',
+            data: result,
+        });
+    });
+
+    static getUserReplies = catchAsync(async (req, res) => {
+        const { _id } = res.locals.user;
+        const result = await UserService.findRepliesToUserComments(_id, req.query);
+        
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Replies retrieved successfully',
+            data: result,
+        });
+    });
+
+    static toggleNewsLike = catchAsync(async (req, res) => {
+        const { _id } = res.locals.user;
+        const { newsId } = req.params;
+        const result = await UserService.toggleNewsLike(newsId, _id);
+        
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: result.isLiked ? 'News liked successfully' : 'News unliked successfully',
+            data: result,
+        });
+    });
 }

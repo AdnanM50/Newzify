@@ -2,6 +2,8 @@ import { HttpStatusCode } from "axios";
 import AppError from "../../errors/appError";
 import User from "./user.model";
 import { Types } from "mongoose";
+import News from "../news/news.model";
+import Comment from "../comment/comment.model";
 
 export default class UserService {
     static async createNewUser(payload: any): Promise<any> {
@@ -166,40 +168,168 @@ export default class UserService {
         }
         return user;
     }
-    // static async allSellerListByQuery(filter,query: any): Promise<any> {
-    //     const aggregate = User.aggregate([
-    //         {
-    //             $match:filter
-    //         },
-    //         {
-    //             $project: {
-    //                 _id: 1,
-    //                 first_name: 1,
-    //                 last_name: 1,
-    //                 email: 1,
-    //                 phone: 1,
-    //                 role: 1,
-    //                 image: 1,
-    //                 shop_address:1,
-    //                 shop_name:1,
-    //                 shop_image:1,
-    //                 shop_banner:1
-    //             },
-    //         },
-    //     ])
-    //     const options = {
-    //         page: query.page || 1,
-    //         limit: query.limit || 10,
-    //         sort: { createdAt: -1 },
-    //     };
-    //     const sellers = await User.aggregatePaginate(aggregate,options)
-    //     if(!sellers.docs.length){
-    //         throw new AppError(
-    //             HttpStatusCode.NotFound,
-    //             'Request Failed',
-    //             'Sellers not found!',
-    //         )
-    //     }
-    //     return sellers;
-    // }
+
+    // User Profile Features
+    static async findLikedPostsByUserId(userId: string | Types.ObjectId, query: any): Promise<any> {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const likedPosts = await News.find({
+            likes: userId,
+            is_deleted: false,
+            status: 'published'
+        })
+        .populate('category', 'name')
+        .populate('author', 'first_name last_name image')
+        .select('-__v')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean();
+
+        const total = await News.countDocuments({
+            likes: userId,
+            is_deleted: false,
+            status: 'published'
+        });
+
+        return {
+            docs: likedPosts,
+            totalDocs: total,
+            limit,
+            page,
+            totalPages: Math.ceil(total / limit),
+            hasNextPage: page < Math.ceil(total / limit),
+            hasPrevPage: page > 1,
+        };
+    }
+
+    static async findCommentsByUserId(userId: string | Types.ObjectId, query: any): Promise<any> {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const comments = await Comment.find({
+            userId,
+            parentCommentId: null, // Only top-level comments
+            is_deleted: false
+        })
+        .populate('newsId', 'title slug')
+        .populate('userId', 'first_name last_name image')
+        .select('-__v')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean();
+
+        // Get reply counts for each comment
+        const commentsWithReplies = await Promise.all(
+            comments.map(async (comment: any) => {
+                const replyCount = await Comment.countDocuments({
+                    parentCommentId: comment._id,
+                    is_deleted: false
+                });
+                return {
+                    ...comment,
+                    replyCount,
+                    likeCount: comment.likes?.length || 0
+                };
+            })
+        );
+
+        const total = await Comment.countDocuments({
+            userId,
+            parentCommentId: null,
+            is_deleted: false
+        });
+
+        return {
+            docs: commentsWithReplies,
+            totalDocs: total,
+            limit,
+            page,
+            totalPages: Math.ceil(total / limit),
+            hasNextPage: page < Math.ceil(total / limit),
+            hasPrevPage: page > 1,
+        };
+    }
+
+    static async findRepliesToUserComments(userId: string | Types.ObjectId, query: any): Promise<any> {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // First, find all comments by the user
+        const userComments = await Comment.find({
+            userId,
+            is_deleted: false
+        }).select('_id').lean();
+
+        const userCommentIds = userComments.map(c => c._id);
+
+        // Find all replies to those comments
+        const replies = await Comment.find({
+            parentCommentId: { $in: userCommentIds },
+            is_deleted: false
+        })
+        .populate('userId', 'first_name last_name image')
+        .populate('newsId', 'title slug')
+        .populate('parentCommentId', 'content')
+        .select('-__v')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean();
+
+        const total = await Comment.countDocuments({
+            parentCommentId: { $in: userCommentIds },
+            is_deleted: false
+        });
+
+        return {
+            docs: replies,
+            totalDocs: total,
+            limit,
+            page,
+            totalPages: Math.ceil(total / limit),
+            hasNextPage: page < Math.ceil(total / limit),
+            hasPrevPage: page > 1,
+        };
+    }
+
+    static async toggleNewsLike(newsId: string | Types.ObjectId, userId: string | Types.ObjectId): Promise<any> {
+        const news = await News.findById(newsId);
+        
+        if (!news) {
+            throw new AppError(
+                HttpStatusCode.NotFound,
+                'News Not Found',
+                'News article not found!',
+            );
+        }
+
+        const userIdObj = new Types.ObjectId(userId);
+        const likes = news.likes || [];
+        const userLikeIndex = likes.findIndex((id: Types.ObjectId) => id.equals(userIdObj));
+
+        let isLiked: boolean;
+        if (userLikeIndex > -1) {
+            // User has already liked, remove the like
+            likes.splice(userLikeIndex, 1);
+            isLiked = false;
+        } else {
+            // User hasn't liked, add the like
+            likes.push(userIdObj);
+            isLiked = true;
+        }
+
+        news.likes = likes;
+        await news.save();
+
+        return {
+            isLiked,
+            likeCount: likes.length
+        };
+    }
 }
