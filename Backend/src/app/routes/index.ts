@@ -13,6 +13,7 @@ import { tagRoutes } from "../modules/blog-tag/tag.route";
 // import {pageRoutes} from "../modules/setting-page/setting-page.route";
 import {blogRoutes} from "../modules/blog/blog.route";
 import {blogCategoryRoutes} from "../modules/blog-category/category.route";
+import { commentRoutes } from "../modules/comment/comment.route";
 // import {ProductSectionRouter} from "../modules/product/product-section/product-section.routes";
 // import {ProductBrandRouter} from "../modules/product/product-brand/product-brand.routes";
 // import {ProductAttributeRouter} from "../modules/product/product-attributes/product-attributes.routes";
@@ -80,6 +81,10 @@ const moduleRouters:any = [
     {
         path: '/blog-tags',
         route: tagRoutes,
+    },
+    {
+        path: '/comments',
+        route: commentRoutes,
     },
     // {
     //     path: '/faq',

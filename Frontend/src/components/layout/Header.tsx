@@ -105,7 +105,7 @@ const Header: React.FC<Props> = () => {
             {/* Mobile More categories */}
             {moreCategories.length > 0 && isMenuOpen && (
               <div className="md:hidden">
-                <div className="py-2 text-xs font-bold text-gray-400 font-bold uppercase tracking-wider">More Categories</div>
+                <div className="py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">More Categories</div>
                 {moreCategories.map((category: any) => (
                   <Link
                     key={category._id}

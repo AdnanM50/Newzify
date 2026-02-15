@@ -176,4 +176,10 @@ export const createReporter = backend<any>("/user/create-reporter", "post");
 export const deleteUser = backend<any>("/user/delete", "delete");
 export const resetUserPassword = backend<any>("/user/reset-password", "patch");
 
+// ==================== Comment Endpoints ====================
+export const createComment = backend<any>("/comments/create", "post");
+export const getCommentsByNewsId = backend<any[]>("/comments/news/:newsId", "get");
+export const toggleLikeComment = backend<any>("/comments/like/:id", "patch");
+export const deleteComment = backend<any>("/comments/:id", "delete");
+
 export default backend;

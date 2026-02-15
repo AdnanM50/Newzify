@@ -5,6 +5,7 @@ import { useParams } from '@tanstack/react-router';
 import { Calendar, User, Tag, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Link } from '@tanstack/react-router';
+import CommentSection from '../components/comments/CommentSection';
 
 const NewsDetails: React.FC = () => {
   const { newsId } = useParams({ from: '/news/$newsId' });
@@ -108,6 +109,8 @@ const NewsDetails: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      <CommentSection newsId={newsId} />
     </article>
   );
 };
