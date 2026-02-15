@@ -9,12 +9,12 @@ const commentSchema = new Schema<TComment>(
         },
         newsId: {
             type: Schema.Types.ObjectId,
-            ref: "News",
+            ref: "news",
             required: true,
         },
         userId: {
             type: Schema.Types.ObjectId,
-            ref: "User",
+            ref: "user",
             required: true,
         },
         parentCommentId: {
@@ -25,7 +25,7 @@ const commentSchema = new Schema<TComment>(
         likes: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "User",
+                ref: "user",
             },
         ],
         is_deleted: {
