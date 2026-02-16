@@ -10,7 +10,7 @@ import { sendUserEmailGeneral } from '../../utils/sendEmail';
 
 export class OTPController {
     static sendOTP = catchAsync(async (req: any, res: any) => {
-        const { identifier, action } = req.body.body;
+        const { identifier, action } = req.body;
 
         console.log('OTP Request:', { identifier, action });
 

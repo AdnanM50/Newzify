@@ -5,6 +5,7 @@ import * as z from 'zod';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/ui/form';
+import { api } from '../helpers/api';
 
 // Form validation schema
 const registrationSchema = z.object({
@@ -186,32 +187,21 @@ const Registration: React.FC = () => {
   // Send OTP
   const sendOTP = async (data: RegistrationForm) => {
     try {
-      const response = await fetch('https://newzify-backend-kappa.vercel.app/api/v1/otp/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          identifier: data.email,
-          action: 'signup'
-        })
+      const response = await api.post('/otp/send', {
+        identifier: data.email,
+        action: 'signup'
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to send OTP');
-      }
-
-      const result = await response.json();
-      console.log('OTP sent successfully:', result);
+      console.log('OTP sent successfully:', response);
       
       // Store form data and show OTP modal
       setFormData(data);
       setShowOTPModal(true);
       setTimeLeft(300); // Reset timer
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending OTP:', error);
-      showToast('Failed to send OTP. Please try again.', 'error');
+      showToast(error.message || 'Failed to send OTP. Please try again.', 'error');
     }
   };
 
@@ -222,28 +212,16 @@ const Registration: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('https://newzify-backend-kappa.vercel.app/api/v1/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          phone: formData.phoneNumber,
-          password: formData.password,
-          otp: otp
-        })
+      const response = await api.post('/auth/register', {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phoneNumber,
+        password: formData.password,
+        otp: otp
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
-      }
-
-      const result = await response.json();
-      console.log('Registration successful:', result);
+      console.log('Registration successful:', response);
       
       // Show success message
       showToast('Registration successful! Welcome to Newzify!', 'success');
@@ -253,9 +231,9 @@ const Registration: React.FC = () => {
       setFormData(null);
       form.reset();
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
-      showToast(error instanceof Error ? error.message : 'Registration failed. Please try again.', 'error');
+      showToast(error.message || 'Registration failed. Please try again.', 'error');
     } finally {
       setIsSubmitting(false);
     }
