@@ -13,7 +13,7 @@ import httpStatus from "http-status";
 
 export class AuthController {
     static loginAccess = catchAsync(async (req, res) => {
-        const {body} = req.body;
+        const body = req.body;
         const { identifier, password } = body;
         const verificationResult = validEmailCheck(identifier);
         let user = null;
@@ -80,7 +80,7 @@ export class AuthController {
         });
     })
     static forgetPasswordOTPVerify = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const { identifier, action, otp } = body;
         let otp_Object,
             user: any = null;
@@ -164,7 +164,7 @@ export class AuthController {
         );
     });
     static forgetPasswordSubmitTokenBased = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const { _id } = res.locals.user;
         await AuthService.forgetPasswordTokenBased(body, _id);
         sendResponse(res, {
@@ -175,7 +175,7 @@ export class AuthController {
         });
     });
     static userPasswordUpdate = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const { _id, password } = res.locals.user;
         
         const isPasswordMatched = await comparePassword(
@@ -200,7 +200,7 @@ export class AuthController {
 
     static registerNewAccount = catchAsync(async (req, res) => {
         const payload = req.body; 
-        const { email, otp } = payload.body;
+        const { email, otp } = payload;
 
         // Validate OTP
         const otpRecord = await OTPService.findOTPByEmail({
@@ -231,7 +231,7 @@ export class AuthController {
         }
 
         // Create new user
-        const newUser = await UserService.createNewUser(payload.body);
+        const newUser = await UserService.createNewUser(payload);
         if (!newUser) {
             throw new AppError(
                 400,
