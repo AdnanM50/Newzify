@@ -79,8 +79,8 @@ export class AuthController {
         });
     })
     static forgetPasswordOTPVerify = catchAsync(async (req, res) => {
-        const body = req.body;
-        const { identifier, action, otp } = body;
+        const { identifier, action, otp } = req.body.body;
+
         let otp_Object,
             user: any = null;
         const validationResult = validEmailCheck(identifier?.trim());
@@ -198,8 +198,9 @@ export class AuthController {
     });
 
     static registerNewAccount = catchAsync(async (req, res) => {
-        const payload = req.body; 
+        const payload = req.body.body; 
         const { email, otp } = payload;
+
 
         // Validate OTP
         const otpRecord = await OTPService.findOTPByEmail({

@@ -188,9 +188,12 @@ const Registration: React.FC = () => {
   const sendOTP = async (data: RegistrationForm) => {
     try {
       const response = await api.post('/otp/send', {
-        identifier: data.email,
-        action: 'signup'
+        body: {
+          identifier: data.email,
+          action: 'signup'
+        }
       });
+
 
       console.log('OTP sent successfully:', response);
       
@@ -213,13 +216,16 @@ const Registration: React.FC = () => {
     
     try {
       const response = await api.post('/auth/register', {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phoneNumber,
-        password: formData.password,
-        otp: otp
+        body: {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phoneNumber,
+          password: formData.password,
+          otp: otp
+        }
       });
+
 
       console.log('Registration successful:', response);
       

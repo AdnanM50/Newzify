@@ -10,10 +10,10 @@ import AppError from '../../errors/appError';
 export class OTPController {
     static sendOTP = catchAsync(async (req: any, res: any) => {
         // Coerce identifier and action from request body without strict validation
-        const identifier = req.body?.identifier ? String(req.body.identifier) : '';
-        const action = req.body?.action ? String(req.body.action) : '';
+        const { identifier, action } = req.body.body;
 
         console.log('OTP Request:', { identifier, action });
+
 
         const otpPayload = {
             email: identifier?.toLowerCase().trim(),
