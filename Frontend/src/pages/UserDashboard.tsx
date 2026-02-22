@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { userProfileApi } from '@/helpers/api';
 import { LikedPostsSection } from '@/components/user/LikedPostsSection';
 import { UserCommentsSection } from '@/components/user/UserCommentsSection';
 import { RepliesSection } from '@/components/user/RepliesSection';
 import { SettingsForm } from '@/components/user/SettingsForm';
 import UserSidebar from '../components/layout/UserSidebar';
-import { Heart, MessageSquare, Reply, Settings } from 'lucide-react';
+
 
 const UserDashboard: React.FC = () => {
   const [likedPosts, setLikedPosts] = useState<any[]>([]);
@@ -86,7 +86,11 @@ const UserDashboard: React.FC = () => {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar */}
           <aside className="lg:w-64 flex-shrink-0">
-            <UserSidebar user={userProfile} />
+            <UserSidebar 
+              user={userProfile} 
+              activeTab={activeTab} 
+              onTabChange={setActiveTab} 
+            />
           </aside>
 
           {/* Main Content */}
@@ -97,42 +101,19 @@ const UserDashboard: React.FC = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex mb-6">
-                <TabsTrigger value="liked" className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" />
-                  <span className="hidden sm:inline">Liked Posts</span>
-                  <span className="sm:hidden">Liked</span>
-                </TabsTrigger>
-                <TabsTrigger value="comments" className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  <span className="hidden sm:inline">Comments</span>
-                  <span className="sm:hidden">Comments</span>
-                </TabsTrigger>
-                <TabsTrigger value="replies" className="flex items-center gap-2">
-                  <Reply className="h-4 w-4" />
-                  <span className="hidden sm:inline">Replies</span>
-                  <span className="sm:hidden">Replies</span>
-                </TabsTrigger>
-                <TabsTrigger value="settings" className="flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
-                  <span className="hidden sm:inline">Settings</span>
-                  <span className="sm:hidden">Settings</span>
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="liked" className="mt-0">
+              <TabsContent value="liked" className="mt-0 outline-none">
                 <LikedPostsSection posts={likedPosts} isLoading={isLoadingLiked} />
               </TabsContent>
 
-              <TabsContent value="comments" className="mt-0">
+              <TabsContent value="comments" className="mt-0 outline-none">
                 <UserCommentsSection comments={comments} isLoading={isLoadingComments} />
               </TabsContent>
 
-              <TabsContent value="replies" className="mt-0">
+              <TabsContent value="replies" className="mt-0 outline-none">
                 <RepliesSection replies={replies} isLoading={isLoadingReplies} />
               </TabsContent>
 
-              <TabsContent value="settings" className="mt-0">
+              <TabsContent value="settings" className="mt-0 outline-none">
                 <SettingsForm user={userProfile} onUpdate={fetchUserProfile} />
               </TabsContent>
             </Tabs>
