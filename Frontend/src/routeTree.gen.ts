@@ -16,8 +16,13 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as NewsNewsIdRouteImport } from './routes/news/$newsId'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
+import { Route as DashboardRepliesRouteImport } from './routes/dashboard/replies'
+import { Route as DashboardLikesRouteImport } from './routes/dashboard/likes'
+import { Route as DashboardCommentsRouteImport } from './routes/dashboard/comments'
 import { Route as CategorySlugRouteImport } from './routes/category/$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
@@ -66,6 +71,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -75,6 +85,26 @@ const NewsNewsIdRoute = NewsNewsIdRouteImport.update({
   id: '/news/$newsId',
   path: '/news/$newsId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRepliesRoute = DashboardRepliesRouteImport.update({
+  id: '/replies',
+  path: '/replies',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLikesRoute = DashboardLikesRouteImport.update({
+  id: '/likes',
+  path: '/likes',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCommentsRoute = DashboardCommentsRouteImport.update({
+  id: '/comments',
+  path: '/comments',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
@@ -141,7 +171,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
@@ -150,8 +180,13 @@ export interface FileRoutesByFullPath {
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/dashboard/comments': typeof DashboardCommentsRoute
+  '/dashboard/likes': typeof DashboardLikesRoute
+  '/dashboard/replies': typeof DashboardRepliesRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/news/$newsId': typeof NewsNewsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
   '/admin/news/create': typeof AdminNewsCreateRoute
@@ -163,7 +198,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
@@ -172,8 +206,13 @@ export interface FileRoutesByTo {
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/dashboard/comments': typeof DashboardCommentsRoute
+  '/dashboard/likes': typeof DashboardLikesRoute
+  '/dashboard/replies': typeof DashboardRepliesRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/news/$newsId': typeof NewsNewsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
   '/admin/news/create': typeof AdminNewsCreateRoute
@@ -187,7 +226,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
@@ -196,8 +235,13 @@ export interface FileRoutesById {
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/dashboard/comments': typeof DashboardCommentsRoute
+  '/dashboard/likes': typeof DashboardLikesRoute
+  '/dashboard/replies': typeof DashboardRepliesRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/news/$newsId': typeof NewsNewsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
   '/admin/news/create': typeof AdminNewsCreateRoute
@@ -221,8 +265,13 @@ export interface FileRouteTypes {
     | '/admin/reporters'
     | '/admin/users'
     | '/category/$slug'
+    | '/dashboard/comments'
+    | '/dashboard/likes'
+    | '/dashboard/replies'
+    | '/dashboard/settings'
     | '/news/$newsId'
     | '/admin/'
+    | '/dashboard/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
     | '/admin/news/create'
@@ -234,7 +283,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/dashboard'
     | '/login'
     | '/reporter-dashboard'
     | '/signup'
@@ -243,8 +291,13 @@ export interface FileRouteTypes {
     | '/admin/reporters'
     | '/admin/users'
     | '/category/$slug'
+    | '/dashboard/comments'
+    | '/dashboard/likes'
+    | '/dashboard/replies'
+    | '/dashboard/settings'
     | '/news/$newsId'
     | '/admin'
+    | '/dashboard'
     | '/admin/blog/category'
     | '/admin/blog/tags'
     | '/admin/news/create'
@@ -266,8 +319,13 @@ export interface FileRouteTypes {
     | '/admin/reporters'
     | '/admin/users'
     | '/category/$slug'
+    | '/dashboard/comments'
+    | '/dashboard/likes'
+    | '/dashboard/replies'
+    | '/dashboard/settings'
     | '/news/$newsId'
     | '/admin/'
+    | '/dashboard/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
     | '/admin/news/create'
@@ -281,7 +339,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   ReporterDashboardRoute: typeof ReporterDashboardRoute
   SignupRoute: typeof SignupRoute
@@ -340,6 +398,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -353,6 +418,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/news/$newsId'
       preLoaderRoute: typeof NewsNewsIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/replies': {
+      id: '/dashboard/replies'
+      path: '/replies'
+      fullPath: '/dashboard/replies'
+      preLoaderRoute: typeof DashboardRepliesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/likes': {
+      id: '/dashboard/likes'
+      path: '/likes'
+      fullPath: '/dashboard/likes'
+      preLoaderRoute: typeof DashboardLikesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/comments': {
+      id: '/dashboard/comments'
+      path: '/comments'
+      fullPath: '/dashboard/comments'
+      preLoaderRoute: typeof DashboardCommentsRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/category/$slug': {
       id: '/category/$slug'
@@ -475,11 +568,31 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
   AdminRouteRouteChildren,
 )
 
+interface DashboardRouteChildren {
+  DashboardCommentsRoute: typeof DashboardCommentsRoute
+  DashboardLikesRoute: typeof DashboardLikesRoute
+  DashboardRepliesRoute: typeof DashboardRepliesRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCommentsRoute: DashboardCommentsRoute,
+  DashboardLikesRoute: DashboardLikesRoute,
+  DashboardRepliesRoute: DashboardRepliesRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   ReporterDashboardRoute: ReporterDashboardRoute,
   SignupRoute: SignupRoute,
