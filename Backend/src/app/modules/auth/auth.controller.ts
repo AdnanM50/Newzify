@@ -13,8 +13,7 @@ import httpStatus from "http-status";
 
 export class AuthController {
     static loginAccess = catchAsync(async (req, res) => {
-        const body = req.body;
-        const { identifier, password } = body;
+        const { identifier, password } = req.body.body;
         const verificationResult = validEmailCheck(identifier);
         let user = null;
         if (verificationResult.success) {

@@ -2,32 +2,34 @@ import { z } from 'zod';
 
 const userLoginValidationSchema = z.object({
     body: z.object({
-        identifier: z
-            .string()
-            .refine(
-                (value) => {
-                    // Check if input matches email format or phone number format
-                    return (
-                        /^\+(?:[0-9] ?){6,14}[0-9]$/.test(value) ||
-                        z.string().email().safeParse(value).success
-                    );
-                },
-                {
+        body: z.object({
+            identifier: z
+                .string()
+                .refine(
+                    (value) => {
+                        // Check if input matches email format or phone number format
+                        return (
+                            /^\+(?:[0-9] ?){6,14}[0-9]$/.test(value) ||
+                            z.string().email().safeParse(value).success
+                        );
+                    },
+                    {
+                        message:
+                            'User identifier must be a valid email or phone number',
+                    },
+                ),
+            password: z
+                .string()
+                .min(6, {
                     message:
-                        'User identifier must be a valid email or phone number',
-                },
-            ),
-        password: z
-            .string()
-            .min(6, {
-                message:
-                    'Password must be greater than or equal to 6 characters',
-            })
-            .max(100, {
-                message:
-                    'Password must be less than or equal to 100 characters',
-            })
-            .trim(),
+                        'Password must be greater than or equal to 6 characters',
+                })
+                .max(100, {
+                    message:
+                        'Password must be less than or equal to 100 characters',
+                })
+                .trim(),
+        }),
     }),
 });
 const identifierValidations = z.object({

@@ -7,8 +7,11 @@ import auth from "../../middleware/auth";
 
 const authRouter = Router();
 authRouter.post('/register', AuthController.registerNewAccount);
-authRouter.post("/login",
-    AuthController.loginAccess)
+authRouter.post(
+    "/login",
+    validate(AuthValidations.userLoginValidationSchema),
+    AuthController.loginAccess
+)
 authRouter.post(
     '/forget-password/verify-otp',
     
