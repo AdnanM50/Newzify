@@ -9,9 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrandingNewsRouteImport } from './routes/tranding-news'
+import { Route as TopStoriesRouteImport } from './routes/top-stories'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ReporterDashboardRouteImport } from './routes/reporter-dashboard'
+import { Route as PopularRouteImport } from './routes/popular'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FreshStoriesRouteImport } from './routes/fresh-stories'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
@@ -36,6 +40,16 @@ import { Route as AdminBlogCategoryRouteImport } from './routes/admin/blog/categ
 import { Route as AdminNewsNewsIdEditRouteImport } from './routes/admin/news/$newsId.edit'
 import { Route as AdminNewsNewsIdCommentsRouteImport } from './routes/admin/news/$newsId.comments'
 
+const TrandingNewsRoute = TrandingNewsRouteImport.update({
+  id: '/tranding-news',
+  path: '/tranding-news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopStoriesRoute = TopStoriesRouteImport.update({
+  id: '/top-stories',
+  path: '/top-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -46,9 +60,19 @@ const ReporterDashboardRoute = ReporterDashboardRouteImport.update({
   path: '/reporter-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PopularRoute = PopularRouteImport.update({
+  id: '/popular',
+  path: '/popular',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FreshStoriesRoute = FreshStoriesRouteImport.update({
+  id: '/fresh-stories',
+  path: '/fresh-stories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -172,9 +196,13 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
+  '/popular': typeof PopularRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
+  '/top-stories': typeof TopStoriesRoute
+  '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
@@ -198,9 +226,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
+  '/popular': typeof PopularRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
+  '/top-stories': typeof TopStoriesRoute
+  '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
@@ -227,9 +259,13 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
+  '/popular': typeof PopularRoute
   '/reporter-dashboard': typeof ReporterDashboardRoute
   '/signup': typeof SignupRoute
+  '/top-stories': typeof TopStoriesRoute
+  '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
@@ -257,9 +293,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/about'
     | '/dashboard'
+    | '/fresh-stories'
     | '/login'
+    | '/popular'
     | '/reporter-dashboard'
     | '/signup'
+    | '/top-stories'
+    | '/tranding-news'
     | '/admin/category'
     | '/admin/profile'
     | '/admin/reporters'
@@ -283,9 +323,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/fresh-stories'
     | '/login'
+    | '/popular'
     | '/reporter-dashboard'
     | '/signup'
+    | '/top-stories'
+    | '/tranding-news'
     | '/admin/category'
     | '/admin/profile'
     | '/admin/reporters'
@@ -311,9 +355,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/about'
     | '/dashboard'
+    | '/fresh-stories'
     | '/login'
+    | '/popular'
     | '/reporter-dashboard'
     | '/signup'
+    | '/top-stories'
+    | '/tranding-news'
     | '/admin/category'
     | '/admin/profile'
     | '/admin/reporters'
@@ -340,15 +388,33 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  FreshStoriesRoute: typeof FreshStoriesRoute
   LoginRoute: typeof LoginRoute
+  PopularRoute: typeof PopularRoute
   ReporterDashboardRoute: typeof ReporterDashboardRoute
   SignupRoute: typeof SignupRoute
+  TopStoriesRoute: typeof TopStoriesRoute
+  TrandingNewsRoute: typeof TrandingNewsRoute
   CategorySlugRoute: typeof CategorySlugRoute
   NewsNewsIdRoute: typeof NewsNewsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tranding-news': {
+      id: '/tranding-news'
+      path: '/tranding-news'
+      fullPath: '/tranding-news'
+      preLoaderRoute: typeof TrandingNewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/top-stories': {
+      id: '/top-stories'
+      path: '/top-stories'
+      fullPath: '/top-stories'
+      preLoaderRoute: typeof TopStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -363,11 +429,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReporterDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/popular': {
+      id: '/popular'
+      path: '/popular'
+      fullPath: '/popular'
+      preLoaderRoute: typeof PopularRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fresh-stories': {
+      id: '/fresh-stories'
+      path: '/fresh-stories'
+      fullPath: '/fresh-stories'
+      preLoaderRoute: typeof FreshStoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -593,9 +673,13 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  FreshStoriesRoute: FreshStoriesRoute,
   LoginRoute: LoginRoute,
+  PopularRoute: PopularRoute,
   ReporterDashboardRoute: ReporterDashboardRoute,
   SignupRoute: SignupRoute,
+  TopStoriesRoute: TopStoriesRoute,
+  TrandingNewsRoute: TrandingNewsRoute,
   CategorySlugRoute: CategorySlugRoute,
   NewsNewsIdRoute: NewsNewsIdRoute,
 }

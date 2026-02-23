@@ -62,6 +62,31 @@ const Header: React.FC<Props> = () => {
       <nav className={`bg-gray-50 border-t border-gray-200 ${isMenuOpen ? 'block' : 'hidden'} md:block relative`}>
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-8 py-2">
+            <Link
+              to="/tranding-news"
+              className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
+            >
+              Trending
+            </Link>
+            <Link
+              to="/top-stories"
+              className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
+            >
+              Top Stories
+            </Link>
+            <Link
+              to="/popular"
+              className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
+            >
+              Popular
+            </Link>
+            <Link
+              to="/fresh-stories"
+              className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
+            >
+              Fresh Stories
+            </Link>
+            <div className="h-6 w-px bg-gray-200 hidden md:block mx-1"></div>
             {visibleCategories.map((category: any) => (
               <Link
                 key={category._id}

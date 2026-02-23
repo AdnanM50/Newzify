@@ -91,6 +91,10 @@ export class NewsController {
             filter.category = new Types.ObjectId(query.category as string);
         }
 
+        if (query.type) {
+            filter.types = query.type;
+        }
+
         const list = await NewsService.listNews(filter, query);
         sendResponse(res, {
             statusCode: httpStatus.OK,
