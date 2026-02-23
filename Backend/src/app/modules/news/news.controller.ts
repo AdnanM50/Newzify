@@ -187,4 +187,16 @@ export class NewsController {
             data: null,
         });
     });
+
+    static toggleLikeNews = catchAsync(async (req, res) => {
+        const { id } = req.params;
+        const user = res.locals.user;
+        const updatedNews = await NewsService.toggleLikeNews(id, user._id);
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'News like toggled successfully',
+            data: updatedNews,
+        });
+    });
 }

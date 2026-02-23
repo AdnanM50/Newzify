@@ -23,6 +23,7 @@ export type TNews = {
   types?: string[];
   author?: any;
   status?: 'draft' | 'published';
+  likes?: string[] | any[];
   is_deleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -186,5 +187,8 @@ export const createComment = backend<any>("/comments/create", "post");
 export const getCommentsByNewsId = backend<any[]>("/comments/news/:newsId", "get");
 export const toggleLikeComment = backend<any>("/comments/like/:id", "patch");
 export const deleteComment = backend<any>("/comments/:id", "delete");
+
+// ==================== News Interaction Endpoints ====================
+export const toggleLikeNews = backend<any>("/news/like/:id", "patch");
 
 export default backend;

@@ -21,4 +21,7 @@ router.get('/:id', auth(), NewsController.getNews);
 router.get('/public/list', NewsController.publicList);
 router.get('/public/:id', NewsController.publicGet);
 
+// Like news
+router.patch('/like/:id', auth(), NewsController.toggleLikeNews);
+
 export const newsRoutes = router;

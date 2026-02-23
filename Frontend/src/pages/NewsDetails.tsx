@@ -1,17 +1,37 @@
 import React from 'react';
-import { useFetch } from '../helpers/hooks';
-import { getPublicNewsById } from '../helpers/backend';
+import { useFetch, useAction } from '../helpers/hooks';
+import { getPublicNewsById, toggleLikeNews } from '../helpers/backend';
 import { useParams } from '@tanstack/react-router';
-import { Calendar, User, Tag, ArrowLeft } from 'lucide-react';
+import { Calendar, User, Tag, ArrowLeft, Heart } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Link } from '@tanstack/react-router';
 import CommentSection from '../components/comments/CommentSection';
+import { useUser } from '../context/user';
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  LinkedinIcon,
+  WhatsappIcon
+} from 'react-share';
 
 const NewsDetails: React.FC = () => {
   const { newsId } = useParams({ from: '/news/$newsId' });
+  const { user } = useUser();
+  const shareUrl = window.location.href;
 
-  const { data: news, isLoading, error } = useFetch('news-details', getPublicNewsById, {
+  const { data: news, isLoading, error, refetch } = useFetch('news-details', getPublicNewsById, {
     id: newsId
+  });
+
+  const { mutate: likeNews, isLoading: isLiking } = useAction(toggleLikeNews, {
+    showSuccessToast: false,
+    onSuccess: () => {
+      refetch();
+    }
   });
 
   if (isLoading) {
@@ -33,6 +53,15 @@ const NewsDetails: React.FC = () => {
       </div>
     );
   }
+
+  const isLiked = user && news.likes?.some((id: any) => (typeof id === 'string' ? id === user._id : id._id === user._id));
+
+  const handleLike = () => {
+    if (!user) {
+      return;
+    }
+    likeNews({ id: newsId });
+  };
 
   return (
     <article className="container mx-auto px-4 py-8 max-w-4xl">
@@ -64,8 +93,8 @@ const NewsDetails: React.FC = () => {
         <div className="flex flex-wrap items-center text-sm text-gray-500 gap-6 border-y border-gray-100 py-4">
           <div className="flex items-center">
             <User className="h-4 w-4 mr-2" />
-            <span className="font-medium text-gray-900">
-              {news.author ? `${news.author.first_name} ${news.author.last_name}` : 'Admin'}
+            <span className="font-medium text-gray-900 capitalize">
+              {news.author ? `${news.author.first_name} ${news.author.last_name} (${news.author.role})` : 'Admin'}
             </span>
           </div>
           <div className="flex items-center">
@@ -75,6 +104,34 @@ const NewsDetails: React.FC = () => {
               month: 'long',
               day: 'numeric'
             })}
+          </div>
+          <div className="flex items-center gap-4 ml-auto">
+             <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`flex items-center gap-1.5 ${isLiked ? 'text-red-600 hover:text-red-700' : 'text-gray-500 hover:text-red-600'}`}
+                onClick={handleLike}
+                disabled={isLiking || !user}
+             >
+                <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+                <span className="font-semibold">{news.likes?.length || 0}</span>
+             </Button>
+             
+             <div className="flex items-center gap-2 border-l pl-4">
+                <span className="text-xs font-bold text-gray-400 uppercase">Share:</span>
+                <FacebookShareButton url={shareUrl}>
+                  <FacebookIcon size={32} round />
+                </FacebookShareButton>
+                <TwitterShareButton url={shareUrl} title={news.title}>
+                  <TwitterIcon size={32} round />
+                </TwitterShareButton>
+                <LinkedinShareButton url={shareUrl} title={news.title}>
+                  <LinkedinIcon size={32} round />
+                </LinkedinShareButton>
+                <WhatsappShareButton url={shareUrl} title={news.title} separator=":: ">
+                  <WhatsappIcon size={32} round />
+                </WhatsappShareButton>
+             </div>
           </div>
         </div>
       </header>

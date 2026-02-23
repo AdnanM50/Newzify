@@ -2,7 +2,8 @@
 
 const BACKEND_URL = "https://newzify-backend-kappa.vercel.app";
 const API_URL = `${BACKEND_URL.replace(/\/$/, "")}/api/v1/`;
-
+// https://newzify-backend-kappa.vercel.app
+// http://localhost:5000
 // API Response type matching your backend
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -49,8 +50,14 @@ const buildUrl = (endpoint: string, params: Record<string, unknown> = {}) => {
 // Generic Fetch Wrapper
 const customFetch = async <T>(endpoint: string, options: FetchOptions = {}): Promise<ApiResponse<T>> => {
   const { data, params = {}, token_name = "token", headers = {}, ...customConfig } = options;
+  
+  // Merge data with params for URL interpolation, but don't mutate the original data
+  const urlParams = { ...params };
+  if (data && !(data instanceof FormData)) {
+    Object.assign(urlParams, data);
+  }
 
-  const url = buildUrl(endpoint, params);
+  const url = buildUrl(endpoint, urlParams);
   
   const config: RequestInit = {
     ...customConfig,

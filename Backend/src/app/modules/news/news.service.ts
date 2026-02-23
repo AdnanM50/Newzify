@@ -17,7 +17,7 @@ export default class NewsService {
     }
 
     static async findById(_id: string): Promise<any> {
-        const news = await News.findById(_id).lean();
+        const news = await News.findById(_id).populate('author', 'first_name last_name role image').lean();
         if (!news) {
             throw new AppError(
                 HttpStatusCode.NotFound,
@@ -27,6 +27,30 @@ export default class NewsService {
         }
         return news;
     }
+
+    static async toggleLikeNews(_id: string, userId: string): Promise<any> {
+        const news = await News.findById(_id);
+        if (!news) {
+            throw new AppError(
+                HttpStatusCode.NotFound,
+                'Not Found',
+                'News not found!',
+            );
+        }
+
+        const isLiked = news.likes?.includes(userId as any);
+        if (isLiked) {
+            // Unlike
+            news.likes = news.likes?.filter((id: any) => String(id) !== String(userId));
+        } else {
+            // Like
+            news.likes?.push(userId as any);
+        }
+
+        await news.save();
+        return news;
+    }
+
     static async updateNews(_id: string, updateDocument: any): Promise<any> {
         const options = { new: true };
         const news = await News.findByIdAndUpdate(_id, updateDocument, options).lean();
