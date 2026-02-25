@@ -1,6 +1,6 @@
 
 
-const BACKEND_URL = "https://newzify-backend-kappa.vercel.app";
+const BACKEND_URL = "http://localhost:5000";
 const API_URL = `${BACKEND_URL.replace(/\/$/, "")}/api/v1/`;
 // https://newzify-backend-kappa.vercel.app
 // http://localhost:5000
@@ -51,13 +51,7 @@ const buildUrl = (endpoint: string, params: Record<string, unknown> = {}) => {
 const customFetch = async <T>(endpoint: string, options: FetchOptions = {}): Promise<ApiResponse<T>> => {
   const { data, params = {}, token_name = "token", headers = {}, ...customConfig } = options;
   
-  // Merge data with params for URL interpolation, but don't mutate the original data
-  const urlParams = { ...params };
-  if (data && !(data instanceof FormData)) {
-    Object.assign(urlParams, data);
-  }
-
-  const url = buildUrl(endpoint, urlParams);
+  const url = buildUrl(endpoint, params);
   
   const config: RequestInit = {
     ...customConfig,
@@ -158,7 +152,7 @@ export const userProfileApi = {
     api.patch(`/user/profile/toggle-like/${newsId}`),
   
   updateUserProfile: (data: Record<string, unknown>) =>
-    api.patch('/user/update', { body: data }),
+    api.patch('/user/update', data),
 };
 
 export default api;

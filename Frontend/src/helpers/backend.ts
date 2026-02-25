@@ -23,6 +23,7 @@ export type TNews = {
   types?: string[];
   author?: any;
   status?: 'draft' | 'published';
+  reporter?: any;
   likes?: string[] | any[];
   is_deleted?: boolean;
   createdAt?: string;

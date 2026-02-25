@@ -79,7 +79,7 @@ const Reporters = () => {
   });
 
   const onSubmit = (data: ReporterFormValues) => {
-    addReporter({ body: data } as any);
+    addReporter(data as any);
   };
 
   const handleDelete = (id: string) => {
@@ -90,7 +90,7 @@ const Reporters = () => {
 
   const handleResetPassword = () => {
     if (selectedUser && resetPassword) {
-      resetPwd({ body: { userId: selectedUser._id, newPassword: resetPassword } } as any);
+      resetPwd({ userId: selectedUser._id, newPassword: resetPassword } as any);
     }
   };
 

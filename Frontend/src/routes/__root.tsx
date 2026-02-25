@@ -9,7 +9,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const location = useLocation()
-  const hideLayout = location.pathname.startsWith('/admin')
+  const hideLayout = location.pathname.startsWith('/admin') || location.pathname.startsWith('/reporter-dashboard')
 
   return (
     <>

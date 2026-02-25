@@ -31,7 +31,7 @@ export class UserController {
     });
     static userProfileUpdate = catchAsync(async (req, res) => {
         const {_id} = res.locals.user;
-        const {body} = req.body;
+        const body = req.body;
         const updateQuery = {_id}
         const updateDocument = {
             ...body,
@@ -74,7 +74,7 @@ export class UserController {
     });
 
     static createNewReporter = catchAsync(async (req, res) => {
-        const payload = req.body.body;
+        const payload = req.body;
         payload.role = 'reporter';
         
         // Check if user already exists
@@ -104,7 +104,7 @@ export class UserController {
     });
 
     static resetUserPassword = catchAsync(async (req, res) => {
-        const { userId, newPassword } = req.body.body;
+        const { userId, newPassword } = req.body;
         const salt = Number(config.bcrypt_salt_rounds);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
         
