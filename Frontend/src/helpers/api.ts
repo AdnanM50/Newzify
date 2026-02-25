@@ -1,6 +1,6 @@
 
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://newzify-backend-kappa.vercel.app";
 const API_URL = `${BACKEND_URL.replace(/\/$/, "")}/api/v1/`;
 // https://newzify-backend-kappa.vercel.app
 // http://localhost:5000
