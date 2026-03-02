@@ -9,27 +9,18 @@ import {
 } from "../../../helpers/backend";
 import { Trash, Edit, Loader2, Image as ImageIcon, Eye, Plus } from "lucide-react";
 import NewsPreviewModal from "../../../components/admin/news/NewsPreviewModal";
-import { useUser } from "../../../context/user";
+
 
 const NewsList = () => {
   const [selectedNews, setSelectedNews] = useState<TNews | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const { user } = useUser();
 
   const { data: newsData, isLoading: isNewsLoading, refetch: refetchNews } = useFetch<PaginatedResponse<TNews>>(
     "news",
     getNewsList
   );
   
-  // Filter news to show only those created by the current reporter
-  // In a real app, this should be done on the backend
-  const newsList = (newsData?.docs || []).filter(item => {
-    // Handling both object and string reporter ID
-    const reporterId = typeof item.reporter === 'object' && item.reporter !== null 
-      ? (item.reporter as any)._id 
-      : item.reporter;
-    return reporterId === user?._id;
-  });
+  const newsList = newsData?.docs || [];
 
   const { mutate: remove } = useDelete(deleteNews, {
     onSuccess: () => refetchNews(),
@@ -38,7 +29,7 @@ const NewsList = () => {
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this news?")) {
-      remove({ body: { _id: id } });
+      remove({ _id: id });
     }
   };
 

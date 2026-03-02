@@ -27,7 +27,7 @@ const NewsList = () => {
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this news?")) {
-      remove({ body: { _id: id } });
+      remove({ _id: id });
     }
   };
 

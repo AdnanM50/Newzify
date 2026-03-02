@@ -131,7 +131,7 @@ const NewsForm = ({ initialData, categories, onSuccess, onCancel }: NewsFormProp
 
       if (initialData) {
         const oldImage = initialData.image;
-        await update({ body: { ...payloadBody, _id: initialData._id } });
+        await update({ ...payloadBody, _id: initialData._id });
         
         if (selectedImage && oldImage && oldImage !== imageUrl) {
             const publicId = getPublicIdFromUrl(oldImage);
@@ -140,7 +140,7 @@ const NewsForm = ({ initialData, categories, onSuccess, onCancel }: NewsFormProp
             }
         }
       } else {
-        await create({ body: payloadBody });
+        await create(payloadBody);
       }
       onSuccess();
     } catch (error) {
