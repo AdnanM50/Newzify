@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useUser } from "../../../context/user";
 import { useFetch, useDelete } from "../../../helpers/hooks";
 import {
   getNewsList,
@@ -8,10 +9,18 @@ import {
   type TNews,
   type PaginatedResponse,
 } from "../../../helpers/backend";
-import { Trash, Edit, Loader2, Image as ImageIcon, Eye, MessageSquare, Plus } from "lucide-react";
+import { Trash, Edit, Loader2, Image as ImageIcon, Eye, MessageSquare, Plus, Filter } from "lucide-react";
 import NewsPreviewModal from "../../../components/admin/news/NewsPreviewModal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/ui/select";
 
 const NewsList = () => {
+  const { user: currentUser } = useUser();
   const [selectedNews, setSelectedNews] = useState<TNews | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [authorFilter, setAuthorFilter] = useState('');
@@ -23,7 +32,7 @@ const NewsList = () => {
   const queryParams: Record<string, string> = {};
   if (authorFilter === 'admin') {
     queryParams.author_role = 'admin';
-  } else if (authorFilter !== '') {
+  } else if (authorFilter !== '' && authorFilter !== 'all') {
     queryParams.author = authorFilter;
   }
 
@@ -57,19 +66,25 @@ const NewsList = () => {
            <p className="text-gray-500">View and manage all news articles published on Newzify.</p>
         </div>
         <div className="flex gap-4 items-center">
-            <select
-              className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700 outline-none focus:border-blue-500 transition-colors"
-              value={authorFilter}
-              onChange={(e) => setAuthorFilter(e.target.value)}
-            >
-              <option value="">All Authors</option>
-              <option value="admin">Admins Only</option>
-              {Array.isArray(reportersList) && reportersList.map((reporter: any) => (
-                <option key={reporter._id} value={reporter._id}>
-                  {reporter.first_name} {reporter.last_name} (Reporter)
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2 bg-gray-50 p-1 rounded-lg border border-gray-100">
+               <Select value={authorFilter || 'all'} onValueChange={(val) => setAuthorFilter(val === 'all' ? '' : val)}>
+                  <SelectTrigger className="w-[200px] border-none shadow-none focus:ring-0 bg-transparent h-9">
+                    <div className="flex items-center gap-2">
+                      <Filter size={14} className="text-gray-400" />
+                      <SelectValue placeholder="Filter by Author" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Authors</SelectItem>
+                    <SelectItem value="admin">Admins Only</SelectItem>
+                    {Array.isArray(reportersList) && reportersList.map((reporter: any) => (
+                      <SelectItem key={reporter._id} value={reporter._id}>
+                        {reporter.first_name} {reporter.last_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+            </div>
             <Link 
               to="/admin/news/create"
               className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-600/20"
@@ -152,14 +167,16 @@ const NewsList = () => {
                       >
                         <MessageSquare size={18} />
                       </Link>
-                      <Link 
-                        to="/admin/news/$newsId/edit"
-                        params={{ newsId: item._id }}
-                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="Edit"
-                      >
-                        <Edit size={18} />
-                      </Link>
+                      {!(currentUser?.role === 'admin' && item.author?.role === 'reporter') && (
+                        <Link 
+                          to="/admin/news/$newsId/edit"
+                          params={{ newsId: item._id }}
+                          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                          title="Edit"
+                        >
+                          <Edit size={18} />
+                        </Link>
+                      )}
                       <button 
                         onClick={() => handleDelete(item._id)} 
                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"

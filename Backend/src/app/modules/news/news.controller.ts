@@ -57,6 +57,15 @@ export class NewsController {
             );
         }
 
+        // Admin restriction: Cannot edit reporter news
+        if (user?.role === 'admin' && news.author?.role === 'reporter') {
+            throw new AppError(
+                HttpStatusCode.Forbidden,
+                'Forbidden',
+                'Admins cannot edit news authored by reporters.',
+            );
+        }
+
         // If category provided, ensure it exists and not deleted
         if (body.category) {
             const category = await Category.findById(body.category).lean();
