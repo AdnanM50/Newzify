@@ -4,6 +4,7 @@ import { useFetch, useDelete } from "../../../helpers/hooks";
 import {
   getNewsList,
   deleteNews,
+  fetchUserList,
   type TNews,
   type PaginatedResponse,
 } from "../../../helpers/backend";
@@ -13,10 +14,22 @@ import NewsPreviewModal from "../../../components/admin/news/NewsPreviewModal";
 const NewsList = () => {
   const [selectedNews, setSelectedNews] = useState<TNews | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [authorFilter, setAuthorFilter] = useState('');
+
+  // Fetch only reporters for the filter dropdown
+  const { data: reportersData } = useFetch("reporters", () => fetchUserList({ role: "reporter" }));
+  const reportersList = reportersData?.docs || reportersData || [];
+
+  const queryParams: Record<string, string> = {};
+  if (authorFilter === 'admin') {
+    queryParams.author_role = 'admin';
+  } else if (authorFilter !== '') {
+    queryParams.author = authorFilter;
+  }
 
   const { data: newsData, isLoading: isNewsLoading, refetch: refetchNews } = useFetch<PaginatedResponse<TNews>>(
-    "news",
-    getNewsList
+    ["news", authorFilter], // add filter to query key to trigger refetch
+    () => getNewsList(queryParams),
   );
   const newsList = newsData?.docs || [];
 
@@ -43,13 +56,28 @@ const NewsList = () => {
            <h1 className="text-2xl font-bold text-gray-800">News Management</h1>
            <p className="text-gray-500">View and manage all news articles published on Newzify.</p>
         </div>
-        <Link 
-          to="/admin/news/create"
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-600/20"
-        >
-          <Plus size={20} />
-          Add News
-        </Link>
+        <div className="flex gap-4 items-center">
+            <select
+              className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700 outline-none focus:border-blue-500 transition-colors"
+              value={authorFilter}
+              onChange={(e) => setAuthorFilter(e.target.value)}
+            >
+              <option value="">All Authors</option>
+              <option value="admin">Admins Only</option>
+              {Array.isArray(reportersList) && reportersList.map((reporter: any) => (
+                <option key={reporter._id} value={reporter._id}>
+                  {reporter.first_name} {reporter.last_name} (Reporter)
+                </option>
+              ))}
+            </select>
+            <Link 
+              to="/admin/news/create"
+              className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-600/20"
+            >
+              <Plus size={20} />
+              Add News
+            </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -64,6 +92,7 @@ const NewsList = () => {
                 <th className="px-6 py-4 font-semibold">Image</th>
                 <th className="px-6 py-4 font-semibold">Title</th>
                 <th className="px-6 py-4 font-semibold">Category</th>
+                <th className="px-6 py-4 font-semibold">Author</th>
                 <th className="px-6 py-4 font-semibold">Status</th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -89,9 +118,17 @@ const NewsList = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-gray-600 text-sm">
-                      <span className="bg-gray-100 px-2 py-1 rounded text-xs">
-                        {typeof item.category === 'object' && item.category !== null ? (item.category as any).name : '-'}
+                      <span className="bg-gray-100 px-2 py-1 rounded text-xs font-medium">
+                        {item.category && typeof item.category === 'object' ? (item.category as any).name : '-'}
                       </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium text-gray-900">
+                      {item.author ? `${item.author.first_name} ${item.author.last_name || ''}` : 'Unknown'}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-0.5 capitalize">
+                      {item.author?.role || '-'}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full ${item.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>

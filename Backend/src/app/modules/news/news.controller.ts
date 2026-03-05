@@ -121,7 +121,11 @@ export class NewsController {
         const query = req.query || {};
         let filter: any = { is_deleted: false };
         if (user?.role === 'reporter') {
-            filter.author = user._id;
+            filter.author = new Types.ObjectId(user._id);
+        } else if (user?.role === 'admin') {
+            if (query.author) {
+                filter.author = new Types.ObjectId(query.author as string);
+            }
         }
         const list = await NewsService.listNews(filter, query);
         sendResponse(res, {
