@@ -33,6 +33,7 @@ import { Route as CategorySlugRouteImport } from './routes/category/$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
+import { Route as AdminPageSettingsRouteImport } from './routes/admin/page-settings'
 import { Route as AdminCategoryRouteImport } from './routes/admin/category'
 import { Route as ReporterDashboardNewsIndexRouteImport } from './routes/reporter-dashboard/news/index'
 import { Route as AdminNewsIndexRouteImport } from './routes/admin/news/index'
@@ -166,6 +167,11 @@ const AdminProfileRoute = AdminProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminPageSettingsRoute = AdminPageSettingsRouteImport.update({
+  id: '/page-settings',
+  path: '/page-settings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminCategoryRoute = AdminCategoryRouteImport.update({
   id: '/category',
   path: '/category',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/top-stories': typeof TopStoriesRoute
   '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
+  '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/top-stories': typeof TopStoriesRoute
   '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
+  '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/top-stories': typeof TopStoriesRoute
   '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
+  '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/top-stories'
     | '/tranding-news'
     | '/admin/category'
+    | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
@@ -383,6 +393,7 @@ export interface FileRouteTypes {
     | '/top-stories'
     | '/tranding-news'
     | '/admin/category'
+    | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/top-stories'
     | '/tranding-news'
     | '/admin/category'
+    | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
@@ -631,6 +643,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProfileRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/page-settings': {
+      id: '/admin/page-settings'
+      path: '/page-settings'
+      fullPath: '/admin/page-settings'
+      preLoaderRoute: typeof AdminPageSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/category': {
       id: '/admin/category'
       path: '/category'
@@ -713,6 +732,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminCategoryRoute: typeof AdminCategoryRoute
+  AdminPageSettingsRoute: typeof AdminPageSettingsRoute
   AdminProfileRoute: typeof AdminProfileRoute
   AdminReportersRoute: typeof AdminReportersRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -728,6 +748,7 @@ interface AdminRouteRouteChildren {
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCategoryRoute: AdminCategoryRoute,
+  AdminPageSettingsRoute: AdminPageSettingsRoute,
   AdminProfileRoute: AdminProfileRoute,
   AdminReportersRoute: AdminReportersRoute,
   AdminUsersRoute: AdminUsersRoute,

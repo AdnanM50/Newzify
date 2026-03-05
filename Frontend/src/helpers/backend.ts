@@ -74,6 +74,14 @@ export type PaginatedResponse<T> = {
   pagingCounter: number;
 };
 
+export type TPageSetting = {
+  _id?: string;
+  heroNews: Array<TNews | string>;
+  threeBoxNews: Array<TNews | string>;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 /**
  * Creates an API function for a specific endpoint and HTTP method
  */
@@ -191,5 +199,9 @@ export const deleteComment = backend<any>("/comments/:id", "delete");
 
 // ==================== News Interaction Endpoints ====================
 export const toggleLikeNews = backend<any>("/news/like/:id", "patch");
+
+// ==================== Page Setting Endpoints ====================
+export const getPageSettings = backend<TPageSetting>("/page-setting", "get");
+export const updatePageSettings = backend<TPageSetting>("/page-setting", "put");
 
 export default backend;

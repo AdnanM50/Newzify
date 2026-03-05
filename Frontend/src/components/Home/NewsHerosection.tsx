@@ -2,6 +2,8 @@ import React from "react";
 import ArticleCard from "./ArticleCard";
 import FeaturedArticle from "./FeaturedArticle";
 import Sidebar from "./Sidebar";
+import { useFetch } from "../../helpers/hooks";
+import { getPageSettings } from "../../helpers/backend";
 
 
 
@@ -54,6 +56,10 @@ import Sidebar from "./Sidebar";
     }
   ];
 const NewsHerosection: React.FC = () => {
+
+  const { data: pageSettingsRaw } = useFetch<any>("page-settings", getPageSettings);
+  const threeBoxNews = pageSettingsRaw?.data?.threeBoxNews || [];
+
   return (
     <div className=" bg-white">
       {/* Top Articles Bar */}
@@ -113,27 +119,58 @@ const NewsHerosection: React.FC = () => {
 
           {/* Center Column - Featured Article */}
           <div className="lg:col-span-2 grid-cols-1">
-            <FeaturedArticle
-              title="Social Media Marketing for Franchises is Meant for Women"
-              description="Find people with high expectations and a low tolerance for excuses. They'll have higher expectations for you than you have for yourself. Don't flatter yourself..."
-              category="MARKETING"
-              imageUrl="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-            />
+            {threeBoxNews.length >= 1 ? (
+              <FeaturedArticle
+                _id={threeBoxNews[0].slug || threeBoxNews[0]._id}
+                title={threeBoxNews[0].title}
+                description={threeBoxNews[0].content?.substring(0, 150) + "..." || ""}
+                category={threeBoxNews[0].category?.name || "News"}
+                imageUrl={threeBoxNews[0].image || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
+              />
+            ) : (
+              <FeaturedArticle
+                title="Social Media Marketing for Franchises is Meant for Women"
+                description="Find people with high expectations and a low tolerance for excuses. They'll have higher expectations for you than you have for yourself. Don't flatter yourself..."
+                category="MARKETING"
+                imageUrl="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+              />
+            )}
             
             <div className="mt-3 flex gap-4">
-              <ArticleCard
-                title="A Look at How Social Media & Mobile Gaming Can Increase Sales"
-                category="FINANCE"
-                date="FINANCE"
-                imageUrl="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-              />
-              
-              <ArticleCard
-                title="The Secret to Your Company's Financial Health is Very Important"
-                category="FINANCE"
-                date="FINANCE"
-                imageUrl="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-              />
+               {threeBoxNews.length >= 3 ? (
+                  <>
+                    <ArticleCard
+                      _id={threeBoxNews[1].slug || threeBoxNews[1]._id}
+                      title={threeBoxNews[1].title}
+                      category={threeBoxNews[1].category?.name || "FINANCE"}
+                      date={new Date(threeBoxNews[1].createdAt).toLocaleDateString()}
+                      imageUrl={threeBoxNews[1].image || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
+                    />
+                    <ArticleCard
+                      _id={threeBoxNews[2].slug || threeBoxNews[2]._id}
+                      title={threeBoxNews[2].title}
+                      category={threeBoxNews[2].category?.name || "FINANCE"}
+                      date={new Date(threeBoxNews[2].createdAt).toLocaleDateString()}
+                      imageUrl={threeBoxNews[2].image || "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
+                    />
+                  </>
+               ) : (
+                  <>
+                    <ArticleCard
+                      title="A Look at How Social Media & Mobile Gaming Can Increase Sales"
+                      category="FINANCE"
+                      date="October 7, 2021"
+                      imageUrl="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                    />
+                    
+                    <ArticleCard
+                      title="The Secret to Your Company's Financial Health is Very Important"
+                      category="FINANCE"
+                      date="October 7, 2021"
+                      imageUrl="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                    />
+                  </>
+               )}
             </div>
           </div>
 
