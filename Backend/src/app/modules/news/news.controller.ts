@@ -39,6 +39,24 @@ export class NewsController {
         const body = req.body; // expects { _id, ...update }
         const user = res.locals.user;
 
+        const news = await NewsService.findById(body._id);
+        if (!news) {
+            throw new AppError(
+                HttpStatusCode.NotFound,
+                'Not Found',
+                'News not found!',
+            );
+        }
+
+        // Ownership check for reporters
+        if (user?.role === 'reporter' && String(news.author?._id || news.author) !== String(user._id)) {
+            throw new AppError(
+                HttpStatusCode.Forbidden,
+                'Forbidden',
+                'You do not have permission to update this news.',
+            );
+        }
+
         // If category provided, ensure it exists and not deleted
         if (body.category) {
             const category = await Category.findById(body.category).lean();
@@ -125,7 +143,9 @@ export class NewsController {
                 'News not found!',
             );
         }
-        if (user?.role === 'reporter' && String(news.author) !== String(user._id)) {
+        
+        const authorId = news.author?._id || news.author;
+        if (user?.role === 'reporter' && String(authorId) !== String(user._id)) {
             throw new AppError(
                 HttpStatusCode.Forbidden,
                 'Forbidden',
@@ -151,7 +171,9 @@ export class NewsController {
                 'News not found!',
             );
         }
-        if (user?.role === 'reporter' && String(news.author) !== String(user._id)) {
+        
+        const authorId = news.author?._id || news.author;
+        if (user?.role === 'reporter' && String(authorId) !== String(user._id)) {
             throw new AppError(
                 HttpStatusCode.Forbidden,
                 'Forbidden',

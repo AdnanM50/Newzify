@@ -124,6 +124,8 @@ const LoginPage: React.FC = () => {
       const role = result.data?.user?.role;
       if (role === 'admin') {
         navigate({ to: '/admin' });
+      } else if (role === 'reporter') {
+        navigate({ to: '/reporter-dashboard' });
       } else if (role === 'user') {
         navigate({ to: '/dashboard' });
       }

@@ -101,10 +101,12 @@ const NewsForm = ({ initialData, categories, onSuccess, onCancel }: NewsFormProp
 
   const { mutateAsync: create } = useAction(createNews, {
     successMessage: "News created successfully",
+    invalidateKeys: ["news"],
   });
 
   const { mutateAsync: update } = useAction(updateNews, {
     successMessage: "News updated successfully",
+    invalidateKeys: ["news"],
   });
 
   const onSubmit = async (data: TNews) => {
