@@ -22,4 +22,7 @@ userRouter.post('/create-reporter', auth('admin'), validate(UserValidations.crea
 userRouter.delete('/delete/:id', auth('admin'), UserController.deleteUser);
 userRouter.patch('/reset-password', auth('admin'), validate(UserValidations.resetPasswordValidationSchema), UserController.resetUserPassword);
 
+// Chat users route
+userRouter.get('/chat-users', auth(), UserController.getChatUsers);
+
 export default userRouter

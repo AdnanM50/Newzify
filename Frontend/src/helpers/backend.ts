@@ -204,4 +204,13 @@ export const toggleLikeNews = backend<any>("/news/like/:id", "patch");
 export const getPageSettings = backend<TPageSetting>("/page-setting", "get");
 export const updatePageSettings = backend<TPageSetting>("/page-setting", "put");
 
+// ==================== Messaging Endpoints ====================
+export const getChatUsers = backend<any[]>("/user/chat-users", "get");
+export const getConversations = backend<any[]>("/conversation/list", "get");
+export const getOrCreateConversation = backend<any>("/conversation/create", "post");
+export const getMessages = backend<any>("/message/list/:conversationId", "get");
+export const sendMessageApi = backend<any>("/message/send", "post");
+export const markMessagesRead = backend<any>("/message/mark-read/:conversationId", "patch");
+export const getUnreadCount = backend<any>("/message/unread-count", "get");
+
 export default backend;

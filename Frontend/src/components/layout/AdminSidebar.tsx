@@ -17,6 +17,7 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
+  MessageCircle,
 } from "lucide-react";
 
 interface MenuItem {
@@ -51,6 +52,11 @@ const menuItems: MenuItem[] = [
     label: "Category",
     href: "/admin/category",
     icon: <CreditCard size={20} />,
+  },
+  {
+    label: "Messages",
+    href: "/admin/messages",
+    icon: <MessageCircle size={20} />,
   },
   {
     label: "Group",

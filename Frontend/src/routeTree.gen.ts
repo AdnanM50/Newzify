@@ -24,6 +24,7 @@ import { Route as ReporterDashboardIndexRouteImport } from './routes/reporter-da
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ReporterDashboardProfileRouteImport } from './routes/reporter-dashboard/profile'
+import { Route as ReporterDashboardMessagesRouteImport } from './routes/reporter-dashboard/messages'
 import { Route as NewsNewsIdRouteImport } from './routes/news/$newsId'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardRepliesRouteImport } from './routes/dashboard/replies'
@@ -34,6 +35,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
 import { Route as AdminPageSettingsRouteImport } from './routes/admin/page-settings'
+import { Route as AdminMessagesRouteImport } from './routes/admin/messages'
 import { Route as AdminCategoryRouteImport } from './routes/admin/category'
 import { Route as ReporterDashboardNewsIndexRouteImport } from './routes/reporter-dashboard/news/index'
 import { Route as AdminNewsIndexRouteImport } from './routes/admin/news/index'
@@ -122,6 +124,12 @@ const ReporterDashboardProfileRoute =
     path: '/profile',
     getParentRoute: () => ReporterDashboardRouteRoute,
   } as any)
+const ReporterDashboardMessagesRoute =
+  ReporterDashboardMessagesRouteImport.update({
+    id: '/messages',
+    path: '/messages',
+    getParentRoute: () => ReporterDashboardRouteRoute,
+  } as any)
 const NewsNewsIdRoute = NewsNewsIdRouteImport.update({
   id: '/news/$newsId',
   path: '/news/$newsId',
@@ -170,6 +178,11 @@ const AdminProfileRoute = AdminProfileRouteImport.update({
 const AdminPageSettingsRoute = AdminPageSettingsRouteImport.update({
   id: '/page-settings',
   path: '/page-settings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMessagesRoute = AdminMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminCategoryRoute = AdminCategoryRouteImport.update({
@@ -244,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/top-stories': typeof TopStoriesRoute
   '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
@@ -254,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/replies': typeof DashboardRepliesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/news/$newsId': typeof NewsNewsIdRoute
+  '/reporter-dashboard/messages': typeof ReporterDashboardMessagesRoute
   '/reporter-dashboard/profile': typeof ReporterDashboardProfileRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -279,6 +294,7 @@ export interface FileRoutesByTo {
   '/top-stories': typeof TopStoriesRoute
   '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
@@ -289,6 +305,7 @@ export interface FileRoutesByTo {
   '/dashboard/replies': typeof DashboardRepliesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/news/$newsId': typeof NewsNewsIdRoute
+  '/reporter-dashboard/messages': typeof ReporterDashboardMessagesRoute
   '/reporter-dashboard/profile': typeof ReporterDashboardProfileRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -318,6 +335,7 @@ export interface FileRoutesById {
   '/top-stories': typeof TopStoriesRoute
   '/tranding-news': typeof TrandingNewsRoute
   '/admin/category': typeof AdminCategoryRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
@@ -328,6 +346,7 @@ export interface FileRoutesById {
   '/dashboard/replies': typeof DashboardRepliesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/news/$newsId': typeof NewsNewsIdRoute
+  '/reporter-dashboard/messages': typeof ReporterDashboardMessagesRoute
   '/reporter-dashboard/profile': typeof ReporterDashboardProfileRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -358,6 +377,7 @@ export interface FileRouteTypes {
     | '/top-stories'
     | '/tranding-news'
     | '/admin/category'
+    | '/admin/messages'
     | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
@@ -368,6 +388,7 @@ export interface FileRouteTypes {
     | '/dashboard/replies'
     | '/dashboard/settings'
     | '/news/$newsId'
+    | '/reporter-dashboard/messages'
     | '/reporter-dashboard/profile'
     | '/admin/'
     | '/dashboard/'
@@ -393,6 +414,7 @@ export interface FileRouteTypes {
     | '/top-stories'
     | '/tranding-news'
     | '/admin/category'
+    | '/admin/messages'
     | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
@@ -403,6 +425,7 @@ export interface FileRouteTypes {
     | '/dashboard/replies'
     | '/dashboard/settings'
     | '/news/$newsId'
+    | '/reporter-dashboard/messages'
     | '/reporter-dashboard/profile'
     | '/admin'
     | '/dashboard'
@@ -431,6 +454,7 @@ export interface FileRouteTypes {
     | '/top-stories'
     | '/tranding-news'
     | '/admin/category'
+    | '/admin/messages'
     | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
@@ -441,6 +465,7 @@ export interface FileRouteTypes {
     | '/dashboard/replies'
     | '/dashboard/settings'
     | '/news/$newsId'
+    | '/reporter-dashboard/messages'
     | '/reporter-dashboard/profile'
     | '/admin/'
     | '/dashboard/'
@@ -580,6 +605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReporterDashboardProfileRouteImport
       parentRoute: typeof ReporterDashboardRouteRoute
     }
+    '/reporter-dashboard/messages': {
+      id: '/reporter-dashboard/messages'
+      path: '/messages'
+      fullPath: '/reporter-dashboard/messages'
+      preLoaderRoute: typeof ReporterDashboardMessagesRouteImport
+      parentRoute: typeof ReporterDashboardRouteRoute
+    }
     '/news/$newsId': {
       id: '/news/$newsId'
       path: '/news/$newsId'
@@ -648,6 +680,13 @@ declare module '@tanstack/react-router' {
       path: '/page-settings'
       fullPath: '/admin/page-settings'
       preLoaderRoute: typeof AdminPageSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/messages': {
+      id: '/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminMessagesRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/category': {
@@ -732,6 +771,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminCategoryRoute: typeof AdminCategoryRoute
+  AdminMessagesRoute: typeof AdminMessagesRoute
   AdminPageSettingsRoute: typeof AdminPageSettingsRoute
   AdminProfileRoute: typeof AdminProfileRoute
   AdminReportersRoute: typeof AdminReportersRoute
@@ -748,6 +788,7 @@ interface AdminRouteRouteChildren {
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCategoryRoute: AdminCategoryRoute,
+  AdminMessagesRoute: AdminMessagesRoute,
   AdminPageSettingsRoute: AdminPageSettingsRoute,
   AdminProfileRoute: AdminProfileRoute,
   AdminReportersRoute: AdminReportersRoute,
@@ -767,6 +808,7 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 )
 
 interface ReporterDashboardRouteRouteChildren {
+  ReporterDashboardMessagesRoute: typeof ReporterDashboardMessagesRoute
   ReporterDashboardProfileRoute: typeof ReporterDashboardProfileRoute
   ReporterDashboardIndexRoute: typeof ReporterDashboardIndexRoute
   ReporterDashboardNewsCreateRoute: typeof ReporterDashboardNewsCreateRoute
@@ -776,6 +818,7 @@ interface ReporterDashboardRouteRouteChildren {
 
 const ReporterDashboardRouteRouteChildren: ReporterDashboardRouteRouteChildren =
   {
+    ReporterDashboardMessagesRoute: ReporterDashboardMessagesRoute,
     ReporterDashboardProfileRoute: ReporterDashboardProfileRoute,
     ReporterDashboardIndexRoute: ReporterDashboardIndexRoute,
     ReporterDashboardNewsCreateRoute: ReporterDashboardNewsCreateRoute,

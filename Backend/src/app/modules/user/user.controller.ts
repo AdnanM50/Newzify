@@ -167,4 +167,15 @@ export class UserController {
             data: result,
         });
     });
+
+    static getChatUsers = catchAsync(async (_req, res) => {
+        const user = res.locals.user;
+        const users = await UserService.getChatUsers(user._id);
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Chat users retrieved successfully',
+            data: users,
+        });
+    });
 }

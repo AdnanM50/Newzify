@@ -332,4 +332,16 @@ export default class UserService {
             likeCount: likes.length
         };
     }
+
+    static async getChatUsers(currentUserId: string | Types.ObjectId): Promise<any> {
+        const users = await User.find({
+            _id: { $ne: new Types.ObjectId(currentUserId) },
+            role: { $in: ['admin', 'reporter'] },
+            is_deleted: false,
+        })
+            .select('first_name last_name image role email')
+            .sort({ role: 1, first_name: 1 })
+            .lean();
+        return users;
+    }
 }

@@ -7,6 +7,7 @@ import {
   PlusCircle,
   User,
   Menu,
+  MessageCircle,
 } from "lucide-react";
 
 interface MenuItem {
@@ -30,6 +31,11 @@ const menuItems: MenuItem[] = [
     label: "Create News",
     href: "/reporter-dashboard/news/create",
     icon: <PlusCircle size={20} />,
+  },
+  {
+    label: "Messages",
+    href: "/reporter-dashboard/messages",
+    icon: <MessageCircle size={20} />,
   },
   {
     label: "Profile",
