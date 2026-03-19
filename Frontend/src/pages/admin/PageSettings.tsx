@@ -20,7 +20,7 @@ const PageSettings = () => {
     () => getPageSettings()
   );
 
-  const pageSettings = pageSettingsRaw?.data;
+  const pageSettings = pageSettingsRaw;
 
   useEffect(() => {
     if (pageSettings) {

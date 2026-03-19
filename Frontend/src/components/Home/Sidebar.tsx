@@ -1,51 +1,42 @@
 import React from "react";
 import ArticleCard from "./ArticleCard";
+import { useFetch } from "../../helpers/hooks";
+import { getPublicNewsList } from "../../helpers/backend";
 
 const Sidebar: React.FC = () => {
-  const popularArticles = [
-    {
-      title: "Social Media Marketing for Franchises is Meant for Women",
-      category: "MARKETING",
-      date: "September 29, 2021"
-    },
-    {
-      title: "A Look at How Social Media & Mobile Gaming Can Increase Sales",
-      category: "FINANCE",
-      date: "September 29, 2021"
-    },
-    {
-      title: "Cover Girl Announces Star Shine Makeup Line is Due for Next December",
-      category: "MAKE-UP",
-      date: "September 29, 2021"
-    },
-    {
-      title: "Customer Engagement: New Strategy for the Economy",
-      category: "MARKETING",
-      date: "September 29, 2021",
-      isExclusive: true
-    },
-    {
-      title: "10 Outfits Inspired by Famous Art are Sold in London",
-      category: "MAKE-UP",
-      date: "September 29, 2021",
-      isExclusive: true
-    }
-  ];
+  const { data: popularNewsResponse, isLoading } = useFetch(
+    ["popularNews"],
+    getPublicNewsList,
+    { limit: 5, type: "popular" }
+  );
+
+  const popularArticles = popularNewsResponse?.docs || [];
 
   return (
     <aside className="space-y-8">
       <section>
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Popular</h2>
         <div className="space-y-6">
-          {popularArticles.map((article, index) => (
-            <ArticleCard
-              key={index}
-              title={article.title}
-              category={article.category}
-              date={article.date}
-              isExclusive={article.isExclusive}
-            />
-          ))}
+          {isLoading ? (
+            <div className="animate-pulse space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 rounded w-full"></div>
+              ))}
+            </div>
+          ) : popularArticles.length > 0 ? (
+            popularArticles.map((article: any, index: number) => (
+              <ArticleCard
+                key={article._id || index}
+                _id={article._id}
+                title={article.title}
+                category={article.category?.name || "News"}
+                date={article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                isExclusive={article.types?.includes('Exclusive') || false}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">No popular news found.</p>
+          )}
         </div>
       </section>
       

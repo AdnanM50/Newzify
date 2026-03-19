@@ -6,13 +6,13 @@ const pageSettingSchema = new Schema<IPageSetting>(
     heroNews: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'News',
+        ref: 'news',
       },
     ],
     threeBoxNews: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'News',
+        ref: 'news',
         validate: [arrayLimit, '{PATH} exceeds the limit of 3'],
       },
     ],
