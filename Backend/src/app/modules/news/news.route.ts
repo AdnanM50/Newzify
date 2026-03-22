@@ -19,6 +19,9 @@ router.get('/:id', auth(), NewsController.getNews);
 
 // Public endpoints
 router.get('/public/list', NewsController.publicList);
+router.get('/public/3-box-grid', NewsController.get3BoxGridNews);
+router.get('/public/hero-carousel', NewsController.getHeroCarouselNews);
+router.get('/public/mark-place', NewsController.getMarkPlaceNews);
 router.get('/public/:id', NewsController.publicGet);
 
 // Like news

@@ -19,7 +19,7 @@ const customHeader = (
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept',
     );
-    res.header('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     next();
 };
 

@@ -18,8 +18,18 @@ const updatePageSettings = async (payload: IPageSetting) => {
 
 const getPageSettings = async () => {
   const result = await PageSetting.findOne()
-    .populate('heroNews')
-    .populate('threeBoxNews');
+    .populate({
+      path: 'heroNews',
+      populate: { path: 'category' }
+    })
+    .populate({
+      path: 'threeBoxNews',
+      populate: { path: 'category' }
+    })
+    .populate({
+      path: 'markPlaceNews',
+      populate: { path: 'category' }
+    });
   return result;
 };
 

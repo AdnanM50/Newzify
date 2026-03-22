@@ -3,41 +3,23 @@ import ArticleCard from "./ArticleCard";
 import FeaturedArticle from "./FeaturedArticle";
 import Sidebar from "./Sidebar";
 import { useFetch } from "../../helpers/hooks";
-import { getPublicNewsList } from "../../helpers/backend";
+import { getPublicNewsList, get3BoxGridNews, getMarkPlaceNews } from "../../helpers/backend";
 import { Link } from "@tanstack/react-router";
+import "../../styles/marquee.css";
 
 const NewsHerosection: React.FC = () => {
-  const threeBoxNews = [
-    {
-      _id: "dummy-feat-1",
-      title: "Social Media Marketing for Franchises is Meant for Women",
-      content: "Find people with high expectations and a low tolerance for excuses. They'll have higher expectations for you than you have for yourself. Don't flatter yourself...",
-      category: "MARKETING",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-    },
-    {
-      _id: "dummy-feat-2",
-      title: "A Look at How Social Media & Mobile Gaming Can Increase Sales",
-      category: "FINANCE",
-      createdAt: "2021-10-07T10:00:00Z",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-    },
-    {
-      _id: "dummy-feat-3",
-      title: "The Secret to Your Company's Financial Health is Very Important",
-      category: "FINANCE",
-      createdAt: "2021-10-07T10:00:00Z",
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-    }
-  ];
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
 
-  const { data: topArticlesResponse, isLoading: isTopLoading } = useFetch(
-    ["topArticles"],
-    getPublicNewsList,
-    { limit: 4, type: 'top' }
+  const { data: threeBoxResponse, isLoading: isThreeBoxLoading } = useFetch(
+    ["threeBoxNews"],
+    get3BoxGridNews
   );
-
-  const fetchedTopArticles = topArticlesResponse?.docs || [];
+  
+  const threeBoxNews = threeBoxResponse || [];
 
   const { data: freshStoriesResponse, isLoading: isFreshLoading } = useFetch(
     ["freshStories"],
@@ -47,44 +29,49 @@ const NewsHerosection: React.FC = () => {
 
   const fetchedFreshStories = freshStoriesResponse?.docs || [];
 
+  const { data: markPlaceResponse, isLoading: isMarkPlaceLoading } = useFetch(
+    ["markPlaceNews"],
+    getMarkPlaceNews
+  );
+
+  const markPlaceNews = markPlaceResponse || [];
+
   return (
     <div className=" bg-white">
-      {/* Top Articles Bar */}
-      <div className="bg-gray-50 border-b">
-        <div className=" px-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {isTopLoading ? (
-              [...Array(4)].map((_, i) => (
-                <div key={i} className="animate-pulse space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-full"></div>
-                  <div className="h-2 bg-gray-200 rounded w-1/4"></div>
-                </div>
-              ))
-            ) : fetchedTopArticles.length > 0 ? (
-              fetchedTopArticles.map((article: any, index: number) => (
-                <div key={article._id || index} className="border-b md:border-b-0 md:border-r last:border-r-0 pb-4 md:pb-0 md:pr-4">
+      {/* Top Articles Bar - Marquee */}
+      <div className="bg-gray-50 border-b marquee-container py-3">
+        {isMarkPlaceLoading ? (
+          <div className="animate-pulse flex px-4">
+            <div className="h-4 bg-gray-200 rounded w-1/4 mr-8"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/4 mr-8"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/4 mr-8"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        ) : markPlaceNews.length > 0 ? (
+          <div className="marquee-content">
+            {/* Multiple sets for seamless loop on all screen sizes */}
+            {[...markPlaceNews, ...markPlaceNews, ...markPlaceNews, ...markPlaceNews].map((article: any, index: number) => (
+              <div key={`${article._id}-${index}`} className="marquee-item border-r border-gray-200">
+                <div className="flex flex-col">
                   <Link 
                     to="/news/$newsId" 
                     params={{ newsId: article._id }}
-                    className="text-sm font-bold text-gray-900 leading-tight mb-2 hover:text-red-600 transition-colors cursor-pointer"
+                    className="text-xs font-bold text-gray-900 leading-tight hover:text-red-600 transition-colors cursor-pointer mr-2"
                   >
                     {article.title}
-                    {article.types?.includes('Exclusive') && (
-                      <span className="ml-2 px-2 py-1 bg-red-600 text-white text-xs font-semibold uppercase rounded">
-                        EXCLUSIVE
-                      </span>
-                    )}
                   </Link>
-                  <p className="text-xs text-gray-500">
-                    {article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                  <p className="text-[10px] text-gray-400 mt-0.5">
+                    {article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
                   </p>
                 </div>
-              ))
-            ) : (
-              <p className="text-xs text-gray-500">No top news found.</p>
-            )}
+              </div>
+            ))}
           </div>
-        </div>
+        ) : (
+          <div className="px-4 text-xs text-gray-400 py-1 italic">
+            No featured news in Mark Place. Configure in Admin Panel.
+          </div>
+        )}
       </div>
 
       {/* Main Content */}
@@ -141,27 +128,54 @@ const NewsHerosection: React.FC = () => {
 
           {/* Center Column - Featured Article */}
           <div className="lg:col-span-2 grid-cols-1">
-            <FeaturedArticle
-              title={threeBoxNews[0].title || ""}
-              description={threeBoxNews[0].content || ""}
-              category={threeBoxNews[0].category || ""}
-              imageUrl={threeBoxNews[0].image || ""}
-            />
-            
-            <div className="mt-6 flex flex-col md:flex-row gap-6">
-              <ArticleCard
-                title={threeBoxNews[1].title}
-                category={threeBoxNews[1].category}
-                date={threeBoxNews[1].createdAt ? new Date(threeBoxNews[1].createdAt).toLocaleDateString() : 'N/A'}
-                imageUrl={threeBoxNews[1].image}
-              />
-              <ArticleCard
-                title={threeBoxNews[2].title}
-                category={threeBoxNews[2].category}
-                date={threeBoxNews[2].createdAt ? new Date(threeBoxNews[2].createdAt).toLocaleDateString() : 'N/A'}
-                imageUrl={threeBoxNews[2].image}
-              />
-            </div>
+            {isThreeBoxLoading ? (
+              <div className="animate-pulse space-y-6">
+                <div className="h-96 bg-gray-200 rounded-xl"></div>
+                <div className="flex gap-6">
+                  <div className="h-48 flex-1 bg-gray-200 rounded-lg"></div>
+                  <div className="h-48 flex-1 bg-gray-200 rounded-lg"></div>
+                </div>
+              </div>
+            ) : threeBoxNews.length > 0 ? (
+              <>
+                <FeaturedArticle
+                  _id={threeBoxNews[0]?._id}
+                  title={threeBoxNews[0]?.title || ""}
+                  description={stripHtml(threeBoxNews[0]?.content || "").substring(0, 160) + "..."}
+                  category={typeof threeBoxNews[0]?.category === 'object' ? (threeBoxNews[0]?.category as any)?.name : (threeBoxNews[0]?.category || "Featured")}
+                  imageUrl={threeBoxNews[0]?.image || ""}
+                />
+                
+                <div className="mt-6 flex flex-col md:flex-row gap-6">
+                  {threeBoxNews[1] && (
+                    <ArticleCard
+                      _id={threeBoxNews[1]?._id}
+                      title={threeBoxNews[1]?.title}
+                      category={typeof threeBoxNews[1]?.category === 'object' ? (threeBoxNews[1]?.category as any)?.name : (threeBoxNews[1]?.category || "News")}
+                      date={threeBoxNews[1]?.createdAt ? new Date(threeBoxNews[1].createdAt).toLocaleDateString() : 'N/A'}
+                      imageUrl={threeBoxNews[1]?.image}
+                    />
+                  )}
+                  {threeBoxNews[2] && (
+                    <ArticleCard
+                      _id={threeBoxNews[2]?._id}
+                      title={threeBoxNews[2]?.title}
+                      category={typeof threeBoxNews[2]?.category === 'object' ? (threeBoxNews[2]?.category as any)?.name : (threeBoxNews[2]?.category || "News")}
+                      date={threeBoxNews[2]?.createdAt ? new Date(threeBoxNews[2].createdAt).toLocaleDateString() : 'N/A'}
+                      imageUrl={threeBoxNews[2]?.image}
+                    />
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="h-full flex items-center justify-center border-2 border-dashed border-gray-200 rounded-3xl p-12 text-center text-gray-400">
+                <div>
+                  <div className="text-4xl mb-4 text-gray-200">📰</div>
+                  <p className="font-medium">No featured articles selected for this section yet.</p>
+                  <p className="text-sm">Configure this in the Admin Panel {'>'} Page Settings</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Sidebar */}

@@ -6,7 +6,8 @@ import { Loader2, Save, Search, X, Check, Layout, PlayCircle, Layers, Image as I
 const PageSettings = () => {
   const [heroNews, setHeroNews] = useState<string[]>([]);
   const [threeBoxNews, setThreeBoxNews] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<"hero" | "threeBox">("hero");
+  const [markPlaceNews, setMarkPlaceNews] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<"hero" | "threeBox" | "markPlace">("hero");
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: newsData, isLoading: isNewsLoading } = useFetch<PaginatedResponse<TNews>>(
@@ -26,6 +27,7 @@ const PageSettings = () => {
     if (pageSettings) {
       setHeroNews(pageSettings.heroNews?.map((n: any) => typeof n === 'string' ? n : n._id) || []);
       setThreeBoxNews(pageSettings.threeBoxNews?.map((n: any) => typeof n === 'string' ? n : n._id) || []);
+      setMarkPlaceNews(pageSettings.markPlaceNews?.map((n: any) => typeof n === 'string' ? n : n._id) || []);
     }
   }, [pageSettings]);
 
@@ -39,7 +41,11 @@ const PageSettings = () => {
       alert("You can only select a maximum of 3 news articles for the 3-Box section.");
       return;
     }
-    updateSettings({ heroNews, threeBoxNews });
+    if (markPlaceNews.length > 10) {
+      alert("You can only select a maximum of 10 news articles for the Mark Place section.");
+      return;
+    }
+    updateSettings({ heroNews, threeBoxNews, markPlaceNews });
   };
 
   const toggleSelection = (id: string) => {
@@ -47,13 +53,25 @@ const PageSettings = () => {
       setHeroNews((prev) => 
         prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
       );
-    } else {
+    } else if (activeTab === "threeBox") {
       setThreeBoxNews((prev) => {
         if (prev.includes(id)) {
           return prev.filter((item) => item !== id);
         } else {
           if (prev.length >= 3) {
             alert("Maximum 3 news allowed for 3-Box section.");
+            return prev;
+          }
+          return [...prev, id];
+        }
+      });
+    } else if (activeTab === "markPlace") {
+      setMarkPlaceNews((prev) => {
+        if (prev.includes(id)) {
+          return prev.filter((item) => item !== id);
+        } else {
+          if (prev.length >= 10) {
+            alert("Maximum 10 news allowed for Mark Place section.");
             return prev;
           }
           return [...prev, id];
@@ -76,8 +94,15 @@ const PageSettings = () => {
     return newsList.filter(n => threeBoxNews.includes(n._id));
   }, [newsList, threeBoxNews]);
 
+  const selectedMarkPlaceItems = useMemo(() => {
+    return newsList.filter(n => markPlaceNews.includes(n._id));
+  }, [newsList, markPlaceNews]);
+
   const isSelected = (id: string) => {
-    return activeTab === "hero" ? heroNews.includes(id) : threeBoxNews.includes(id);
+    if (activeTab === "hero") return heroNews.includes(id);
+    if (activeTab === "threeBox") return threeBoxNews.includes(id);
+    if (activeTab === "markPlace") return markPlaceNews.includes(id);
+    return false;
   };
 
   return (
@@ -110,7 +135,7 @@ const PageSettings = () => {
           <div className="lg:col-span-8 space-y-6">
             
             {/* Tabs */}
-            <div className="flex gap-2 p-1 bg-white rounded-2xl shadow-sm border border-gray-100 max-w-md">
+            <div className="flex gap-2 p-1 bg-white rounded-2xl shadow-sm border border-gray-100 max-w-lg">
               <button 
                 onClick={() => setActiveTab("hero")}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold transition-all ${activeTab === 'hero' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
@@ -124,6 +149,13 @@ const PageSettings = () => {
               >
                 <Layers size={18} />
                 3-Box Grid
+              </button>
+              <button 
+                onClick={() => setActiveTab("markPlace")}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold transition-all ${activeTab === 'markPlace' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+              >
+                <Check size={18} />
+                Mark Place
               </button>
             </div>
 
@@ -279,6 +311,41 @@ const PageSettings = () => {
                   <p className="text-[10px] uppercase font-bold tracking-wider text-yellow-400">Needs {3 - selectedThreeBoxItems.length} more pieces</p>
                 </div>
               )}
+            </div>
+
+            {/* Mark Place Summary */}
+            <div className="bg-emerald-900 rounded-[2.5rem] p-8 text-white shadow-2xl overflow-hidden relative group">
+               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Check size={120} />
+              </div>
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <h3 className="text-xl font-bold flex items-center gap-3">
+                  <Check className="text-emerald-400" />
+                  Mark Place
+                </h3>
+                <span className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase ${selectedMarkPlaceItems.length === 10 ? 'bg-green-500 text-white' : 'bg-white/10 text-white'}`}>
+                  {selectedMarkPlaceItems.length}/10
+                </span>
+              </div>
+
+              <div className="space-y-4 mb-8 relative z-10">
+                {selectedMarkPlaceItems.length > 0 ? selectedMarkPlaceItems.map((item) => (
+                  <div key={`sel-markplace-${item._id}`} className="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 rounded-2xl backdrop-blur-sm group/item">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/10">
+                      {item.image && <img src={item.image} className="w-full h-full object-cover" />}
+                    </div>
+                    <span className="text-sm font-medium line-clamp-1 flex-1">{item.title}</span>
+                    <button 
+                      onClick={() => setMarkPlaceNews(prev => prev.filter(id => id !== item._id))}
+                      className="opacity-0 group-hover/item:opacity-100 p-1 hover:text-red-400 transition-all"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                )) : (
+                  <p className="text-gray-400 text-sm italic">Select up to 10 news articles.</p>
+                )}
+              </div>
             </div>
 
           </div>

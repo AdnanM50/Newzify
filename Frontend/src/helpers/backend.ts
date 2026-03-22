@@ -78,6 +78,7 @@ export type TPageSetting = {
   _id?: string;
   heroNews: Array<TNews | string>;
   threeBoxNews: Array<TNews | string>;
+  markPlaceNews: Array<TNews | string>;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -144,6 +145,15 @@ export const getNewsList = backend<PaginatedResponse<TNews>>("/news/list", "get"
 
 // Public list of news
 export const getPublicNewsList = backend<PaginatedResponse<TNews>>("/news/public/list", "get");
+
+// Public 3-box grid news
+export const get3BoxGridNews = backend<TNews[]>("/news/public/3-box-grid", "get");
+
+// Public hero carousel news
+export const getHeroCarouselNews = backend<TNews[]>("/news/public/hero-carousel", "get");
+
+// Public mark place news
+export const getMarkPlaceNews = backend<TNews[]>("/news/public/mark-place", "get");
 
 // Public single news
 // GET /news/public/:id

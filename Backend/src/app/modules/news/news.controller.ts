@@ -6,6 +6,7 @@ import { HttpStatusCode } from 'axios';
 import AppError from '../../errors/appError';
 import Category from '../news-category/category.model';
 import { Types } from 'mongoose';
+import { PageSettingService } from '../page-setting/page-setting.service';
 
 export class NewsController {
     static createNews = catchAsync(async (req, res) => {
@@ -211,6 +212,39 @@ export class NewsController {
             success: true,
             message: 'News like toggled successfully',
             data: updatedNews,
+        });
+    });
+
+    static get3BoxGridNews = catchAsync(async (req, res) => {
+        const settings = await PageSettingService.getPageSettings();
+        const news = settings?.threeBoxNews || [];
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: '3-box grid news fetched successfully',
+            data: news,
+        });
+    });
+
+    static getHeroCarouselNews = catchAsync(async (req, res) => {
+        const settings = await PageSettingService.getPageSettings();
+        const news = settings?.heroNews || [];
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Hero carousel news fetched successfully',
+            data: news,
+        });
+    });
+
+    static getMarkPlaceNews = catchAsync(async (req, res) => {
+        const settings = await PageSettingService.getPageSettings();
+        const news = settings?.markPlaceNews || [];
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Mark Place news fetched successfully',
+            data: news,
         });
     });
 }
