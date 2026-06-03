@@ -5,7 +5,7 @@ import BlogCategoryService from './category.service';
 
 export class BlogCategoryController {
     static createCategory = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const created = await BlogCategoryService.createCategory(body);
         sendResponse(res, {
             statusCode: httpStatus.CREATED,
@@ -16,7 +16,7 @@ export class BlogCategoryController {
     });
 
     static updateCategory = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const updated = await BlogCategoryService.updateCategory(body._id, body);
         sendResponse(res, {
             statusCode: httpStatus.OK,
@@ -49,7 +49,7 @@ export class BlogCategoryController {
     });
 
     static deleteCategory = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         await BlogCategoryService.deleteCategory(body._id);
         sendResponse(res, {
             statusCode: httpStatus.OK,

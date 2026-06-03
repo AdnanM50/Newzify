@@ -5,7 +5,7 @@ import TagService from './tag.service';
 
 export class TagController {
     static createTag = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const created = await TagService.createTag(body);
         sendResponse(res, {
             statusCode: httpStatus.CREATED,
@@ -16,7 +16,7 @@ export class TagController {
     });
 
     static updateTag = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const updated = await TagService.updateTag(body._id, body);
         sendResponse(res, {
             statusCode: httpStatus.OK,
@@ -49,7 +49,7 @@ export class TagController {
     });
 
     static deleteTag = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         await TagService.deleteTag(body._id);
         sendResponse(res, {
             statusCode: httpStatus.OK,

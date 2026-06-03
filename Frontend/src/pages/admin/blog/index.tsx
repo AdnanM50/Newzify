@@ -134,7 +134,7 @@ const BlogManagement = () => {
 
       if (editingBlog) {
         const oldImage = editingBlog.image;
-        await update({ body: { ...payloadBody, _id: editingBlog._id } });
+        await update({ ...payloadBody, _id: editingBlog._id });
         
         if (selectedImage && oldImage && oldImage !== imageUrl) {
             const publicId = getPublicIdFromUrl(oldImage);
@@ -143,7 +143,7 @@ const BlogManagement = () => {
             }
         }
       } else {
-        create({ body: payloadBody });
+        create(payloadBody);
       }
     } catch (error) {
       setUploadingImage(false);
@@ -163,7 +163,7 @@ const BlogManagement = () => {
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this blog post?")) {
-      remove({ body: { _id: id } });
+      remove({ _id: id });
     }
   };
 

@@ -12,7 +12,7 @@ import { seedAdmin } from '../../utils/seeders';
 import { generateID } from '../../utils/helper';
 
 const postSiteSettings = catchAsync(async (req, res) => {
-    const { body } = req.body;
+    const body = req.body;
     await SettingService.postSiteSettings(body);
     sendResponse(res, {
         statusCode: httpStatus.CREATED,

@@ -45,10 +45,10 @@ const BlogTags = () => {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string }>();
 
   const onSubmit = (data: { name: string }) => {
-    const payload = { body: data };
+    const payload = data;
 
     if (editingTag) {
-      update({ body: { ...data, _id: editingTag._id } }); 
+      update({ ...data, _id: editingTag._id }); 
     } else {
       create(payload);
     }
@@ -62,7 +62,7 @@ const BlogTags = () => {
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this tag?')) {
-      remove({ body: { _id: id } });
+      remove({ _id: id });
     }
   };
 

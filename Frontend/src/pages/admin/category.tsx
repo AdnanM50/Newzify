@@ -44,10 +44,10 @@ const Category = () => {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{ name: string }>();
 
   const onSubmit = (data: { name: string }) => {
-    const payload = { body: data };
+    const payload = data;
 
     if (editingCategory) {
-      update({ body: { ...data, _id: editingCategory._id } }); 
+      update({ ...data, _id: editingCategory._id }); 
     } else {
       create(payload);
     }
@@ -61,7 +61,7 @@ const Category = () => {
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this category?')) {
-      remove({ body: { _id: id } });
+      remove({ _id: id });
     }
   };
 

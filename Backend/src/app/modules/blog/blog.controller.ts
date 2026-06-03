@@ -5,7 +5,7 @@ import BlogService from './blog.service';
 
 export class BlogController {
     static createBlog = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const created = await BlogService.createBlog(body);
         sendResponse(res, {
             statusCode: httpStatus.CREATED,
@@ -16,7 +16,7 @@ export class BlogController {
     });
 
     static updateBlog = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         const updated = await BlogService.updateBlog(body._id, body);
         sendResponse(res, {
             statusCode: httpStatus.OK,
@@ -49,7 +49,7 @@ export class BlogController {
     });
 
     static deleteBlog = catchAsync(async (req, res) => {
-        const { body } = req.body;
+        const body = req.body;
         await BlogService.deleteBlog(body._id);
         sendResponse(res, {
             statusCode: httpStatus.OK,
