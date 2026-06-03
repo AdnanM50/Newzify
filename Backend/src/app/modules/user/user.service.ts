@@ -4,6 +4,7 @@ import User from "./user.model";
 import { Types } from "mongoose";
 import News from "../news/news.model";
 import Comment from "../comment/comment.model";
+import { deleteImageFromCloudinary } from '../../utils/cloudinary.helper';
 
 export default class UserService {
     static async createNewUser(payload: any): Promise<any> {
@@ -148,11 +149,17 @@ export default class UserService {
         updateDocument:any,
         session: any=undefined,
     ): Promise<any> {
+        const oldUser = await User.findOne(query).select('image').lean();
         const options = {
             new: true,
             session,
         };
         const user = await User.findOneAndUpdate(query, updateDocument, options).lean();
+        
+        if (oldUser && oldUser.image && updateDocument.image && oldUser.image !== updateDocument.image) {
+            await deleteImageFromCloudinary(oldUser.image as string);
+        }
+        
         return user;
     }
     static async deleteUserById(_id: string | Types.ObjectId) {
@@ -166,6 +173,11 @@ export default class UserService {
                 'User not found!',
             );
         }
+        
+        if (user.image) {
+            await deleteImageFromCloudinary(user.image as string);
+        }
+        
         return user;
     }
 

@@ -1,10 +1,27 @@
 import AppError from '../../errors/appError';
 import Setting from './setting.model';
 import { Types } from 'mongoose';
+import { deleteImageFromCloudinary } from '../../utils/cloudinary.helper';
 
 export class SettingService {
     static async postSiteSettings(payload: any) {
+        const oldSettings = await Setting.findOne({}).lean();
         await Setting.findOneAndUpdate({}, payload, { upsert: true });
+        
+        if (oldSettings) {
+            if (oldSettings.site_logo && payload.site_logo && oldSettings.site_logo !== payload.site_logo) {
+                await deleteImageFromCloudinary(oldSettings.site_logo as string);
+            }
+            if (oldSettings.stripe?.logo && payload.stripe?.logo && oldSettings.stripe.logo !== payload.stripe.logo) {
+                await deleteImageFromCloudinary(oldSettings.stripe.logo as string);
+            }
+            if (oldSettings.paypal?.logo && payload.paypal?.logo && oldSettings.paypal.logo !== payload.paypal.logo) {
+                await deleteImageFromCloudinary(oldSettings.paypal.logo as string);
+            }
+            if (oldSettings.razorpay?.logo && payload.razorpay?.logo && oldSettings.razorpay.logo !== payload.razorpay.logo) {
+                await deleteImageFromCloudinary(oldSettings.razorpay.logo as string);
+            }
+        }
     }
     public static async getSiteSettings() {
         const settings: any[] = await Setting.aggregate([

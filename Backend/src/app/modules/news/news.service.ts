@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import AppError from '../../errors/appError';
 import News from './news.model';
 import { TNewsCreate } from './news.interface';
+import { deleteImageFromCloudinary } from '../../utils/cloudinary.helper';
 
 export default class NewsService {
     static async createNews(payload: TNewsCreate): Promise<any> {
@@ -52,6 +53,7 @@ export default class NewsService {
     }
 
     static async updateNews(_id: string, updateDocument: any): Promise<any> {
+        const oldNews = await News.findById(_id).select('image').lean();
         const options = { new: true };
         const news = await News.findByIdAndUpdate(_id, updateDocument, options).lean();
         if (!news) {
@@ -61,6 +63,11 @@ export default class NewsService {
                 'News not found!',
             );
         }
+        
+        if (oldNews && oldNews.image && updateDocument.image && oldNews.image !== updateDocument.image) {
+            await deleteImageFromCloudinary(oldNews.image as string);
+        }
+        
         return news;
     }
     static async listNews(filter: any = {}, query: any = {}): Promise<any> {
@@ -125,6 +132,11 @@ export default class NewsService {
                 'News not found!',
             );
         }
+        
+        if (news.image) {
+            await deleteImageFromCloudinary(news.image as string);
+        }
+        
         return news;
     }
 }

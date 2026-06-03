@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import AppError from '../../errors/appError';
 import Blog from './blog.model';
 import { TBlogCreate } from './blog.interface';
+import { deleteImageFromCloudinary } from '../../utils/cloudinary.helper';
 
 export default class BlogService {
     static async createBlog(payload: TBlogCreate): Promise<any> {
@@ -32,6 +33,7 @@ export default class BlogService {
     }
 
     static async updateBlog(_id: string, updateDocument: any): Promise<any> {
+        const oldBlog = await Blog.findById(_id).select('image').lean();
         const options = { new: true };
         const blog = await Blog.findByIdAndUpdate(_id, updateDocument, options)
             .populate('category')
@@ -44,6 +46,11 @@ export default class BlogService {
                 'Blog not found!',
             );
         }
+        
+        if (oldBlog && oldBlog.image && updateDocument.image && oldBlog.image !== updateDocument.image) {
+            await deleteImageFromCloudinary(oldBlog.image as string);
+        }
+        
         return blog;
     }
 
@@ -97,6 +104,11 @@ export default class BlogService {
                 'Blog not found!',
             );
         }
+        
+        if (blog.image) {
+            await deleteImageFromCloudinary(blog.image as string);
+        }
+        
         return blog;
     }
 }
