@@ -22,6 +22,7 @@ import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReporterDashboardIndexRouteImport } from './routes/reporter-dashboard/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ReporterDashboardProfileRouteImport } from './routes/reporter-dashboard/profile'
 import { Route as ReporterDashboardMessagesRouteImport } from './routes/reporter-dashboard/messages'
@@ -31,6 +32,7 @@ import { Route as DashboardRepliesRouteImport } from './routes/dashboard/replies
 import { Route as DashboardLikesRouteImport } from './routes/dashboard/likes'
 import { Route as DashboardCommentsRouteImport } from './routes/dashboard/comments'
 import { Route as CategorySlugRouteImport } from './routes/category/$slug'
+import { Route as BlogBlogIdRouteImport } from './routes/blog/$blogId'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
@@ -41,6 +43,7 @@ import { Route as ReporterDashboardNewsIndexRouteImport } from './routes/reporte
 import { Route as AdminNewsIndexRouteImport } from './routes/admin/news/index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as ReporterDashboardNewsCreateRouteImport } from './routes/reporter-dashboard/news/create'
+import { Route as ReporterDashboardBlogCreateRouteImport } from './routes/reporter-dashboard/blog/create'
 import { Route as AdminNewsCreateRouteImport } from './routes/admin/news/create'
 import { Route as AdminBlogTagsRouteImport } from './routes/admin/blog/tags'
 import { Route as AdminBlogCategoryRouteImport } from './routes/admin/blog/category'
@@ -113,6 +116,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -158,6 +166,11 @@ const DashboardCommentsRoute = DashboardCommentsRouteImport.update({
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
   path: '/category/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogBlogIdRoute = BlogBlogIdRouteImport.update({
+  id: '/blog/$blogId',
+  path: '/blog/$blogId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
@@ -212,6 +225,12 @@ const ReporterDashboardNewsCreateRoute =
     path: '/news/create',
     getParentRoute: () => ReporterDashboardRouteRoute,
   } as any)
+const ReporterDashboardBlogCreateRoute =
+  ReporterDashboardBlogCreateRouteImport.update({
+    id: '/blog/create',
+    path: '/blog/create',
+    getParentRoute: () => ReporterDashboardRouteRoute,
+  } as any)
 const AdminNewsCreateRoute = AdminNewsCreateRouteImport.update({
   id: '/news/create',
   path: '/news/create',
@@ -262,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
+  '/blog/$blogId': typeof BlogBlogIdRoute
   '/category/$slug': typeof CategorySlugRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/likes': typeof DashboardLikesRoute
@@ -271,11 +291,13 @@ export interface FileRoutesByFullPath {
   '/reporter-dashboard/messages': typeof ReporterDashboardMessagesRoute
   '/reporter-dashboard/profile': typeof ReporterDashboardProfileRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/reporter-dashboard/': typeof ReporterDashboardIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
   '/admin/news/create': typeof AdminNewsCreateRoute
+  '/reporter-dashboard/blog/create': typeof ReporterDashboardBlogCreateRoute
   '/reporter-dashboard/news/create': typeof ReporterDashboardNewsCreateRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/news': typeof AdminNewsIndexRoute
@@ -299,6 +321,7 @@ export interface FileRoutesByTo {
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
+  '/blog/$blogId': typeof BlogBlogIdRoute
   '/category/$slug': typeof CategorySlugRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/likes': typeof DashboardLikesRoute
@@ -308,11 +331,13 @@ export interface FileRoutesByTo {
   '/reporter-dashboard/messages': typeof ReporterDashboardMessagesRoute
   '/reporter-dashboard/profile': typeof ReporterDashboardProfileRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/reporter-dashboard': typeof ReporterDashboardIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
   '/admin/news/create': typeof AdminNewsCreateRoute
+  '/reporter-dashboard/blog/create': typeof ReporterDashboardBlogCreateRoute
   '/reporter-dashboard/news/create': typeof ReporterDashboardNewsCreateRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/news': typeof AdminNewsIndexRoute
@@ -340,6 +365,7 @@ export interface FileRoutesById {
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
   '/admin/users': typeof AdminUsersRoute
+  '/blog/$blogId': typeof BlogBlogIdRoute
   '/category/$slug': typeof CategorySlugRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/likes': typeof DashboardLikesRoute
@@ -349,11 +375,13 @@ export interface FileRoutesById {
   '/reporter-dashboard/messages': typeof ReporterDashboardMessagesRoute
   '/reporter-dashboard/profile': typeof ReporterDashboardProfileRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/reporter-dashboard/': typeof ReporterDashboardIndexRoute
   '/admin/blog/category': typeof AdminBlogCategoryRoute
   '/admin/blog/tags': typeof AdminBlogTagsRoute
   '/admin/news/create': typeof AdminNewsCreateRoute
+  '/reporter-dashboard/blog/create': typeof ReporterDashboardBlogCreateRoute
   '/reporter-dashboard/news/create': typeof ReporterDashboardNewsCreateRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/news/': typeof AdminNewsIndexRoute
@@ -382,6 +410,7 @@ export interface FileRouteTypes {
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
+    | '/blog/$blogId'
     | '/category/$slug'
     | '/dashboard/comments'
     | '/dashboard/likes'
@@ -391,11 +420,13 @@ export interface FileRouteTypes {
     | '/reporter-dashboard/messages'
     | '/reporter-dashboard/profile'
     | '/admin/'
+    | '/blog'
     | '/dashboard/'
     | '/reporter-dashboard/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
     | '/admin/news/create'
+    | '/reporter-dashboard/blog/create'
     | '/reporter-dashboard/news/create'
     | '/admin/blog'
     | '/admin/news'
@@ -419,6 +450,7 @@ export interface FileRouteTypes {
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
+    | '/blog/$blogId'
     | '/category/$slug'
     | '/dashboard/comments'
     | '/dashboard/likes'
@@ -428,11 +460,13 @@ export interface FileRouteTypes {
     | '/reporter-dashboard/messages'
     | '/reporter-dashboard/profile'
     | '/admin'
+    | '/blog'
     | '/dashboard'
     | '/reporter-dashboard'
     | '/admin/blog/category'
     | '/admin/blog/tags'
     | '/admin/news/create'
+    | '/reporter-dashboard/blog/create'
     | '/reporter-dashboard/news/create'
     | '/admin/blog'
     | '/admin/news'
@@ -459,6 +493,7 @@ export interface FileRouteTypes {
     | '/admin/profile'
     | '/admin/reporters'
     | '/admin/users'
+    | '/blog/$blogId'
     | '/category/$slug'
     | '/dashboard/comments'
     | '/dashboard/likes'
@@ -468,11 +503,13 @@ export interface FileRouteTypes {
     | '/reporter-dashboard/messages'
     | '/reporter-dashboard/profile'
     | '/admin/'
+    | '/blog/'
     | '/dashboard/'
     | '/reporter-dashboard/'
     | '/admin/blog/category'
     | '/admin/blog/tags'
     | '/admin/news/create'
+    | '/reporter-dashboard/blog/create'
     | '/reporter-dashboard/news/create'
     | '/admin/blog/'
     | '/admin/news/'
@@ -494,8 +531,10 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   TopStoriesRoute: typeof TopStoriesRoute
   TrandingNewsRoute: typeof TrandingNewsRoute
+  BlogBlogIdRoute: typeof BlogBlogIdRoute
   CategorySlugRoute: typeof CategorySlugRoute
   NewsNewsIdRoute: typeof NewsNewsIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -591,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -652,6 +698,13 @@ declare module '@tanstack/react-router' {
       path: '/category/$slug'
       fullPath: '/category/$slug'
       preLoaderRoute: typeof CategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$blogId': {
+      id: '/blog/$blogId'
+      path: '/blog/$blogId'
+      fullPath: '/blog/$blogId'
+      preLoaderRoute: typeof BlogBlogIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
@@ -722,6 +775,13 @@ declare module '@tanstack/react-router' {
       path: '/news/create'
       fullPath: '/reporter-dashboard/news/create'
       preLoaderRoute: typeof ReporterDashboardNewsCreateRouteImport
+      parentRoute: typeof ReporterDashboardRouteRoute
+    }
+    '/reporter-dashboard/blog/create': {
+      id: '/reporter-dashboard/blog/create'
+      path: '/blog/create'
+      fullPath: '/reporter-dashboard/blog/create'
+      preLoaderRoute: typeof ReporterDashboardBlogCreateRouteImport
       parentRoute: typeof ReporterDashboardRouteRoute
     }
     '/admin/news/create': {
@@ -811,6 +871,7 @@ interface ReporterDashboardRouteRouteChildren {
   ReporterDashboardMessagesRoute: typeof ReporterDashboardMessagesRoute
   ReporterDashboardProfileRoute: typeof ReporterDashboardProfileRoute
   ReporterDashboardIndexRoute: typeof ReporterDashboardIndexRoute
+  ReporterDashboardBlogCreateRoute: typeof ReporterDashboardBlogCreateRoute
   ReporterDashboardNewsCreateRoute: typeof ReporterDashboardNewsCreateRoute
   ReporterDashboardNewsIndexRoute: typeof ReporterDashboardNewsIndexRoute
   ReporterDashboardNewsNewsIdEditRoute: typeof ReporterDashboardNewsNewsIdEditRoute
@@ -821,6 +882,7 @@ const ReporterDashboardRouteRouteChildren: ReporterDashboardRouteRouteChildren =
     ReporterDashboardMessagesRoute: ReporterDashboardMessagesRoute,
     ReporterDashboardProfileRoute: ReporterDashboardProfileRoute,
     ReporterDashboardIndexRoute: ReporterDashboardIndexRoute,
+    ReporterDashboardBlogCreateRoute: ReporterDashboardBlogCreateRoute,
     ReporterDashboardNewsCreateRoute: ReporterDashboardNewsCreateRoute,
     ReporterDashboardNewsIndexRoute: ReporterDashboardNewsIndexRoute,
     ReporterDashboardNewsNewsIdEditRoute: ReporterDashboardNewsNewsIdEditRoute,
@@ -863,8 +925,10 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   TopStoriesRoute: TopStoriesRoute,
   TrandingNewsRoute: TrandingNewsRoute,
+  BlogBlogIdRoute: BlogBlogIdRoute,
   CategorySlugRoute: CategorySlugRoute,
   NewsNewsIdRoute: NewsNewsIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -136,6 +136,7 @@ export const getBlogs = backend<PaginatedResponse<TBlog>>("/blogs/list", "get");
 export const createBlog = backend<TBlog>("/blogs/create", "post");
 export const updateBlog = backend<TBlog>("/blogs/update", "put");
 export const deleteBlog = backend<null>("/blogs/delete", "delete");
+export const getBlogById = backend<TBlog>("/blogs/:id", "get");
 
 // ==================== News Endpoints ====================
 

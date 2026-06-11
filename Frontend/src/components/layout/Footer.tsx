@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@tanstack/react-router';
 
 interface Props {
   // add your props here
@@ -29,10 +30,14 @@ const Footer: React.FC<Props> = () => {
           <div>
             <h4 className="font-semibold mb-3">About</h4>
             <ul className="space-y-2 text-sm">
+              <li>
+                <Link from="/" to="/blog" params={{}} className="text-gray-300 hover:text-white">
+                  Blogs
+                </Link>
+              </li>
               <li><a href="#" className="text-gray-300 hover:text-white">Contact Us</a></li>
               <li><a href="#" className="text-gray-300 hover:text-white">Privacy Policy</a></li>
               <li><a href="#" className="text-gray-300 hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white">Advertise</a></li>
             </ul>
           </div>
           <div>

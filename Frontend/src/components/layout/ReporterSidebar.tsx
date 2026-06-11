@@ -33,6 +33,11 @@ const menuItems: MenuItem[] = [
     icon: <PlusCircle size={20} />,
   },
   {
+    label: "Create Blog",
+    href: "/reporter-dashboard/blog/create",
+    icon: <FileText size={20} />,
+  },
+  {
     label: "Messages",
     href: "/reporter-dashboard/messages",
     icon: <MessageCircle size={20} />,

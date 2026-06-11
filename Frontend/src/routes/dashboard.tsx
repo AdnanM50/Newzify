@@ -18,7 +18,7 @@ export const useDashboard = () => {
 };
 
 export const Route = createFileRoute('/dashboard')({
-  beforeLoad: ({ location }) => {
+  beforeLoad: ({ location }: { location: { href: string } }) => {
     if (!localStorage.getItem('token')) {
       throw redirect({
         to: '/login',

@@ -55,8 +55,12 @@ export default class BlogService {
     }
 
     static async listBlogs(filter: any = {}, query: any = {}): Promise<any> {
+        const matchFilter: any = { ...filter, is_deleted: false };
+        if (query.search) {
+            matchFilter.title = { $regex: query.search, $options: 'i' };
+        }
         const aggregate = Blog.aggregate([
-            { $match: { ...filter, is_deleted: false } },
+            { $match: matchFilter },
             {
                 $lookup: {
                     from: 'blog-categories',

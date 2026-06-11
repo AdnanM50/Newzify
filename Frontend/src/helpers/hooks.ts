@@ -29,12 +29,12 @@ import { type ApiResponse } from "./api";
  * );
  */
 export const useFetch = <T = unknown>(
-  key: string | string[],
+  key: string | QueryKey,
   func: (params: Record<string, unknown>) => Promise<ApiResponse<T>>,
   params: Record<string, unknown> = {},
   options?: Omit<UseQueryOptions<ApiResponse<T>, Error>, "queryKey" | "queryFn">
 ) => {
-  const queryKey: QueryKey = Array.isArray(key) ? [...key, params] : [key, params];
+  const queryKey: QueryKey = Array.isArray(key) ? key : [key, params];
 
   const query = useQuery<ApiResponse<T>, Error>({
     queryKey,

@@ -6,7 +6,7 @@ import { BlogValidation } from './blog.validation';
 
 const router = Router();
 
-router.post('/create', auth('admin'), validate(BlogValidation.createBlogSchema), BlogController.createBlog);
+router.post('/create', auth('admin', 'reporter'), validate(BlogValidation.createBlogSchema), BlogController.createBlog);
 router.put('/update', auth('admin'), validate(BlogValidation.updateBlogSchema), BlogController.updateBlog);
 router.delete('/delete', auth('admin'), validate(BlogValidation.deleteBlogSchema), BlogController.deleteBlog);
 router.get('/list', BlogController.listBlogs);
