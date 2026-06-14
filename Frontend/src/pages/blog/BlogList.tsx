@@ -3,7 +3,15 @@ import { useFetch } from "../../helpers/hooks";
 import { getBlogs, type TBlog, type PaginatedResponse } from "../../helpers/backend";
 import BlogCard from "../../components/Cards/BlogCard";
 
-const BlogList = () => {
+type BlogListProps = {
+  title?: string;
+  description?: string;
+};
+
+const BlogList = ({
+  title = "Blogs",
+  description = "Discover the latest blogs from our authors. Search by title and browse through the latest posts.",
+}: BlogListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [queryParams, setQueryParams] = useState({ page: 1, limit: 10, search: "" });
 
@@ -29,9 +37,9 @@ const BlogList = () => {
     <main className="container mx-auto px-4 py-10">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">Blogs</h1>
+          <h1 className="text-4xl font-bold text-gray-900">{title}</h1>
           <p className="mt-2 text-gray-600 max-w-2xl">
-            Discover the latest blogs from our authors. Search by title and browse through the latest posts.
+            {description}
           </p>
         </div>
 

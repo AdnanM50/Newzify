@@ -17,6 +17,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as FreshStoriesRouteImport } from './routes/fresh-stories'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as PodcastsRouteImport } from './routes/Podcasts'
+import { Route as EditorialsRouteImport } from './routes/Editorials'
 import { Route as ReporterDashboardRouteRouteImport } from './routes/reporter-dashboard/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -89,6 +91,16 @@ const DashboardRoute = DashboardRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PodcastsRoute = PodcastsRouteImport.update({
+  id: '/Podcasts',
+  path: '/Podcasts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorialsRoute = EditorialsRouteImport.update({
+  id: '/Editorials',
+  path: '/Editorials',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReporterDashboardRouteRoute = ReporterDashboardRouteRouteImport.update({
@@ -267,6 +279,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/reporter-dashboard': typeof ReporterDashboardRouteRouteWithChildren
+  '/Editorials': typeof EditorialsRoute
+  '/Podcasts': typeof PodcastsRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/fresh-stories': typeof FreshStoriesRoute
@@ -308,6 +322,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/Editorials': typeof EditorialsRoute
+  '/Podcasts': typeof PodcastsRoute
   '/about': typeof AboutRoute
   '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
@@ -351,6 +367,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/reporter-dashboard': typeof ReporterDashboardRouteRouteWithChildren
+  '/Editorials': typeof EditorialsRoute
+  '/Podcasts': typeof PodcastsRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/fresh-stories': typeof FreshStoriesRoute
@@ -396,6 +414,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/reporter-dashboard'
+    | '/Editorials'
+    | '/Podcasts'
     | '/about'
     | '/dashboard'
     | '/fresh-stories'
@@ -437,6 +457,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/Editorials'
+    | '/Podcasts'
     | '/about'
     | '/fresh-stories'
     | '/login'
@@ -479,6 +501,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/reporter-dashboard'
+    | '/Editorials'
+    | '/Podcasts'
     | '/about'
     | '/dashboard'
     | '/fresh-stories'
@@ -523,6 +547,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ReporterDashboardRouteRoute: typeof ReporterDashboardRouteRouteWithChildren
+  EditorialsRoute: typeof EditorialsRoute
+  PodcastsRoute: typeof PodcastsRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   FreshStoriesRoute: typeof FreshStoriesRoute
@@ -593,6 +619,20 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Podcasts': {
+      id: '/Podcasts'
+      path: '/Podcasts'
+      fullPath: '/Podcasts'
+      preLoaderRoute: typeof PodcastsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Editorials': {
+      id: '/Editorials'
+      path: '/Editorials'
+      fullPath: '/Editorials'
+      preLoaderRoute: typeof EditorialsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reporter-dashboard': {
@@ -917,6 +957,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   ReporterDashboardRouteRoute: ReporterDashboardRouteRouteWithChildren,
+  EditorialsRoute: EditorialsRoute,
+  PodcastsRoute: PodcastsRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRouteWithChildren,
   FreshStoriesRoute: FreshStoriesRoute,
