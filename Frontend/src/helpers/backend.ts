@@ -30,6 +30,22 @@ export type TNews = {
   updatedAt?: string;
 };
 
+export type TEditorial = {
+  _id: string;
+  title: string;
+  slug?: string;
+  subtitle?: string;
+  content: string;
+  image?: string;
+  category?: string;
+  author?: any;
+  status?: 'draft' | 'published';
+  is_editors_pick?: boolean;
+  is_deleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type TBlogCategory = {
   _id: string;
   name: string;
@@ -175,6 +191,16 @@ export const updateNews = backend<TNews>("/news/update", "put");
 // Delete news
 // DELETE /news/delete
 export const deleteNews = backend<null>("/news/delete", "delete");
+
+// ==================== Editorial Endpoints ====================
+
+export const getEditorialsList = backend<PaginatedResponse<TEditorial>>("/editorials/list", "get");
+export const getPublicEditorialsList = backend<PaginatedResponse<TEditorial>>("/editorials/public/list", "get");
+export const getPublicEditorialById = backend<TEditorial>("/editorials/public/:id", "get");
+export const getEditorialById = backend<TEditorial>("/editorials/:id", "get");
+export const createEditorial = backend<TEditorial>("/editorials/create", "post");
+export const updateEditorial = backend<TEditorial>("/editorials/update", "put");
+export const deleteEditorial = backend<null>("/editorials/delete", "delete");
 
 // ==================== File Endpoints ====================
 

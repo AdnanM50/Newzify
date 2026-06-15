@@ -28,6 +28,11 @@ const menuItems: MenuItem[] = [
     icon: <FileText size={20} />,
   },
   {
+    label: "My Editorials",
+    href: "/reporter-dashboard/editorials",
+    icon: <FileText size={20} />,
+  },
+  {
     label: "Create News",
     href: "/reporter-dashboard/news/create",
     icon: <PlusCircle size={20} />,

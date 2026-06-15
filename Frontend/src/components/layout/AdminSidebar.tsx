@@ -49,6 +49,11 @@ const menuItems: MenuItem[] = [
     icon: <FileText size={20} />,
   },
   {
+    label: "Editorials",
+    href: "/admin/editorials",
+    icon: <FileText size={20} />,
+  },
+  {
     label: "Category",
     href: "/admin/category",
     icon: <CreditCard size={20} />,

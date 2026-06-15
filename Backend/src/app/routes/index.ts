@@ -17,6 +17,7 @@ import { commentRoutes } from "../modules/comment/comment.route";
 import { pageSettingRoutes } from "../modules/page-setting/page-setting.route";
 import { conversationRoutes } from "../modules/conversation/conversation.route";
 import { messageRoutes } from "../modules/message/message.route";
+import { editorialRoutes } from "../modules/editorial/editorial.route";
 // import {ProductSectionRouter} from "../modules/product/product-section/product-section.routes";
 // import {ProductBrandRouter} from "../modules/product/product-brand/product-brand.routes";
 // import {ProductAttributeRouter} from "../modules/product/product-attributes/product-attributes.routes";
@@ -100,6 +101,10 @@ const moduleRouters:any = [
     {
         path: '/message',
         route: messageRoutes,
+    },
+    {
+        path: '/editorials',
+        route: editorialRoutes,
     },
     // {
     //     path: '/faq',
