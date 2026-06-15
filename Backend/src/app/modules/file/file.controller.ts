@@ -72,19 +72,20 @@ export class CloudinaryController {
                 });
             }
 
-            // Check if image field exists
-            if (!req.files.image) {
+            // Accept the newer generic "file" field and the older "image" field.
+            const uploadedFile = req.files.file || req.files.image;
+            if (!uploadedFile) {
                 const availableFields = req.files && typeof req.files === 'object' ? Object.keys(req.files) : [];
                 return res.status(400).json({ 
-                    message: 'Image field is required',
-                    error: 'Please use "image" as the field name in your form data',
+                    message: 'File field is required',
+                    error: 'Please use "file" as the field name in your form data',
                     availableFields: availableFields
                 });
             }
 
-            const imageFile = Array.isArray(req.files.image)
-                ? req.files.image[0]
-                : req.files.image;
+            const imageFile = Array.isArray(uploadedFile)
+                ? uploadedFile[0]
+                : uploadedFile;
 
             // Validate file object
             if (!imageFile || typeof imageFile !== 'object') {
@@ -121,6 +122,7 @@ export class CloudinaryController {
                 console.log('Using tempFilePath for upload:', imageFile.tempFilePath);
                 uploadResult = await cloudinary.uploader.upload(imageFile.tempFilePath, {
                     folder: 'my_uploads',
+                    resource_type: 'auto',
                 });
             } 
             // If file has data buffer, convert to temp file first
@@ -133,6 +135,7 @@ export class CloudinaryController {
                 try {
                     uploadResult = await cloudinary.uploader.upload(tempPath, {
                         folder: 'my_uploads',
+                        resource_type: 'auto',
                     });
                 } finally {
                     // Clean up temp file
@@ -152,7 +155,7 @@ export class CloudinaryController {
             console.log('Upload successful:', uploadResult.secure_url);
 
             return res.status(200).json({
-                message: 'Image uploaded successfully',
+                message: 'File uploaded successfully',
                 url: uploadResult.secure_url,
                 public_id: uploadResult.public_id,
                 fileInfo: {

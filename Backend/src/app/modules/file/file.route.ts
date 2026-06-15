@@ -24,6 +24,7 @@ router.post('/test-upload', (req, res) => {
 });
 
 router.post('/single-image-upload', CloudinaryController.uploadImage);
+router.post('/single-file-upload', CloudinaryController.uploadImage);
 router.delete('/delete', CloudinaryController.deleteImage);
 
 export const fileRouters: Router = router;

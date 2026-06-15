@@ -46,6 +46,23 @@ export type TEditorial = {
   updatedAt?: string;
 };
 
+export type TPodcast = {
+  _id: string;
+  title: string;
+  slug?: string;
+  description: string;
+  image?: string;
+  embed_code?: string;
+  audio_url?: string;
+  category?: string;
+  author?: any;
+  status?: 'draft' | 'published';
+  is_featured?: boolean;
+  is_deleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type TBlogCategory = {
   _id: string;
   name: string;
@@ -202,9 +219,20 @@ export const createEditorial = backend<TEditorial>("/editorials/create", "post")
 export const updateEditorial = backend<TEditorial>("/editorials/update", "put");
 export const deleteEditorial = backend<null>("/editorials/delete", "delete");
 
+// ==================== Podcast Endpoints ====================
+
+export const getPodcastsList = backend<PaginatedResponse<TPodcast>>("/podcasts/list", "get");
+export const getPublicPodcastsList = backend<PaginatedResponse<TPodcast>>("/podcasts/public/list", "get");
+export const getPublicPodcastById = backend<TPodcast>("/podcasts/public/:id", "get");
+export const getPodcastById = backend<TPodcast>("/podcasts/:id", "get");
+export const createPodcast = backend<TPodcast>("/podcasts/create", "post");
+export const updatePodcast = backend<TPodcast>("/podcasts/update", "put");
+export const deletePodcast = backend<null>("/podcasts/delete", "delete");
+
 // ==================== File Endpoints ====================
 
 export const uploadImage = backend<{ url: string }>("/files/single-image-upload", "postForm");
+export const uploadFile = backend<{ url: string }>("/files/single-file-upload", "postForm");
 
 export const deleteImage = backend<{ message: string }>("/files/delete", "delete");
 

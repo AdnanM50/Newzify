@@ -33,6 +33,11 @@ const menuItems: MenuItem[] = [
     icon: <FileText size={20} />,
   },
   {
+    label: "My Podcasts",
+    href: "/reporter-dashboard/podcasts",
+    icon: <FileText size={20} />,
+  },
+  {
     label: "Create News",
     href: "/reporter-dashboard/news/create",
     icon: <PlusCircle size={20} />,
