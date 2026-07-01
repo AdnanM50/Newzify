@@ -11,25 +11,34 @@ export type TData = {
 export const sendUserEmailGeneral = async (data: TData) => {
     let transporter: any, from_email: string | undefined;
 
-    // Hardcoded Ethereal SMTP credentials as requested
-    const etherealConfig = {
-        host: 'smtp.ethereal.email',
-        port: 587,
-        auth: {
-            user: 'amina.hermiston@ethereal.email',
-            pass: 'eSGUVSE1qkgwR73GFf',
-        },
-    };
+    if (config.email_user && config.email_pass) {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: config.email_user,
+                pass: config.email_pass,
+            },
+        });
+        from_email = `"Newzify" <${config.email_user}>`;
+    } else {
+        // Hardcoded Ethereal SMTP credentials as requested fallback
+        const etherealConfig = {
+            host: 'smtp.ethereal.email',
+            port: 587,
+            auth: {
+                user: 'amina.hermiston@ethereal.email',
+                pass: 'eSGUVSE1qkgwR73GFf',
+            },
+        };
 
-    transporter = nodemailer.createTransport({
-        host: etherealConfig.host,
-        port: etherealConfig.port,
-        secure: false, // true for 465, false for other ports
-        auth: etherealConfig.auth,
-    });
-    
-    // Using requested from email with a friendly display name
-    from_email = '"Newzify" <md.adnanhossain88@gmail.com>';
+        transporter = nodemailer.createTransport({
+            host: etherealConfig.host,
+            port: etherealConfig.port,
+            secure: false, // true for 465, false for other ports
+            auth: etherealConfig.auth,
+        });
+        from_email = '"Newzify" <md.adnanhossain88@gmail.com>';
+    }
 
     // Check if transporter is configured
     if (!transporter) {
