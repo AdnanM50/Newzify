@@ -2,15 +2,28 @@ import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import CommonNewscard from "../Cards/commonNewscard";
 import { useFetch } from "../../helpers/hooks";
-import { getBlogs, type TBlog, type PaginatedResponse } from "../../helpers/backend";
+import { getBlogs, getPublicPodcastsList, getPublicEditorialsList, type TBlog, type TPodcast, type TEditorial, type PaginatedResponse } from "../../helpers/backend";
 
 const NewsSection: React.FC = () => {
   const navigate = useNavigate();
+  
   const { data, isLoading } = useFetch<PaginatedResponse<TBlog>>("latest-blogs", getBlogs, {
     page: 1,
     limit: 3,
   });
   const blogs = data?.docs || [];
+
+  const { data: podcastsData, isLoading: podcastsLoading } = useFetch<PaginatedResponse<TPodcast>>("latest-podcasts", getPublicPodcastsList, {
+    page: 1,
+    limit: 3,
+  });
+  const podcasts = podcastsData?.docs || [];
+
+  const { data: editorialsData, isLoading: editorialsLoading } = useFetch<PaginatedResponse<TEditorial>>("latest-editorials", getPublicEditorialsList, {
+    page: 1,
+    limit: 3,
+  });
+  const editorials = editorialsData?.docs || [];
 
   return (
     <section className="bg-white p-6 md:p-10 max-w-7xl mx-auto">
@@ -18,65 +31,63 @@ const NewsSection: React.FC = () => {
         {/* Podcasts */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Podcasts</h2>
-          {[
-            {
-              title: "Weekly Podcast Episode 35: How to declutter your life",
-              category: "Tech talk",
-              image: "https://www.uni-hamburg.de/15322293/corona-virus-733x414-81999777e59f34709412f48a94465338233a1803.jpg",
-            },
-            {
-              title: "Weekly Podcast Episode 36: Best headphone to buy",
-              category: "Tech talk",
-              image: "https://www.uni-hamburg.de/15322293/corona-virus-733x414-81999777e59f34709412f48a94465338233a1803.jpg",
-            },
-            {
-              title: "Weekly Podcast Episode 37: Retro games are back",
-              category: "Tech talk",
-              image: "https://www.uni-hamburg.de/15322293/corona-virus-733x414-81999777e59f34709412f48a94465338233a1803.jpg",
-            },
-          ].map((podcast, index) => (
-            <CommonNewscard
-              key={`podcast-${index}`}
-              data={{
-                title: podcast.title,
-                category: podcast.category,
-                image: podcast.image,
-              }}
-              onReadMore={() => null}
-            />
-          ))}
+          {podcastsLoading ? (
+            <div className="flex min-h-[260px] items-center justify-center text-gray-500">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-600" />
+            </div>
+          ) : podcasts.length > 0 ? (
+            <div className="space-y-4">
+              {podcasts.map((podcast) => (
+                <CommonNewscard
+                  key={podcast._id}
+                  data={{
+                    title: podcast.title,
+                    category: podcast.category || "Podcast",
+                    image: podcast.image,
+                  }}
+                  onReadMore={() => 
+                    navigate({
+                      to: "/podcast/$podcastId",
+                      params: { podcastId: podcast._id },
+                    })
+                  }
+                />
+              ))}
+            </div>
+          ) : (
+             <p className="text-gray-500">No podcasts available.</p>
+          )}
         </div>
 
         {/* Editorials */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Editorials</h2>
-          {[
-            {
-              title: "How to protest in the age of digital surveillance",
-              category: "Politics",
-              image: "https://www.uni-hamburg.de/15322293/corona-virus-733x414-81999777e59f34709412f48a94465338233a1803.jpg",
-            },
-            {
-              title: "Crisis intensifies in Gaza, are Arab nations doing their part?",
-              category: "Politics",
-              image: "https://www.uni-hamburg.de/15322293/corona-virus-733x414-81999777e59f34709412f48a94465338233a1803.jpg",
-            },
-            {
-              title: "How Ukraine is using their food stock in diplomacy",
-              category: "Politics",
-              image: "https://www.uni-hamburg.de/15322293/corona-virus-733x414-81999777e59f34709412f48a94465338233a1803.jpg",
-            },
-          ].map((editorial, index) => (
-            <CommonNewscard
-              key={`editorial-${index}`}
-              data={{
-                title: editorial.title,
-                category: editorial.category,
-                image: editorial.image,
-              }}
-              onReadMore={() => null}
-            />
-          ))}
+          {editorialsLoading ? (
+            <div className="flex min-h-[260px] items-center justify-center text-gray-500">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-600" />
+            </div>
+          ) : editorials.length > 0 ? (
+            <div className="space-y-4">
+              {editorials.map((editorial) => (
+                <CommonNewscard
+                  key={editorial._id}
+                  data={{
+                    title: editorial.title,
+                    category: editorial.category || "Editorial",
+                    image: editorial.image,
+                  }}
+                  onReadMore={() => 
+                    navigate({
+                      to: "/editorial/$editorialId",
+                      params: { editorialId: editorial._id },
+                    })
+                  }
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No editorials available.</p>
+          )}
         </div>
 
         {/* Blogs */}
