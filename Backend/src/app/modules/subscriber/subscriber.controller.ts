@@ -2,10 +2,15 @@ import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { SubscriberService } from './subscriber.service';
+import AppError from '../../errors/appError';
 
 export class SubscriberController {
     static subscribe = catchAsync(async (req, res) => {
-        const { email } = req.body;
+        const body = req.body.body || req.body;
+        const { email } = body;
+        if (!email) {
+            throw new AppError(400, 'Bad Request', 'Email is required');
+        }
         const subscriber = await SubscriberService.subscribe(email);
         sendResponse(res, {
             statusCode: httpStatus.OK,
@@ -27,7 +32,8 @@ export class SubscriberController {
     });
 
     static unsubscribe = catchAsync(async (req, res) => {
-        const { email } = req.body;
+        const body = req.body.body || req.body;
+        const { email } = body;
         await SubscriberService.unsubscribe(email);
         sendResponse(res, {
             statusCode: httpStatus.OK,
@@ -38,7 +44,8 @@ export class SubscriberController {
     });
 
     static deleteSubscriber = catchAsync(async (req, res) => {
-        const { _id } = req.body;
+        const body = req.body.body || req.body;
+        const { _id } = body;
         await SubscriberService.deleteSubscriber(_id);
         sendResponse(res, {
             statusCode: httpStatus.OK,
