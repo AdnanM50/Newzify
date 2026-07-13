@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { useEffect, useState, createContext, useContext } from 'react';
 import UserSidebar from '../components/layout/UserSidebar';
+import { getUserRole } from '../helpers/auth';
 
 interface DashboardContextType {
   userProfile: any;
@@ -19,12 +20,19 @@ export const useDashboard = () => {
 
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: ({ location }: { location: { href: string } }) => {
-    if (!localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    if (!token) {
       throw redirect({
         to: '/login',
         search: {
           redirect: location.href,
         },
+      })
+    }
+    const role = getUserRole();
+    if (role !== 'user') {
+      throw redirect({
+        to: '/login',
       })
     }
   },

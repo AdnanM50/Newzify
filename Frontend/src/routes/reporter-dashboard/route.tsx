@@ -1,9 +1,27 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { useState } from 'react'
 import ReporterSidebar from '../../components/layout/ReporterSidebar'
 import ReporterHeader from '../../components/layout/ReporterHeader'
+import { getUserRole } from '../../helpers/auth'
 
 export const Route = createFileRoute('/reporter-dashboard')({
+  beforeLoad: ({ location }: { location: { href: string } }) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw redirect({
+        to: '/login',
+        search: {
+          redirect: location.href,
+        },
+      })
+    }
+    const role = getUserRole();
+    if (role !== 'reporter') {
+      throw redirect({
+        to: '/login',
+      })
+    }
+  },
   component: ReporterLayout,
 })
 

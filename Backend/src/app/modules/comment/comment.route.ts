@@ -14,6 +14,9 @@ router.post(
     CommentController.createComment
 );
 
+// List all comments (admin)
+router.get("/list", auth('admin'), CommentController.listComments);
+
 // Get comments for a news
 router.get("/news/:newsId", CommentController.getCommentsByNewsId);
 

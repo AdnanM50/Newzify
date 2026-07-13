@@ -20,7 +20,6 @@ interface FetchOptions extends RequestInit {
   params?: Record<string, unknown>;
   token_name?: string;
 }
-
 // Helper to construct URL with query params
 const buildUrl = (endpoint: string, params: Record<string, unknown> = {}) => {
   const baseUrl = endpoint.startsWith("http") ? endpoint : `${API_URL}${endpoint.replace(/^\//, "")}`;

@@ -10,6 +10,42 @@ const createComment = async (userId: string, payload: Partial<TComment>) => {
     return result;
 };
 
+const listComments = async (query: any = {}) => {
+    const filter: any = { is_deleted: false };
+    if (query.newsId) {
+        filter.newsId = new Types.ObjectId(query.newsId);
+    }
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    let sort: any = { createdAt: -1 };
+    if (query.sort === 'likes') {
+        sort = { 'likes': -1, createdAt: -1 };
+    }
+
+    const [docs, totalDocs] = await Promise.all([
+        Comment.find(filter)
+            .populate("userId", "first_name last_name image")
+            .populate("newsId", "title slug")
+            .sort(sort)
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        Comment.countDocuments(filter),
+    ]);
+
+    return {
+        docs,
+        totalDocs,
+        limit,
+        page,
+        totalPages: Math.ceil(totalDocs / limit),
+        hasNextPage: page * limit < totalDocs,
+        hasPrevPage: page > 1,
+    };
+};
+
 const getCommentsByNewsId = async (newsId: string) => {
     // Helper function for recursive reply fetching
     const getReplies = async (parentId: string): Promise<any[]> => {
@@ -94,6 +130,7 @@ const deleteComment = async (userId: string, commentId: string) => {
 export const CommentService = {
     createComment,
     getCommentsByNewsId,
+    listComments,
     toggleLike,
     deleteComment,
 };

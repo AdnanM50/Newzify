@@ -3,6 +3,7 @@ import { Search, Menu, User, ChevronDown } from "lucide-react";
 import { Link } from '@tanstack/react-router';
 import { useFetch } from '../../helpers/hooks';
 import { getPublicCategories } from '../../helpers/backend';
+import { getUserRole } from '../../helpers/auth';
 import SubscribeModal from '../SubscribeModal';
 
 const Header: React.FC = () => {
@@ -47,8 +48,15 @@ const Header: React.FC = () => {
             <Link to="/" className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">NEWZIFY</Link>
             <div className="flex items-center space-x-4">
               <Search className="w-5 h-5 text-gray-600 cursor-pointer" />
-              <User className="w-5 h-5 text-gray-600 cursor-pointer" />
-              <a href="/dashboard" className="text-sm text-gray-700 hover:text-red-600">User Panel</a>
+              {(() => {
+                const role = getUserRole();
+                const dashboardPath = role === 'admin' ? '/admin' : role === 'reporter' ? '/reporter-dashboard' : '/dashboard';
+                return (
+                  <Link to={dashboardPath as any} className="text-gray-600 hover:text-red-600 transition-colors">
+                    <User className="w-5 h-5 cursor-pointer" />
+                  </Link>
+                );
+              })()}
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden"

@@ -74,11 +74,7 @@ const menuItems: MenuItem[] = [
     href: "/admin/subscribers",
     icon: <Megaphone size={20} />,
   },
-  {
-    label: "Group",
-    href: "/admin/group",
-    icon: <UsersRound size={20} />,
-  },
+ 
   {
     label: "Blog",
     icon: <FileText size={20} />,
@@ -100,38 +96,43 @@ const menuItems: MenuItem[] = [
       },
     ],
   },
-
-  {
-    label: "Settings",
-    icon: <Settings size={20} />,
-    children: [
-      {
-        label: "Settings",
-        href: "/admin/settings",
-        icon: <Settings size={18} />,
-      },
-      {
-        label: "Languages",
-        href: "/admin/languages",
-        icon: <Languages size={18} />,
-      },
-      {
-        label: "Email Settings",
-        href: "/admin/email-setting",
-        icon: <Mail size={18} />,
-      },
-      {
-        label: "Faq",
-        href: "/admin/faq",
-        icon: <HelpCircle size={18} />,
-      },
-      {
-        label: "Page Settings",
-        href: "/admin/page-settings",
-        icon: <Layout size={18} />,
-      },
-    ],
+   {
+    label: "Page Settings",
+    href: "/admin/page-settings",
+    icon: <Layout size={18} />,
   },
+
+  // {
+  //   label: "Settings",
+  //   icon: <Settings size={20} />,
+  //   children: [
+  //     // {
+  //     //   label: "Settings",
+  //     //   href: "/admin/settings",
+  //     //   icon: <Settings size={18} />,
+  //     // },
+  //     // {
+  //     //   label: "Languages",
+  //     //   href: "/admin/languages",
+  //     //   icon: <Languages size={18} />,
+  //     // },
+  //     // {
+  //     //   label: "Email Settings",
+  //     //   href: "/admin/email-setting",
+  //     //   icon: <Mail size={18} />,
+  //     // },
+  //     // {
+  //     //   label: "Faq",
+  //     //   href: "/admin/faq",
+  //     //   icon: <HelpCircle size={18} />,
+  //     // },
+  //     // {
+  //     //   label: "Page Settings",
+  //     //   href: "/admin/page-settings",
+  //     //   icon: <Layout size={18} />,
+  //     // },
+  //   ],
+  // },
 ];
 
 interface AdminSidebarProps {
@@ -194,7 +195,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, setIsOpen }) => {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 overflow-y-auto hide-scrollbar">
           <ul className="space-y-1 p-3">
             {menuItems.map((item, index) => (
               <li key={index}>

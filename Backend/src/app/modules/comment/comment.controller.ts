@@ -16,6 +16,18 @@ const createComment = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const listComments = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query || {};
+    const result = await CommentService.listComments(query);
+
+    sendResponse(res, {
+        statusCode: HttpStatusCode.Ok,
+        success: true,
+        message: "Comments fetched successfully",
+        data: result,
+    });
+});
+
 const getCommentsByNewsId = catchAsync(async (req: Request, res: Response) => {
     const { newsId } = req.params;
     const result = await CommentService.getCommentsByNewsId(newsId);
@@ -56,6 +68,7 @@ const deleteComment = catchAsync(async (req: Request, res: Response) => {
 
 export const CommentController = {
     createComment,
+    listComments,
     getCommentsByNewsId,
     toggleLike,
     deleteComment,

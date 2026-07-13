@@ -259,6 +259,7 @@ export const resetUserPassword = backend<any>("/user/reset-password", "patch");
 // ==================== Comment Endpoints ====================
 export const createComment = backend<any>("/comments/create", "post");
 export const getCommentsByNewsId = backend<any[]>("/comments/news/:newsId", "get");
+export const getCommentsList = backend<PaginatedResponse<any>>("/comments/list", "get");
 export const toggleLikeComment = backend<any>("/comments/like/:id", "patch");
 export const deleteComment = backend<any>("/comments/:id", "delete");
 

@@ -100,6 +100,12 @@ export default class NewsService {
         }
 
         pipeline.push({
+            $addFields: {
+                likesCount: { $size: { $ifNull: ['$likes', []] } },
+            },
+        });
+
+        pipeline.push({
             $project: {
                 title: 1,
                 slug: 1,
@@ -109,15 +115,21 @@ export default class NewsService {
                 types: 1,
                 status: 1,
                 author: { _id: '$author._id', first_name: '$author.first_name', last_name: '$author.last_name', role: '$author.role' },
+                likesCount: 1,
                 createdAt: 1,
             },
         });
+
+        let sort: any = { createdAt: -1 };
+        if (query.sort === 'likes') {
+            sort = { likesCount: -1, createdAt: -1 };
+        }
 
         const aggregate = News.aggregate(pipeline);
         const options = {
             page: query.page || 1,
             limit: query.limit || 10,
-            sort: { createdAt: -1 },
+            sort,
         };
         const list = await (News as any).aggregatePaginate(aggregate, options);
         return list;
