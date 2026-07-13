@@ -26,7 +26,7 @@ import { podcastRoutes } from "../modules/podcast/podcast.route";
 // import {HeroBannerRoute} from "../modules/hero-banner/hero-banner.routes";
 // import {ProductCouponRouter} from "../modules/product/product-coupon/coupon.routes";
 // import {contactRoutes} from "../modules/contact/contact.route";
-// import {subscriberRoutes} from "../modules/subscriber/subscriber.route";
+import { subscriberRoutes } from "../modules/subscriber/subscriber.route";
 
 const router = Router();
 
@@ -75,6 +75,10 @@ const moduleRouters:any = [
     //     path: '/subscriber',
     //     route: subscriberRoutes,
     // },
+    {
+        path: '/subscribers',
+        route: subscriberRoutes,
+    },
     {
         path: '/blogs',
         route: blogRoutes,

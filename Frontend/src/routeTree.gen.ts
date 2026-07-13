@@ -15,6 +15,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PopularRouteImport } from './routes/popular'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FreshStoriesRouteImport } from './routes/fresh-stories'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as PodcastsRouteImport } from './routes/Podcasts'
@@ -38,6 +39,7 @@ import { Route as DashboardCommentsRouteImport } from './routes/dashboard/commen
 import { Route as CategorySlugRouteImport } from './routes/category/$slug'
 import { Route as BlogBlogIdRouteImport } from './routes/blog/$blogId'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminSubscribersRouteImport } from './routes/admin/subscribers'
 import { Route as AdminReportersRouteImport } from './routes/admin/reporters'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
 import { Route as AdminPageSettingsRouteImport } from './routes/admin/page-settings'
@@ -95,6 +97,11 @@ const LoginRoute = LoginRouteImport.update({
 const FreshStoriesRoute = FreshStoriesRouteImport.update({
   id: '/fresh-stories',
   path: '/fresh-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -212,6 +219,11 @@ const BlogBlogIdRoute = BlogBlogIdRouteImport.update({
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
+  id: '/subscribers',
+  path: '/subscribers',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminReportersRoute = AdminReportersRouteImport.update({
@@ -375,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/Podcasts': typeof PodcastsRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
   '/popular': typeof PopularRoute
@@ -386,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
   '/blog/$blogId': typeof BlogBlogIdRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -431,6 +445,7 @@ export interface FileRoutesByTo {
   '/Editorials': typeof EditorialsRoute
   '/Podcasts': typeof PodcastsRoute
   '/about': typeof AboutRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
   '/popular': typeof PopularRoute
@@ -442,6 +457,7 @@ export interface FileRoutesByTo {
   '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
   '/blog/$blogId': typeof BlogBlogIdRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -491,6 +507,7 @@ export interface FileRoutesById {
   '/Podcasts': typeof PodcastsRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/fresh-stories': typeof FreshStoriesRoute
   '/login': typeof LoginRoute
   '/popular': typeof PopularRoute
@@ -502,6 +519,7 @@ export interface FileRoutesById {
   '/admin/page-settings': typeof AdminPageSettingsRoute
   '/admin/profile': typeof AdminProfileRoute
   '/admin/reporters': typeof AdminReportersRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
   '/blog/$blogId': typeof BlogBlogIdRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -552,6 +570,7 @@ export interface FileRouteTypes {
     | '/Podcasts'
     | '/about'
     | '/dashboard'
+    | '/forgot-password'
     | '/fresh-stories'
     | '/login'
     | '/popular'
@@ -563,6 +582,7 @@ export interface FileRouteTypes {
     | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
+    | '/admin/subscribers'
     | '/admin/users'
     | '/blog/$blogId'
     | '/category/$slug'
@@ -608,6 +628,7 @@ export interface FileRouteTypes {
     | '/Editorials'
     | '/Podcasts'
     | '/about'
+    | '/forgot-password'
     | '/fresh-stories'
     | '/login'
     | '/popular'
@@ -619,6 +640,7 @@ export interface FileRouteTypes {
     | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
+    | '/admin/subscribers'
     | '/admin/users'
     | '/blog/$blogId'
     | '/category/$slug'
@@ -667,6 +689,7 @@ export interface FileRouteTypes {
     | '/Podcasts'
     | '/about'
     | '/dashboard'
+    | '/forgot-password'
     | '/fresh-stories'
     | '/login'
     | '/popular'
@@ -678,6 +701,7 @@ export interface FileRouteTypes {
     | '/admin/page-settings'
     | '/admin/profile'
     | '/admin/reporters'
+    | '/admin/subscribers'
     | '/admin/users'
     | '/blog/$blogId'
     | '/category/$slug'
@@ -727,6 +751,7 @@ export interface RootRouteChildren {
   PodcastsRoute: typeof PodcastsRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   FreshStoriesRoute: typeof FreshStoriesRoute
   LoginRoute: typeof LoginRoute
   PopularRoute: typeof PopularRoute
@@ -783,6 +808,13 @@ declare module '@tanstack/react-router' {
       path: '/fresh-stories'
       fullPath: '/fresh-stories'
       preLoaderRoute: typeof FreshStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -944,6 +976,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/subscribers': {
+      id: '/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AdminSubscribersRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/reporters': {
@@ -1151,6 +1190,7 @@ interface AdminRouteRouteChildren {
   AdminPageSettingsRoute: typeof AdminPageSettingsRoute
   AdminProfileRoute: typeof AdminProfileRoute
   AdminReportersRoute: typeof AdminReportersRoute
+  AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogCategoryRoute: typeof AdminBlogCategoryRoute
@@ -1174,6 +1214,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminPageSettingsRoute: AdminPageSettingsRoute,
   AdminProfileRoute: AdminProfileRoute,
   AdminReportersRoute: AdminReportersRoute,
+  AdminSubscribersRoute: AdminSubscribersRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogCategoryRoute: AdminBlogCategoryRoute,
@@ -1265,6 +1306,7 @@ const rootRouteChildren: RootRouteChildren = {
   PodcastsRoute: PodcastsRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   FreshStoriesRoute: FreshStoriesRoute,
   LoginRoute: LoginRoute,
   PopularRoute: PopularRoute,

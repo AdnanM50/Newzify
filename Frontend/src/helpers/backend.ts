@@ -278,4 +278,9 @@ export const sendMessageApi = backend<any>("/message/send", "post");
 export const markMessagesRead = backend<any>("/message/mark-read/:conversationId", "patch");
 export const getUnreadCount = backend<any>("/message/unread-count", "get");
 
+// ==================== Subscriber Endpoints ====================
+export const subscribeEmail = backend<any>("/subscribers/subscribe", "post");
+export const getSubscribersList = backend<any>("/subscribers/list", "get");
+export const deleteSubscriber = backend<any>("/subscribers/delete", "delete");
+
 export default backend;

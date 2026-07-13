@@ -7,7 +7,6 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/ui/form';
 
-// Form validation schema
 const loginSchema = z.object({
   identifier: z.string().email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
@@ -15,7 +14,6 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
-// Toast Component
 const Toast: React.FC<{
   message: string;
   type: 'success' | 'error';
@@ -25,10 +23,7 @@ const Toast: React.FC<{
   if (!isVisible) return null;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 5000);
-
+    const timer = setTimeout(() => onClose(), 5000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
@@ -38,16 +33,9 @@ const Toast: React.FC<{
         type === 'success' ? 'bg-green-500' : 'bg-red-500'
       }`}>
         <div className="flex items-center gap-3">
-          <span className="text-lg">
-            {type === 'success' ? '✅' : '❌'}
-          </span>
+          <span className="text-lg">{type === 'success' ? '✅' : '❌'}</span>
           <span className="font-medium">{message}</span>
-          <button
-            onClick={onClose}
-            className="ml-4 text-white hover:text-gray-200"
-          >
-            ✕
-          </button>
+          <button onClick={onClose} className="ml-4 text-white hover:text-gray-200">✕</button>
         </div>
       </div>
     </div>
@@ -83,7 +71,6 @@ const LoginPage: React.FC = () => {
     setToast(prev => ({ ...prev, isVisible: false }));
   };
 
-  // Login user
   const onSubmit = async (data: LoginForm) => {
     setIsSubmitting(true);
     
@@ -107,18 +94,12 @@ const LoginPage: React.FC = () => {
       }
 
       const result = await response.json();
-      console.log('Login successful:', result);
       
-      // Save access token to localStorage
       if (result.data && result.data.accessToken) {
         localStorage.setItem('token', result.data.accessToken);
-        console.log('Access token saved to localStorage');
       }
       
-      // Show success message
       showToast('Login successful! Welcome back to Newzify!', 'success');
-      
-      // Reset form
       form.reset();
       
       const role = result.data?.user?.role;
@@ -129,11 +110,7 @@ const LoginPage: React.FC = () => {
       } else if (role === 'user') {
         navigate({ to: '/dashboard' });
       }
-      
-
-      
     } catch (error) {
-      console.error('Login error:', error);
       showToast(error instanceof Error ? error.message : 'Login failed. Please check your credentials.', 'error');
     } finally {
       setIsSubmitting(false);
@@ -142,33 +119,33 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-white p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md animate-in slide-in-from-bottom-4 duration-500">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md animate-in slide-in-from-bottom-4 duration-500 border border-gray-100">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-serif font-bold text-gray-900 mb-2">
               Welcome Back
             </h1>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-500 text-sm">
               Sign in to your Newzify account
             </p>
           </div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FormField
                 control={form.control}
                 name="identifier"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      Email Address *
+                      Email Address
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="email"
                         placeholder="Enter your email address"
-                        className="h-12 border-2 border-gray-200 rounded-xl bg-gray-50 focus:border-blue-500 focus:bg-white transition-all duration-300 hover:border-gray-300"
+                        className="h-11 border border-gray-300 rounded-lg bg-white focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-200 hover:border-gray-400"
                       />
                     </FormControl>
                     <FormMessage />
@@ -182,14 +159,14 @@ const LoginPage: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      Password *
+                      Password
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="password"
                         placeholder="Enter your password"
-                        className="h-12 border-2 border-gray-200 rounded-xl bg-gray-50 focus:border-blue-500 focus:bg-white transition-all duration-300 hover:border-gray-300"
+                        className="h-11 border border-gray-300 rounded-lg bg-white focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-200 hover:border-gray-400"
                       />
                     </FormControl>
                     <FormMessage />
@@ -201,13 +178,13 @@ const LoginPage: React.FC = () => {
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
                   />
                   <span className="text-sm text-gray-600">Remember me</span>
                 </label>
                 <a
                   href="/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-200"
+                  className="text-sm text-red-600 hover:text-red-700 hover:underline transition-colors duration-200"
                 >
                   Forgot password?
                 </a>
@@ -216,7 +193,7 @@ const LoginPage: React.FC = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <div className="flex items-center gap-2">
@@ -231,18 +208,16 @@ const LoginPage: React.FC = () => {
           </Form>
 
           <div className="text-center mt-6 pt-6 border-t border-gray-200">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-500 text-sm">
               Don't have an account?{' '}
               <a 
                 href="/signup" 
-                className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-colors duration-200"
+                className="text-red-600 font-semibold hover:text-red-700 hover:underline transition-colors duration-200"
               >
                 Sign up here
               </a>
             </p>
           </div>
-
-          
         </div>
       </div>
       <Toast

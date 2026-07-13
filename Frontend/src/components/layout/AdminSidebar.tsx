@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Menu,
   MessageCircle,
+  Megaphone,
 } from "lucide-react";
 
 interface MenuItem {
@@ -67,6 +68,11 @@ const menuItems: MenuItem[] = [
     label: "Messages",
     href: "/admin/messages",
     icon: <MessageCircle size={20} />,
+  },
+  {
+    label: "Subscribers",
+    href: "/admin/subscribers",
+    icon: <Megaphone size={20} />,
   },
   {
     label: "Group",

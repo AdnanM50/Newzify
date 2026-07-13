@@ -2,11 +2,15 @@ import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import BlogService from './blog.service';
+import { SubscriberService } from '../subscriber/subscriber.service';
 
 export class BlogController {
     static createBlog = catchAsync(async (req, res) => {
         const body = req.body;
         const created = await BlogService.createBlog(body);
+
+        SubscriberService.sendPublishNotification('blog', body.title, body.slug).catch(() => {});
+
         sendResponse(res, {
             statusCode: httpStatus.CREATED,
             success: true,

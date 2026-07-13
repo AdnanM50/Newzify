@@ -7,6 +7,7 @@ import AppError from '../../errors/appError';
 import Category from '../news-category/category.model';
 import { Types } from 'mongoose';
 import { PageSettingService } from '../page-setting/page-setting.service';
+import { SubscriberService } from '../subscriber/subscriber.service';
 
 export class NewsController {
     static createNews = catchAsync(async (req, res) => {
@@ -28,6 +29,11 @@ export class NewsController {
         }
 
         const created = await NewsService.createNews(body);
+
+        if (body.status === 'published') {
+            SubscriberService.sendPublishNotification('news', body.title, body.slug).catch(() => {});
+        }
+
         sendResponse(res, {
             statusCode: httpStatus.CREATED,
             success: true,
@@ -80,6 +86,11 @@ export class NewsController {
         }
 
         const updated = await NewsService.updateNews(body._id, body);
+
+        if (body.status === 'published' && news.status !== 'published') {
+            SubscriberService.sendPublishNotification('news', body.title || news.title, body.slug || news.slug).catch(() => {});
+        }
+
         sendResponse(res, {
             statusCode: httpStatus.OK,
             success: true,
