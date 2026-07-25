@@ -54,7 +54,7 @@ const ReporterHeader: React.FC<ReporterHeaderProps> = ({ setSidebarOpen }) => {
                   <User size={18} />
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-gray-700 group-hover:text-indigo-900">
-                  {user?.name || 'Reporter'}
+                  {user?.first_name || 'Reporter'}
                 </span>
                 <ChevronDown size={14} className="text-gray-400 group-hover:text-indigo-600" />
               </div>
@@ -65,7 +65,7 @@ const ReporterHeader: React.FC<ReporterHeaderProps> = ({ setSidebarOpen }) => {
                 <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)}></div>
                 <div className="absolute right-0 mt-3 w-48 bg-white border border-gray-100 rounded-lg shadow-lg py-1 z-20">
                     <div className="px-4 py-3 border-b border-gray-50">
-                        <p className="text-sm font-semibold text-gray-900">{user?.name || 'Reporter'}</p>
+                        <p className="text-sm font-semibold text-gray-900">{user?.first_name || 'Reporter'}</p>
                         <p className="text-xs text-gray-500 capitalize">{user?.role || 'Reporter'}</p>
                     </div>
                     <div className="py-1">

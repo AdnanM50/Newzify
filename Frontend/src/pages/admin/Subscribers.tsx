@@ -1,5 +1,5 @@
-import { useFetch } from "../../helpers/hooks";
-import { api } from "../../helpers/api";
+import { useFetch, useDelete } from "../../helpers/hooks";
+import { getSubscribersList, deleteSubscriber } from "../../helpers/backend";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "../../components/ui/table";
@@ -10,22 +10,27 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Subscribers = () => {
+  const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
-  const { data: subscribersData, refetch, isLoading } = useFetch<any>("subscribers", () =>
-    api.get('/subscribers/list', { search: search || undefined })
-  );
 
-  const handleDelete = async (id: string) => {
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(searchInput), 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const { data: subscribersData, isLoading } = useFetch<any>("subscribers", getSubscribersList, { search: search || undefined });
+
+  const { mutate: deleteSub } = useDelete(deleteSubscriber, {
+    invalidateKeys: ["subscribers"],
+    successMessage: "Subscriber deleted successfully",
+  });
+
+  const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this subscriber?")) {
-      try {
-        await api.delete('/subscribers/delete', { body: { _id: id } });
-        refetch();
-      } catch (error: any) {
-        alert(error.message || 'Failed to delete subscriber');
-      }
+      deleteSub({ _id: id });
     }
   };
 
@@ -66,11 +71,8 @@ const Subscribers = () => {
               <Input
                 placeholder="Search by email..."
                 className="pl-8"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') refetch();
-                }}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
           </div>

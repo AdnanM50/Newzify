@@ -6,6 +6,7 @@ import * as z from 'zod';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/ui/form';
+import { useQueryClient } from '@tanstack/react-query';
 
 const loginSchema = z.object({
   identifier: z.string().email('Please enter a valid email address'),
@@ -44,6 +45,7 @@ const Toast: React.FC<{
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
@@ -97,6 +99,7 @@ const LoginPage: React.FC = () => {
       
       if (result.data && result.data.accessToken) {
         localStorage.setItem('token', result.data.accessToken);
+        queryClient.invalidateQueries({ queryKey: ["user"] });
       }
       
       showToast('Login successful! Welcome back to Newzify!', 'success');

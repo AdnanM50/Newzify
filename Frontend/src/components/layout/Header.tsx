@@ -5,11 +5,13 @@ import { useFetch } from '../../helpers/hooks';
 import { getPublicCategories } from '../../helpers/backend';
 import { getUserRole } from '../../helpers/auth';
 import SubscribeModal from '../SubscribeModal';
+import SearchModal from '../common/SearchModal';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const { data: categoriesData } = useFetch<any>("categories", getPublicCategories, { limit: 100 });
 
@@ -47,7 +49,7 @@ const Header: React.FC = () => {
           <div className="flex items-center justify-between">
             <Link to="/" className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">NEWZIFY</Link>
             <div className="flex items-center space-x-4">
-              <Search className="w-5 h-5 text-gray-600 cursor-pointer" />
+              <Search className="w-5 h-5 text-gray-600 cursor-pointer" onClick={() => setIsSearchOpen(true)} />
               {(() => {
                 const role = getUserRole();
                 const dashboardPath = role === 'admin' ? '/admin' : role === 'reporter' ? '/reporter-dashboard' : '/dashboard';
@@ -155,6 +157,7 @@ const Header: React.FC = () => {
       </header>
 
       <SubscribeModal isOpen={isSubscribeOpen} onClose={() => setIsSubscribeOpen(false)} />
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 };

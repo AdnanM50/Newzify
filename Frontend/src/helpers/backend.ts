@@ -107,6 +107,13 @@ export type PaginatedResponse<T> = {
   pagingCounter: number;
 };
 
+export type TSearchResult = {
+  news: Array<{ _id: string; title: string; slug?: string; image?: string; category?: { name: string; slug?: string }; createdAt?: string }>;
+  podcasts: Array<{ _id: string; title: string; slug?: string; image?: string; category?: string; createdAt?: string }>;
+  editorials: Array<{ _id: string; title: string; slug?: string; image?: string; category?: string; createdAt?: string }>;
+  blogs: Array<{ _id: string; title: string; slug?: string; image?: string; category?: { name: string; slug?: string }; createdAt?: string }>;
+};
+
 export type TPageSetting = {
   _id?: string;
   heroNews: Array<TNews | string>;
@@ -283,5 +290,8 @@ export const getUnreadCount = backend<any>("/message/unread-count", "get");
 export const subscribeEmail = backend<any>("/subscribers/subscribe", "post");
 export const getSubscribersList = backend<any>("/subscribers/list", "get");
 export const deleteSubscriber = backend<any>("/subscribers/delete", "delete");
+
+// ==================== Search Endpoints ====================
+export const searchContent = backend<TSearchResult>("/search", "get");
 
 export default backend;

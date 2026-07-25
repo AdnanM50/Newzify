@@ -16,21 +16,21 @@ import { Input } from "../../components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { useUser } from "../../context/user";
 import { useEffect } from "react";
-import { User, Mail, Phone, MapPin } from "lucide-react";
+import { User, Mail, Phone, Briefcase } from "lucide-react";
 
 const profileSchema = z.object({
   first_name: z.string().min(1, "First name is required").max(50),
   last_name: z.string().min(1, "Last name is required").max(50),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
-  address: z.string().max(250).optional(),
+  work_experience: z.string().max(500).optional(),
   image: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 const ProfileUpdateForm = () => {
-  const { user, refetch } = useUser();
+  const { user, isLoading: isUserLoading, refetch } = useUser();
   const { mutate: update, isLoading } = useAction(updateProfile, {
     onSuccess: () => {
       refetch();
@@ -45,7 +45,7 @@ const ProfileUpdateForm = () => {
       last_name: "",
       email: "",
       phone: "",
-      address: "",
+      work_experience: "",
       image: "",
     },
   });
@@ -57,7 +57,7 @@ const ProfileUpdateForm = () => {
         last_name: user.last_name || "",
         email: user.email || "",
         phone: user.phone || "",
-        address: user.address || "",
+        work_experience: user.work_experience || "",
         image: user.image || "",
       });
     }
@@ -79,7 +79,12 @@ const ProfileUpdateForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
+        {isUserLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-2 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
@@ -150,14 +155,14 @@ const ProfileUpdateForm = () => {
             
             <FormField
               control={form.control}
-              name="address"
+              name="work_experience"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Work Experience</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                      <Input {...field} className="pl-10" placeholder="Your full address" />
+                      <Briefcase className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                      <Input {...field} className="pl-10" placeholder="Your work experience" />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -182,7 +187,8 @@ const ProfileUpdateForm = () => {
               </Button>
             </div>
           </form>
-        </Form>
+          </Form>
+        )}
       </CardContent>
     </Card>
   );

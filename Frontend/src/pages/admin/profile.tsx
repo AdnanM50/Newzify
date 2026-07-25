@@ -6,6 +6,8 @@ import { cn } from "../../lib/utils";
 
 const AdminProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "password">("profile");
+  const isReporter = typeof window !== 'undefined' && window.location.pathname.startsWith('/reporter-dashboard');
+  const roleLabel = isReporter ? 'Reporter' : 'Admin';
 
   const tabs = [
     {
@@ -38,7 +40,7 @@ const AdminProfile = () => {
         
         {/* Breadcrumb-like indicator */}
         <div className="flex items-center gap-2 text-sm text-gray-400">
-          <span className="hover:text-indigo-600 transition-colors cursor-pointer">Admin</span>
+          <span className="hover:text-indigo-600 transition-colors cursor-pointer">{roleLabel}</span>
           <ChevronRight className="w-4 h-4" />
           <span className="text-gray-900 font-medium">Profile</span>
         </div>

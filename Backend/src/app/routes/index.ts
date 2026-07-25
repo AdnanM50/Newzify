@@ -19,6 +19,7 @@ import { conversationRoutes } from "../modules/conversation/conversation.route";
 import { messageRoutes } from "../modules/message/message.route";
 import { editorialRoutes } from "../modules/editorial/editorial.route";
 import { podcastRoutes } from "../modules/podcast/podcast.route";
+import { searchRoutes } from "../modules/search/search.route";
 // import {ProductSectionRouter} from "../modules/product/product-section/product-section.routes";
 // import {ProductBrandRouter} from "../modules/product/product-brand/product-brand.routes";
 // import {ProductAttributeRouter} from "../modules/product/product-attributes/product-attributes.routes";
@@ -114,6 +115,10 @@ const moduleRouters:any = [
     {
         path: '/podcasts',
         route: podcastRoutes,
+    },
+    {
+        path: '/search',
+        route: searchRoutes,
     },
     // {
     //     path: '/faq',
