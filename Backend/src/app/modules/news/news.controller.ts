@@ -148,6 +148,9 @@ export class NewsController {
                 filter.author = new Types.ObjectId(query.author as string);
             }
         }
+        if (query.status) {
+            filter.status = query.status;
+        }
         const list = await NewsService.listNews(filter, query);
         sendResponse(res, {
             statusCode: httpStatus.OK,
