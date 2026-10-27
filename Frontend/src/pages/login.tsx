@@ -7,6 +7,7 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../components/ui/form';
 import { useQueryClient } from '@tanstack/react-query';
+import { Shield, PenTool, User } from 'lucide-react';
 
 const loginSchema = z.object({
   identifier: z.string().email('Please enter a valid email address'),
@@ -73,6 +74,22 @@ const LoginPage: React.FC = () => {
     setToast(prev => ({ ...prev, isVisible: false }));
   };
 
+  const fillCredentials = (role: 'admin' | 'reporter' | 'user') => {
+    if (role === 'admin') {
+      form.setValue('identifier', 'admin@gmail.com', { shouldValidate: true, shouldDirty: true });
+      form.setValue('password', '123456', { shouldValidate: true, shouldDirty: true });
+      showToast('Admin credentials filled!', 'success');
+    } else if (role === 'reporter') {
+      form.setValue('identifier', 'reporter@gmail.com', { shouldValidate: true, shouldDirty: true });
+      form.setValue('password', '123456', { shouldValidate: true, shouldDirty: true });
+      showToast('Reporter credentials filled!', 'success');
+    } else if (role === 'user') {
+      form.setValue('identifier', 'wegikag354@esyline.com', { shouldValidate: true, shouldDirty: true });
+      form.setValue('password', 'Adnan1234', { shouldValidate: true, shouldDirty: true });
+      showToast('User credentials filled!', 'success');
+    }
+  };
+
   const onSubmit = async (data: LoginForm) => {
     setIsSubmitting(true);
     
@@ -131,6 +148,45 @@ const LoginPage: React.FC = () => {
             <p className="text-gray-500 text-sm">
               Sign in to your Newzify account
             </p>
+          </div>
+
+          {/* Quick Demo Credentials Buttons */}
+          <div className="mb-6 p-3 bg-gray-50 border border-gray-200/80 rounded-xl">
+            <div className="flex items-center justify-between mb-2 px-1">
+              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                Demo Credentials
+              </span>
+              <span className="text-[10px] text-gray-400">Click to autofill</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => fillCredentials('admin')}
+                className="flex items-center justify-center gap-1.5 py-2 px-2 bg-white hover:bg-red-50 text-gray-700 hover:text-red-600 border border-gray-200 hover:border-red-300 rounded-lg text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer"
+                title="Fill Admin Credentials (admin@gmail.com / 123456)"
+              >
+                <Shield className="w-3.5 h-3.5 text-red-500" />
+                <span>Admin</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => fillCredentials('reporter')}
+                className="flex items-center justify-center gap-1.5 py-2 px-2 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 border border-gray-200 hover:border-blue-300 rounded-lg text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer"
+                title="Fill Reporter Credentials (reporter@gmail.com / 123456)"
+              >
+                <PenTool className="w-3.5 h-3.5 text-blue-500" />
+                <span>Reporter</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => fillCredentials('user')}
+                className="flex items-center justify-center gap-1.5 py-2 px-2 bg-white hover:bg-emerald-50 text-gray-700 hover:text-emerald-600 border border-gray-200 hover:border-emerald-300 rounded-lg text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer"
+                title="Fill User Credentials (wegikag354@esyline.com / Adnan1234)"
+              >
+                <User className="w-3.5 h-3.5 text-emerald-500" />
+                <span>User</span>
+              </button>
+            </div>
           </div>
 
           <Form {...form}>

@@ -11,6 +11,7 @@ userRouter.patch('/update',auth(...USER_ROLE_ENUM),validate(UserValidations.upda
 userRouter.get('/profile',auth(...USER_ROLE_ENUM), UserController.getUserProfile);
 
 // User Profile Features
+userRouter.get('/profile/dashboard-summary', auth(...USER_ROLE_ENUM), UserController.getDashboardSummary);
 userRouter.get('/profile/liked-posts', auth(...USER_ROLE_ENUM), UserController.getLikedPosts);
 userRouter.get('/profile/comments', auth(...USER_ROLE_ENUM), UserController.getUserComments);
 userRouter.get('/profile/replies', auth(...USER_ROLE_ENUM), UserController.getUserReplies);

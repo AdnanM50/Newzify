@@ -356,4 +356,78 @@ export default class UserService {
             .lean();
         return users;
     }
+
+    static async getDashboardSummary(userId: string | Types.ObjectId): Promise<any> {
+        const userIdObj = new Types.ObjectId(userId);
+
+        const totalLikes = await News.countDocuments({
+            likes: userIdObj,
+            is_deleted: false,
+            status: 'published'
+        });
+
+        const totalComments = await Comment.countDocuments({
+            userId: userIdObj,
+            is_deleted: false
+        });
+
+        const userComments = await Comment.find({
+            userId: userIdObj,
+            is_deleted: false
+        }).select('_id');
+        const userCommentIds = userComments.map(c => c._id);
+
+        const totalReplies = userCommentIds.length > 0 
+            ? await Comment.countDocuments({
+                parentCommentId: { $in: userCommentIds },
+                userId: { $ne: userIdObj },
+                is_deleted: false
+            })
+            : 0;
+
+        const recentLikes = await News.find({
+            likes: userIdObj,
+            is_deleted: false,
+            status: 'published'
+        })
+            .populate('category', 'name slug')
+            .populate('author', 'first_name last_name image')
+            .select('title slug image category author createdAt likes content')
+            .sort({ createdAt: -1 })
+            .limit(4)
+            .lean();
+
+        const recentComments = await Comment.find({
+            userId: userIdObj,
+            parentCommentId: null,
+            is_deleted: false
+        })
+            .populate('newsId', 'title slug image')
+            .select('content createdAt newsId likes')
+            .sort({ createdAt: -1 })
+            .limit(4)
+            .lean();
+
+        const recommendedStories = await News.find({
+            is_deleted: false,
+            status: 'published'
+        })
+            .populate('category', 'name slug')
+            .populate('author', 'first_name last_name image')
+            .select('title slug image category author createdAt likes types image')
+            .sort({ createdAt: -1 })
+            .limit(4)
+            .lean();
+
+        return {
+            stats: {
+                totalLikes,
+                totalComments,
+                totalReplies,
+            },
+            recentLikes,
+            recentComments,
+            recommendedStories,
+        };
+    }
 }

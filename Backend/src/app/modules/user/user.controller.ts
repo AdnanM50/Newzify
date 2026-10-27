@@ -178,4 +178,15 @@ export class UserController {
             data: users,
         });
     });
+
+    static getDashboardSummary = catchAsync(async (req, res) => {
+        const { _id } = res.locals.user;
+        const result = await UserService.getDashboardSummary(_id);
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Dashboard summary retrieved successfully',
+            data: result,
+        });
+    });
 }

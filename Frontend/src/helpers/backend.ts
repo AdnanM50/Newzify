@@ -119,6 +119,7 @@ export type TPageSetting = {
   heroNews: Array<TNews | string>;
   threeBoxNews: Array<TNews | string>;
   markPlaceNews: Array<TNews | string>;
+  socialLinks?: Array<{ name: string; link: string }>;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -248,6 +249,7 @@ export const deleteImage = backend<{ message: string }>("/files/delete", "delete
 // Get user profile
 // GET /user/profile
 export const fetchUser = backend<any>("/user/profile", "get");
+export const getDashboardSummary = backend<any>("/user/profile/dashboard-summary", "get");
 
 // Update user profile
 // PATCH /user/update

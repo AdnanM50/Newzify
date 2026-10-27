@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart, MessageSquare, Reply, Settings } from 'lucide-react';
+import { LayoutDashboard, Heart, MessageSquare, Reply, Settings } from 'lucide-react';
 
 interface UserProfile {
   _id: string;
@@ -31,6 +31,7 @@ const UserSidebar: React.FC<Props> = ({ className = '', user }) => {
   };
 
   const navItems = [
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, exact: true },
     { to: '/dashboard/likes', label: 'Liked Posts', icon: Heart },
     { to: '/dashboard/comments', label: 'Your Comments', icon: MessageSquare },
     { to: '/dashboard/replies', label: 'Replies', icon: Reply },
@@ -55,11 +56,12 @@ const UserSidebar: React.FC<Props> = ({ className = '', user }) => {
           </div>
         </div>
 
-        <nav className="mt-4 lg:mt-0 grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-col gap-2">
+        <nav className="mt-4 lg:mt-0 grid grid-cols-2 sm:grid-cols-5 lg:flex lg:flex-col gap-2">
           {navItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
+              activeOptions={{ exact: item.exact }}
               className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-md transition-colors text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-red-600"
               activeProps={{
                 className: 'bg-red-50 text-red-600 font-medium',

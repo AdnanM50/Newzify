@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
+import { useFetch } from '../../helpers/hooks';
+import { getPageSettings } from '../../helpers/backend';
+import { DEFAULT_SOCIAL_LINKS, getSocialIcon, type SocialLink } from '../../helpers/social';
 
 interface Props {
   // add your props here
@@ -8,6 +11,14 @@ interface Props {
 const Footer: React.FC<Props> = () => {
   const hideForReporter = typeof window !== 'undefined' && window.location.pathname.startsWith('/reporter')
   if (hideForReporter) return null
+
+  const { data: pageSettings } = useFetch<any>("page-settings", getPageSettings);
+
+  const socialLinks: SocialLink[] = 
+    pageSettings?.socialLinks && pageSettings.socialLinks.length > 0 
+      ? pageSettings.socialLinks 
+      : DEFAULT_SOCIAL_LINKS;
+
   return (
     <footer className="bg-gray-800 text-white py-8 ">
       <div className="container mx-auto px-4">
@@ -42,10 +53,19 @@ const Footer: React.FC<Props> = () => {
           </div>
           <div>
             <h4 className="font-semibold mb-3">Follow Us</h4>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white">Facebook</a>
-              <a href="#" className="text-gray-300 hover:text-white">Twitter</a>
-              <a href="#" className="text-gray-300 hover:text-white">Instagram</a>
+            <div className="flex flex-wrap items-center gap-2.5">
+              {socialLinks.map((s, idx) => (
+                <a
+                  key={idx}
+                  href={s.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={s.name}
+                  className="w-8 h-8 rounded-full bg-gray-700 hover:bg-red-600 text-gray-300 hover:text-white flex items-center justify-center transition-all hover:scale-110 shadow-sm"
+                >
+                  {getSocialIcon(s.name, "w-4 h-4")}
+                </a>
+              ))}
             </div>
           </div>
         </div>

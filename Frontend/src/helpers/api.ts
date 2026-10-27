@@ -1,7 +1,7 @@
 
 
 
-export const BACKEND_URL = "https://newzify-backend-kappa.vercel.app";
+export const BACKEND_URL = "http://localhost:5000";
 
 const API_URL = `${BACKEND_URL.replace(/\/$/, "")}/api/v1/`;
 // https://newzify-backend-kappa.vercel.app
@@ -140,6 +140,9 @@ export const api = {
 
 // User Profile API Functions
 export const userProfileApi = {
+  getDashboardSummary: () =>
+    api.get('/user/profile/dashboard-summary'),
+
   getLikedPosts: (params: { page?: number; limit?: number } = {}) =>
     api.get('/user/profile/liked-posts', params),
   

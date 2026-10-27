@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { useEffect, useState, createContext, useContext } from 'react';
 import UserSidebar from '../components/layout/UserSidebar';
 import { getUserRole } from '../helpers/auth';
+import { api } from '../helpers/api';
 
 interface DashboardContextType {
   userProfile: any;
@@ -44,14 +45,9 @@ function DashboardLayout() {
 
   const fetchUserProfile = async () => {
     try {
-      const response: any = await fetch('https://newzify-backend-kappa.vercel.app/api/v1/user/profile', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      const result = await response.json();
-      if (result.success) {
-        setUserProfile(result.data);
+      const response: any = await api.get('/user/profile');
+      if (response.success && response.data) {
+        setUserProfile(response.data);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);

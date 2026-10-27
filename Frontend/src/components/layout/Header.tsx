@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Search, Menu, User, ChevronDown } from "lucide-react";
-import { Link } from '@tanstack/react-router';
+import { Search, Menu, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useFetch } from '../../helpers/hooks';
-import { getPublicCategories } from '../../helpers/backend';
-import { getUserRole } from '../../helpers/auth';
+import { getPublicCategories, getPageSettings } from '../../helpers/backend';
+import { getUserRole, decodeToken } from '../../helpers/auth';
+import { useUser } from '../../context/user';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DEFAULT_SOCIAL_LINKS, getSocialIcon, type SocialLink } from '../../helpers/social';
 import SubscribeModal from '../SubscribeModal';
 import SearchModal from '../common/SearchModal';
+import toast from 'react-hot-toast';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,7 +17,38 @@ const Header: React.FC = () => {
   const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  const { user, logout } = useUser();
+  const navigate = useNavigate();
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const decoded = token ? decodeToken(token) : null;
+  const role = user?.role || decoded?.role || getUserRole();
+  const isLoggedIn = Boolean(token && role);
+
+  const displayName = user?.first_name || decoded?.first_name || user?.name || '';
+  const firstAlphabet = (displayName.trim()?.[0] || user?.email?.[0] || decoded?.email?.[0] || 'U').toUpperCase();
+  const userImage = user?.image || user?.avatar;
+
+  const dashboardPath = 
+    role === 'admin' 
+      ? '/admin' 
+      : role === 'reporter' 
+        ? '/reporter-dashboard' 
+        : '/dashboard';
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate({ to: '/' });
+  };
+
   const { data: categoriesData } = useFetch<any>("categories", getPublicCategories, { limit: 100 });
+  const { data: pageSettings } = useFetch<any>("page-settings", getPageSettings);
+
+  const socialLinks: SocialLink[] = 
+    pageSettings?.socialLinks && pageSettings.socialLinks.length > 0 
+      ? pageSettings.socialLinks 
+      : DEFAULT_SOCIAL_LINKS;
 
   const fetchedCategories = (categoriesData as any)?.docs || [];
   
@@ -31,7 +66,23 @@ const Header: React.FC = () => {
         {/* Top bar */}
         <div className="bg-gray-800 text-white py-2">
           <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-            <span>Follow us on</span>
+            <div className="flex items-center space-x-2.5">
+              <span className="text-gray-300 text-xs sm:text-sm font-medium">Follow us on</span>
+              <div className="flex items-center space-x-1 sm:space-x-1.5">
+                {socialLinks.map((s, idx) => (
+                  <a
+                    key={idx}
+                    href={s.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={s.name}
+                    className="w-6 h-6 rounded-full bg-gray-700/80 hover:bg-red-600 text-gray-300 hover:text-white flex items-center justify-center transition-all hover:scale-110"
+                  >
+                    {getSocialIcon(s.name, "w-3.5 h-3.5")}
+                  </a>
+                ))}
+              </div>
+            </div>
             <div className="flex space-x-4">
               <button
                 onClick={() => setIsSubscribeOpen(true)}
@@ -39,7 +90,16 @@ const Header: React.FC = () => {
               >
                 Subscribe
               </button>
-              <Link to="/login" className="bg-white text-gray-800 px-3 py-1 text-xs">Login</Link>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className="bg-white text-gray-800 px-3 py-1 text-xs hover:bg-gray-100 transition-colors cursor-pointer"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link to="/login" className="bg-white text-gray-800 px-3 py-1 text-xs">Login</Link>
+              )}
             </div>
           </div>
         </div>
@@ -50,15 +110,22 @@ const Header: React.FC = () => {
             <Link to="/" className="text-4xl md:text-5xl font-bold text-gray-800 font-serif">NEWZIFY</Link>
             <div className="flex items-center space-x-4">
               <Search className="w-5 h-5 text-gray-600 cursor-pointer" onClick={() => setIsSearchOpen(true)} />
-              {(() => {
-                const role = getUserRole();
-                const dashboardPath = role === 'admin' ? '/admin' : role === 'reporter' ? '/reporter-dashboard' : '/dashboard';
-                return (
-                  <Link to={dashboardPath as any} className="text-gray-600 hover:text-red-600 transition-colors">
-                    <User className="w-5 h-5 cursor-pointer" />
-                  </Link>
-                );
-              })()}
+              {isLoggedIn ? (
+                <Link
+                  to={dashboardPath as any}
+                  title={displayName ? `${displayName}'s Dashboard (${role})` : 'Dashboard'}
+                  className="flex items-center justify-center transition-transform hover:scale-105 focus:outline-none"
+                >
+                  <Avatar className="w-9 h-9 rounded-full border border-gray-200 shadow-sm cursor-pointer hover:ring-2 hover:ring-red-600 transition-all">
+                    {userImage ? (
+                      <AvatarImage src={userImage} alt={displayName || 'User Avatar'} className="object-cover" />
+                    ) : null}
+                    <AvatarFallback className="bg-red-600 text-white font-bold text-sm select-none">
+                      {firstAlphabet}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              ) : null}
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden"
@@ -73,6 +140,17 @@ const Header: React.FC = () => {
         <nav className={`bg-gray-50 border-t border-gray-200 ${isMenuOpen ? 'block' : 'hidden'} md:block relative`}>
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row md:items-center md:space-x-8 py-2">
+              {isLoggedIn && (
+                <Link
+                  to={dashboardPath as any}
+                  className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"
+                  activeProps={{
+                    className: 'text-red-600 font-semibold',
+                  }}
+                >
+                  Dashboard
+                </Link>
+              )}
               <Link
                 to="/tranding-news"
                 className="py-2 md:py-3 text-gray-700 hover:text-red-600 transition-colors text-sm font-medium border-b md:border-b-0 border-gray-200"

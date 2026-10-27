@@ -16,8 +16,15 @@ const updatePageSettings = async (payload: IPageSetting) => {
   return updatedSetting;
 };
 
+const DEFAULT_SOCIAL_LINKS = [
+  { name: 'Facebook', link: 'https://facebook.com/newzify' },
+  { name: 'Twitter', link: 'https://x.com/newzify' },
+  { name: 'Instagram', link: 'https://instagram.com/newzify' },
+  { name: 'Youtube', link: 'https://youtube.com/@newzify' },
+];
+
 const getPageSettings = async () => {
-  const result = await PageSetting.findOne()
+  let result: any = await PageSetting.findOne()
     .populate({
       path: 'heroNews',
       populate: { path: 'category' }
@@ -30,6 +37,18 @@ const getPageSettings = async () => {
       path: 'markPlaceNews',
       populate: { path: 'category' }
     });
+
+  if (!result) {
+    result = await PageSetting.create({
+      heroNews: [],
+      threeBoxNews: [],
+      markPlaceNews: [],
+      socialLinks: DEFAULT_SOCIAL_LINKS,
+    });
+  } else if (!result.socialLinks || result.socialLinks.length === 0) {
+    result.socialLinks = DEFAULT_SOCIAL_LINKS;
+  }
+
   return result;
 };
 

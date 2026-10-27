@@ -31,6 +31,12 @@ const pageSettingSchema = new Schema<IPageSetting>(
         validate: [markPlaceLimit, '{PATH} exceeds the limit of 10'],
       },
     ],
+    socialLinks: [
+      {
+        name: { type: String, required: true },
+        link: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,
