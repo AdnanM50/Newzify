@@ -29,7 +29,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     { enabled: debouncedQuery.length >= 2 }
   );
 
-  const handleNavigate = useCallback((type: string, slug?: string, id?: string) => {
+  const handleNavigate = useCallback((type: string, id?: string) => {
     const path = type === 'news' ? `/news/${id}`
       : type === 'podcasts' ? `/podcasts/${id}`
       : type === 'editorials' ? `/editorials/${id}`
@@ -84,7 +84,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                   {section.items.map((item: any) => (
                     <button
                       key={item._id}
-                      onClick={() => handleNavigate(section.key, item.slug, item._id)}
+                      onClick={() => handleNavigate(section.key, item._id)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left cursor-pointer"
                     >
                       {item.image ? (

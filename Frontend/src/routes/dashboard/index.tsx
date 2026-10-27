@@ -14,7 +14,6 @@ import {
   ArrowRight, 
   Sparkles,
   BookOpen,
-  Calendar,
   Compass,
   ExternalLink
 } from 'lucide-react'

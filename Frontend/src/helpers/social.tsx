@@ -1,4 +1,3 @@
-import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, Globe } from 'lucide-react';
 
 export interface SocialLink {
