@@ -78,15 +78,12 @@ const LoginPage: React.FC = () => {
     if (role === 'admin') {
       form.setValue('identifier', 'admin@gmail.com', { shouldValidate: true, shouldDirty: true });
       form.setValue('password', '123456', { shouldValidate: true, shouldDirty: true });
-      showToast('Admin credentials filled!', 'success');
     } else if (role === 'reporter') {
       form.setValue('identifier', 'reporter@gmail.com', { shouldValidate: true, shouldDirty: true });
       form.setValue('password', '123456', { shouldValidate: true, shouldDirty: true });
-      showToast('Reporter credentials filled!', 'success');
     } else if (role === 'user') {
       form.setValue('identifier', 'wegikag354@esyline.com', { shouldValidate: true, shouldDirty: true });
       form.setValue('password', 'Adnan1234', { shouldValidate: true, shouldDirty: true });
-      showToast('User credentials filled!', 'success');
     }
   };
 
