@@ -50,28 +50,7 @@ npm install
 
 2. Create `Backend/.env`.
 
-```env
-PORT=3005
-NODE_ENV=development
-WEBSITE_NAME=Newzify
 
-DB_STRING=mongodb+srv://USER:PASSWORD@HOST/DATABASE_NAME
-
-BCRYPT_SALT_ROUNDS=10
-JWT_ACCESS_SECRET=replace_with_a_long_random_access_secret
-JWT_ACCESS_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=replace_with_a_long_random_refresh_secret
-JWT_REFRESH_EXPIRES_IN=30d
-
-CLOUD_NAME=your_cloudinary_cloud_name
-API_KEY=your_cloudinary_api_key
-API_SECRET=your_cloudinary_api_secret
-
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_gmail_app_password
-
-GOOGLE_MAP_API_KEY=
-```
 
 Do not commit real `.env` values. Keep secrets only on your local machine or deployment provider.
 
